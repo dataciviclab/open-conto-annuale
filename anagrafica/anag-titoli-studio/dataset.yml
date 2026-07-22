@@ -1,0 +1,29 @@
+root: "../../out"
+schema_version: 1
+dataset:
+  name: "ca_anag_titoli_studio_seed"
+  years: [2024]
+raw:
+  output_policy: overwrite
+  sources:
+    - name: "seed_csv"
+      type: "local_file"
+      args:
+        path: "../../_local/seed/Titoli_Studio.CSV"
+      primary: true
+clean:
+  sql: "sql/clean.sql"
+  read:
+    mode: latest
+    header: true
+    delim: ";"
+    encoding: "utf-8"
+  validate: {}
+mart:
+  tables:
+    - name: "ca_anag_titoli_studio_seed"
+      sql: "sql/mart.sql"
+  required_tables: ["ca_anag_titoli_studio_seed"]
+  validate: {}
+validation:
+  fail_on_error: true

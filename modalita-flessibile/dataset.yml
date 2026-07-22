@@ -1,0 +1,40 @@
+root: "../out"
+schema_version: 1
+dataset:
+  name: "modalita_flessibile"
+  source_id: "openbdap"
+  years: [2024]
+raw:
+  output_policy: overwrite
+  sources:
+    - name: "modalita_csv"
+      type: "local_file"
+      args:
+        path: "../_local/seed/dati/MODALITA_LAVORO_FLESSIBILE_2024.CSV"
+      primary: true
+clean:
+  sql: "sql/clean.sql"
+  read:
+    mode: latest
+    header: true
+    delim: ";"
+    encoding: "utf-8"
+  validate:
+    min_rows: 100
+mart:
+  tables:
+    - name: "modalita_flessibile_comparti"
+      sql: "sql/mart.sql"
+  required_tables: ["modalita_flessibile_comparti"]
+  validate:
+    table_rules:
+      modalita_flessibile_comparti: { min_rows: 5 }
+validation:
+  fail_on_error: true
+support:
+  - name: "enti"
+    config: "../anagrafica/anag-enti/dataset.yml"
+    years: [2024]
+  - name: "comparti"
+    config: "../anagrafica/anag-comparti/dataset.yml"
+    years: [2024]

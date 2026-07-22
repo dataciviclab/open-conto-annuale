@@ -1,20 +1,10 @@
 name: check
 on:
   pull_request:
-    paths:
-      - "**/*.py"
-      - "**/*.yml"
-      - "**/*.yaml"
-      - "**/*.sql"
-      - "**/Makefile"
+    paths: ["**/*.py", "**/*.yml", "**/*.yaml", "**/*.sql", "**/Makefile"]
   push:
     branches: [main]
-    paths:
-      - "**/*.py"
-      - "**/*.yml"
-      - "**/*.yaml"
-      - "**/*.sql"
-      - "**/Makefile"
+    paths: ["**/*.py", "**/*.yml", "**/*.yaml", "**/*.sql", "**/Makefile"]
 
 jobs:
   validate-config:
@@ -31,18 +21,16 @@ jobs:
           pip install git+https://github.com/dataciviclab/toolkit.git
           pip install duckdb mcp pytest pytest-timeout
 
-      - name: Validate all dataset configs parse correctly
+      - name: Validate all dataset configs
         run: |
           for cfg in $(find . -path '*/anagrafica/*' -name dataset.yml | sort); do
             echo "→ $cfg"
-            python3 -m toolkit.cli.app inspect paths --config "$cfg" --year 2026 > /dev/null 2>&1
-          done
-          for cfg in $(find . \( -path '*/occupazione/*' -o -path '*/assenze/*' \
-            -o -path '*/retribuzioni/*' -o -path '*/personale/*' \
-            -o -path '*/flessibili/*' -o -path '*/contrattazione/*' \
-            -o -path '*/passaggi/*' -o -path '*/distribuzione/*' \
-            \) -name dataset.yml | sort); do
-            echo "→ $cfg"
             python3 -m toolkit.cli.app inspect paths --config "$cfg" --year 2024 > /dev/null 2>&1
+          done
+          for d in assenze composizione-retribuzione costo-lavoro personale anzianita \
+                   titoli-studio comandati contrattazione flessibili passaggi distribuzione \
+                   retribuzione-media modalita-flessibile; do
+            echo "→ $d/dataset.yml"
+            python3 -m toolkit.cli.app inspect paths --config "$d/dataset.yml" --year 2024 > /dev/null 2>&1
           done
           echo "✅ All configs valid"

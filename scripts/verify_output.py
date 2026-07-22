@@ -1,32 +1,33 @@
 #!/usr/bin/env python3
-"""
-Gate di qualità per open-conto-annuale.
-
-Verifica che ogni dataset dati produca output validi: clean esistente,
-join riusciti, soglie minime righe, mart presenti.
-
-Usage:
-  python3 scripts/verify_output.py --dataset occupazione --year 2024
-  python3 scripts/verify_output.py --all --year 2024
-"""
+"""Gate di qualità per open-conto-annuale."""
 from __future__ import annotations
-
-import argparse
-import json
-import os
-import sys
+import argparse, json, os, sys
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 OUT = os.path.join(ROOT, "out", "data")
 
+DATASET_MARTS = {
+    "assenze": ["assenze_comparti"],
+    "composizione-retribuzione": ["retribuzioni_comparti", "retribuzioni_entrate"],
+    "costo-lavoro": ["costo_lavoro_comparti"],
+    "personale": ["personale_eta_comparti"],
+    "anzianita": ["anzianita_comparti"],
+    "titoli-studio": ["titoli_studio_comparti"],
+    "comandati": ["comandati_comparti"],
+    "contrattazione": ["contrattazione_comparti"],
+    "flessibili": ["flessibili_comparti"],
+    "passaggi": ["passaggi_comparti"],
+    "distribuzione": ["distribuzione_comparti"],
+    "retribuzione-media": ["retribuzione_media_comparti"],
+    "modalita-flessibile": ["modalita_flessibile_comparti"],
+}
 
 def check_clean(dataset: str, year: int) -> list[str]:
     errors = []
-    path = os.path.join(OUT, "clean", dataset, str(year), f"{dataset}_{year}_clean.parquet")
+    path = os.path.join(OUT, "clean", dataset, str(year), f"{dataset.replace('-','_')}_{year}_clean.parquet")
     if not os.path.isfile(path):
         errors.append(f"MISSING clean: {path}")
         return errors
-
     import duckdb
     con = duckdb.connect()
     try:
@@ -41,11 +42,10 @@ def check_clean(dataset: str, year: int) -> list[str]:
         con.close()
     return errors
 
-
 def check_mart(dataset: str, year: int, tables: list[str]) -> list[str]:
     errors = []
     for t in tables:
-        path = os.path.join(OUT, "mart", dataset, str(year), f"{t}.parquet")
+        path = os.path.join(OUT, "mart", dataset.replace('-','_'), str(year), f"{t}.parquet")
         if not os.path.isfile(path):
             errors.append(f"MISSING mart: {path}")
             continue
@@ -60,31 +60,20 @@ def check_mart(dataset: str, year: int, tables: list[str]) -> list[str]:
             con.close()
     return errors
 
-
 def main():
-    parser = argparse.ArgumentParser(description="Verifica output pipeline conto annuale")
-    parser.add_argument("--dataset", help="Dataset slug (es. assenze)")
-    parser.add_argument("--year", type=int, default=2024, help="Anno da verificare")
-    parser.add_argument("--all", action="store_true", help="Verifica tutti i dataset")
-    parser.add_argument("--ci", action="store_true", help="Modalità CI: exit 1 su errori")
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--dataset", help="Dataset slug")
+    parser.add_argument("--year", type=int, default=2024)
+    parser.add_argument("--all", action="store_true")
+    parser.add_argument("--ci", action="store_true")
     args = parser.parse_args()
-
-    # Config dataset → mart attesi
-    DATASET_MARTS = {
-        "assenze": ["assenze_comparti", "assenze_causali"],
-        "retribuzioni": ["retribuzioni_comparti"],
-        "personale": ["personale_eta", "personale_anzianita"],
-        "occupazione": ["occupazione_comparti"],
-        "flessibili": ["flessibili_comparti"],
-    }
 
     if args.all:
         datasets = list(DATASET_MARTS.keys())
     elif args.dataset:
         datasets = [args.dataset]
     else:
-        print("Specifica --dataset o --all")
-        sys.exit(1)
+        print("Specifica --dataset o --all"); sys.exit(1)
 
     all_errors = []
     for ds in datasets:
@@ -102,7 +91,6 @@ def main():
             sys.exit(1)
     else:
         print(f"\n✅ Tutti i check passati per {', '.join(datasets)} ({args.year})")
-
 
 if __name__ == "__main__":
     main()
