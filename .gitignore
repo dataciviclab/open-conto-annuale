@@ -1,7 +1,8 @@
+_local/
+# anagrafica/_data/ NOT gitignored — le anagrafiche sono parte del repo
+*Tutto.zip
 out/
 .tmp/
 .venv/
 __pycache__/
 .pytest_cache/
-_local/seed/dati/
-2024Tutto.zip

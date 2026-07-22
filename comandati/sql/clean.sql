@@ -11,7 +11,7 @@ with raw_data as (
         normalize_italian_number(fuori_ruolo_donne) as fuori_ruolo_d
     from raw_input
 )
-select 2024 as anno,
+select {year} as anno,
     rd.cod_ente as istituzione, rd.cod_contratto as contratto,
     rd.cod_categoria as categoria, rd.cod_qualifica as qualifica,
     rd.comand_dist_u, rd.comand_dist_d, rd.fuori_ruolo_u, rd.fuori_ruolo_d,

@@ -10,7 +10,7 @@ with raw_data as (
     from raw_input
 )
 select
-    2024 as anno,
+    {year} as anno,
     rd.cod_ente as istituzione,
     rd.cod_contratto as contratto,
     rd.cod_categoria as categoria,

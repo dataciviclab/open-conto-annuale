@@ -11,7 +11,7 @@ with raw_data as (
         normalize_italian_number(altre_accessorie) as altre_accessorie
     from raw_input
 )
-select 2024 as anno, rd.cod_ente as istituzione, rd.cod_contratto as contratto,
+select {year} as anno, rd.cod_ente as istituzione, rd.cod_contratto as contratto,
     rd.cod_categoria as categoria, rd.stipendio, rd.ria, rd.tredicesima,
     rd.straordinario, rd.indennita_fisse, rd.altre_accessorie,
     e.codi_tipo_istituzione, e.codi_istituzione, e.desc_istituzione,

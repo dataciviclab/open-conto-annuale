@@ -14,7 +14,7 @@ with raw_data as (
         normalize_italian_number(lavoro_socialmente_utile_donne) as lsu_d
     from raw_input
 )
-select 2024 as anno,
+select {year} as anno,
     rd.cod_ente as istituzione, rd.cod_contratto as contratto,
     rd.cod_macrocategoria as macrocategoria, rd.cod_categoria as categoria,
     rd.td_u, rd.td_d, rd.fl_u, rd.fl_d, rd.int_u, rd.int_d, rd.lsu_u, rd.lsu_d,

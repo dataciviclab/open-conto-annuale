@@ -9,7 +9,7 @@ raw:
     - name: "seed_csv"
       type: "local_file"
       args:
-        path: "../../_local/seed/Natura_Fondo.CSV"
+        path: "../../anagrafica/_data/Natura_Fondo.CSV"
       primary: true
 clean:
   sql: "sql/clean.sql"

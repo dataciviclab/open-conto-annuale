@@ -10,7 +10,7 @@ raw:
     - name: "anagrafica_qualifiche_csv"
       type: "local_file"
       args:
-        path: "../../_local/seed/ContrattoMacroCCategQualif.CSV"
+        path: "../../anagrafica/_data/ContrattoMacroCCategQualif.CSV"
       primary: true
 
 clean:

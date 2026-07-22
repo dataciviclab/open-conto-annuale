@@ -10,7 +10,7 @@ raw:
     - name: "anagrafica_voci_csv"
       type: "local_file"
       args:
-        path: "../../_local/seed/VoceSpesa.CSV"
+        path: "../../anagrafica/_data/VoceSpesa.CSV"
       primary: true
 
 clean:

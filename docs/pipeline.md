@@ -12,7 +12,7 @@ Ogni dataset (assenze, retribuzioni, personale, ...) ha un proprio `dataset.yml`
 che descrive l'intera trasformazione RAW → CLEAN → MART. I CSV vengono estratti
 dallo ZIP annuale (`{year}Tutto.zip`) scaricato dal sito del Conto Annuale RGS.
 
-Le anagrafiche sono `support dataset` condivisi tra tutti i dataset dati,
+Le 9 anagrafiche sono `support dataset` condivisi tra tutti i dataset dati,
 eseguiti prima di questi ultimi.
 
 ## Setup iniziale
@@ -77,6 +77,9 @@ I target `run-*` includono automaticamente `extract-dati` come dipendenza.
 | anag-voci-spesa | VoceSpesa | CODI_TIPO_VOCE_SPESA, CODI_VOCE_SPESA (con chiave composita) | 179 |
 | anag-causali | Causali | CODICE_CAUSALE | 30 |
 | anag-territorio | RegioneProvinciaCatasto | CODI_CATASTALE, CODI_PROVINCIA, CODI_REGIONE (+ mapping ISTAT) | 7.902 |
+| anag-titoli-studio | Titoli_Studio | CODI_TITOLO | 7 |
+| anag-voci-fua | Voci_Spesa_FUA | CODI_CONTRATTO, CODI_VOCE_SPESA | 1.486 |
+| anag-fondi | Natura_Fondo | CODI_FONDO, CODI_NATURA | 305 |
 
 ## Output
 

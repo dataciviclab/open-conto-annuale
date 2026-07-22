@@ -10,7 +10,7 @@ raw:
     - name: "anagrafica_causali_csv"
       type: "local_file"
       args:
-        path: "../../_local/seed/Causali.CSV"
+        path: "../../anagrafica/_data/Causali.CSV"
       primary: true
 
 clean:

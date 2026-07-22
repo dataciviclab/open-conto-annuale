@@ -10,7 +10,7 @@ with raw_data as (
         normalize_italian_number(importo) as importo
     from raw_input
 )
-select 2024 as anno,
+select {year} as anno,
     rd.cod_ente as istituzione, rd.cod_contratto as contratto,
     rd.cod_macrocategoria as macrocategoria,
     rd.cod_tipo_voce_spesa as tipo_voce_spesa, rd.cod_natura as natura,

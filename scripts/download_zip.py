@@ -19,7 +19,7 @@ BASE = "https://contoannuale.rgs.mef.gov.it/ext/CSV/"
 def main():
     year = sys.argv[1] if len(sys.argv) > 1 else "2024"
     tipologia = sys.argv[2] if len(sys.argv) > 2 else "Tutto.zip"
-    zippath = REPO / f"{year}Tutto.zip"
+    zippath = REPO / f"{year}{tipologia}"
 
     if zippath.exists():
         print(f"✅ {zippath.name} già presente ({zippath.stat().st_size // 1024 // 1024} MB)")

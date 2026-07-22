@@ -14,7 +14,7 @@ with raw_data as (
         normalize_italian_number(soggetti_turnazione_donne) as turn_d
     from raw_input
 )
-select 2024 as anno, rd.cod_ente as istituzione, rd.cod_contratto as contratto,
+select {year} as anno, rd.cod_ente as istituzione, rd.cod_contratto as contratto,
     rd.cod_macrocategoria as macrocategoria, rd.cod_categoria as categoria,
     rd.tl_u, rd.tl_d, rd.agile_u, rd.agile_d, rd.cowork_u, rd.cowork_d, rd.turn_u, rd.turn_d,
     e.codi_tipo_istituzione, e.codi_istituzione, e.desc_istituzione,

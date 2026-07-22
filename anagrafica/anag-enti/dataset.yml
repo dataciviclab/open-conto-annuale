@@ -11,7 +11,7 @@ raw:
     - name: "seed_csv"
       type: "local_file"
       args:
-        path: "../../_local/seed/TipoIstituzione_Istituzione.CSV"
+        path: "../../anagrafica/_data/TipoIstituzione_Istituzione.CSV"
       primary: true
 
 clean:

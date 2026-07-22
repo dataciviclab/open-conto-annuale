@@ -10,7 +10,7 @@ raw:
     - name: "anagrafica_comparti_csv"
       type: "local_file"
       args:
-        path: "../../_local/seed/CompartoContratto.CSV"
+        path: "../../anagrafica/_data/CompartoContratto.CSV"
       primary: true
 
 clean:

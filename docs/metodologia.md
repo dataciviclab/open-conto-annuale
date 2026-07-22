@@ -28,7 +28,7 @@ con tutti i microdati in formato CSV per l'anno selezionato.
 Il repository contiene:
 
 - `{year}Tutto.zip` — file ZIP annuale con tutti i CSV (dati + anagrafiche)
-- `_local/seed/` — anagrafiche in formato CSV (in git, ~1.6 MB)
+- `anagrafica/_data/` — anagrafiche in formato CSV (in git, ~1.6 MB)
 - `_local/seed/dati/` — dati estratti dallo ZIP (gitignorati, rigenerabili via `make extract-dati`)
 - `out/data/` — output della pipeline (gitignorato)
 
@@ -95,7 +95,11 @@ automaticamente in ogni clean.sql.
 
 La pipeline usa il toolkit DataCivicLab con:
 
-- **Source**: `local_file` → punta ai CSV in `_local/seed/`
+- **Source**: `local_file` → punta ai CSV in `anagrafica/_data/` (seed) o `_local/seed/dati/{year}/` (dati)
 - **Clean SQL**: normalizza con macro standard (`normalize_string`, `normalize_italian_number`)
   e join con support dataset via `read_parquet('{support.enti.mart}')`
+- **Anno dinamico**: `{year} as anno` nei clean.sql — il toolkit sostituisce `{year}` con l'anno in elaborazione
+- **Support fissi**: le anagrafiche hanno `years: [2024]` e vengono usate per tutti gli anni del dataset.
+  Le descrizioni (comparti, qualifiche, voci) sono quelle del 2024, scelta intenzionale per
+  garantire stabilità classificatoria nelle analisi longitudinali.
 - **Mart SQL**: aggregazione per comparto con `clean_input`
