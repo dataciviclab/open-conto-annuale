@@ -90,7 +90,7 @@ smoke: smoke-seeds
 check:
 	@for f in $$(find . -path '*/anagrafica/*' -name dataset.yml | sort); do \
 		echo "→ $$f"; \
-		$(TOOLKIT) inspect paths --config "$$f" --year 2026 > /dev/null 2>&1 || exit 1; \
+		$(TOOLKIT) inspect paths --config "$$f" --year 2024 > /dev/null 2>&1 || exit 1; \
 	done
 	@for d in $(DATASETS); do \
 		echo "→ $$d/dataset.yml"; \
