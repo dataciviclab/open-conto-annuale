@@ -1,30 +1,25 @@
 #!/usr/bin/env python3
-"""Gate di qualità per open-conto-annuale."""
+"""Gate di qualità per open-conto-annuale. Supporta multi-anno."""
 from __future__ import annotations
-import argparse, json, os, sys
+import argparse, os, sys
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 OUT = os.path.join(ROOT, "out", "data")
 
-DATASET_MARTS = {
-    "assenze": ["assenze_comparti"],
-    "composizione-retribuzione": ["retribuzioni_comparti", "retribuzioni_entrate"],
-    "costo-lavoro": ["costo_lavoro_comparti"],
-    "personale": ["personale_eta_comparti"],
-    "anzianita": ["anzianita_comparti"],
-    "titoli-studio": ["titoli_studio_comparti"],
-    "comandati": ["comandati_comparti"],
-    "contrattazione": ["contrattazione_comparti"],
-    "flessibili": ["flessibili_comparti"],
-    "passaggi": ["passaggi_comparti"],
-    "distribuzione": ["distribuzione_comparti"],
-    "retribuzione-media": ["retribuzione_media_comparti"],
-    "modalita-flessibile": ["modalita_flessibile_comparti"],
-}
+DATASETS = [
+    "assenze", "composizione-retribuzione", "costo-lavoro", "personale",
+    "anzianita", "titoli-studio", "comandati", "contrattazione", "flessibili",
+    "passaggi", "distribuzione", "retribuzione-media", "modalita-flessibile",
+]
 
-def check_clean(dataset: str, year: int) -> list[str]:
+# Per ogni dataset: nome del dataset_mart (nel path usa underscore)
+def mart_dir(dataset):
+    return dataset.replace("-", "_")
+
+def check_clean(dataset: str, year: int):
     errors = []
-    path = os.path.join(OUT, "clean", dataset, str(year), f"{dataset.replace('-','_')}_{year}_clean.parquet")
+    clean_name = f"{mart_dir(dataset)}_{year}_clean.parquet"
+    path = os.path.join(OUT, "clean", mart_dir(dataset), str(year), clean_name)
     if not os.path.isfile(path):
         errors.append(f"MISSING clean: {path}")
         return errors
@@ -35,41 +30,43 @@ def check_clean(dataset: str, year: int) -> list[str]:
         if row_count < 100:
             errors.append(f"CLEAN {dataset}/{year}: solo {row_count} righe (min 100)")
         else:
-            print(f"  ✅ clean {dataset}/{year}: {row_count:,} righe")
+            print(f"  ✅ clean {dataset}/{year}: {row_count:>8,} righe")
     except Exception as e:
-        errors.append(f"CLEAN {dataset}/{year}: errore lettura: {e}")
+        errors.append(f"CLEAN {dataset}/{year}: errore: {e}")
     finally:
         con.close()
     return errors
 
-def check_mart(dataset: str, year: int, tables: list[str]) -> list[str]:
+def check_mart(dataset: str, year: int):
     errors = []
-    for t in tables:
-        path = os.path.join(OUT, "mart", dataset.replace('-','_'), str(year), f"{t}.parquet")
-        if not os.path.isfile(path):
-            errors.append(f"MISSING mart: {path}")
+    dirpath = os.path.join(OUT, "mart", mart_dir(dataset), str(year))
+    if not os.path.isdir(dirpath):
+        errors.append(f"MISSING mart dir: {dirpath}")
+        return errors
+    import duckdb
+    con = duckdb.connect()
+    for f in os.listdir(dirpath):
+        if not f.endswith(".parquet"):
             continue
-        import duckdb
-        con = duckdb.connect()
+        path = os.path.join(dirpath, f)
         try:
             row_count = con.execute(f"SELECT count(*) FROM '{path}'").fetchone()[0]
-            print(f"  ✅ mart {t}/{year}: {row_count:,} righe")
+            print(f"  ✅ mart {f}/{year}: {row_count:>8,} righe")
         except Exception as e:
-            errors.append(f"MART {t}/{year}: errore lettura: {e}")
-        finally:
-            con.close()
+            errors.append(f"MART {f}/{year}: errore: {e}")
+    con.close()
     return errors
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--dataset", help="Dataset slug")
+    parser.add_argument("--dataset")
     parser.add_argument("--year", type=int, default=2024)
     parser.add_argument("--all", action="store_true")
     parser.add_argument("--ci", action="store_true")
     args = parser.parse_args()
 
     if args.all:
-        datasets = list(DATASET_MARTS.keys())
+        datasets = DATASETS
     elif args.dataset:
         datasets = [args.dataset]
     else:
@@ -79,9 +76,7 @@ def main():
     for ds in datasets:
         print(f"\n📊 {ds} ({args.year}):")
         all_errors += check_clean(ds, args.year)
-        marts = DATASET_MARTS.get(ds, [])
-        if marts:
-            all_errors += check_mart(ds, args.year, marts)
+        all_errors += check_mart(ds, args.year)
 
     if all_errors:
         print(f"\n❌ {len(all_errors)} errori:")
@@ -90,7 +85,7 @@ def main():
         if args.ci:
             sys.exit(1)
     else:
-        print(f"\n✅ Tutti i check passati per {', '.join(datasets)} ({args.year})")
+        print(f"\n✅ Tutti i check passati ({len(datasets)} dataset, {args.year})")
 
 if __name__ == "__main__":
     main()
