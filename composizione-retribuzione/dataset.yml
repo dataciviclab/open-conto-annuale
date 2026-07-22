@@ -1,0 +1,59 @@
+root: "../out"
+schema_version: 1
+
+dataset:
+  name: "composizione_retribuzione"
+  source_id: "openbdap"
+  years: [2024]
+
+raw:
+  output_policy: overwrite
+  sources:
+    - name: "composizione_retribuzione_csv"
+      type: "local_file"
+      args:
+        path: "../_local/seed/dati/COMPOSIZIONE_RETRIBUZIONE_2024.CSV"
+      primary: true
+
+clean:
+  sql: "sql/clean.sql"
+  read:
+    mode: latest
+    header: true
+    delim: ";"
+    encoding: "utf-8"
+  validate:
+    min_rows: 1000
+
+mart:
+  tables:
+    - name: "retribuzioni_comparti"
+      sql: "sql/mart_comparti.sql"
+    - name: "retribuzioni_entrate"
+      sql: "sql/mart_voci_spesa.sql"
+  required_tables:
+    - "retribuzioni_comparti"
+    - "retribuzioni_entrate"
+  validate:
+    table_rules:
+      retribuzioni_comparti:
+        min_rows: 10
+      retribuzioni_entrate:
+        min_rows: 10
+
+validation:
+  fail_on_error: true
+
+support:
+  - name: "enti"
+    config: "../anagrafica/anag-enti/dataset.yml"
+    years: [2024]
+  - name: "comparti"
+    config: "../anagrafica/anag-comparti/dataset.yml"
+    years: [2024]
+  - name: "qualifiche"
+    config: "../anagrafica/anag-qualifiche/dataset.yml"
+    years: [2024]
+  - name: "voci_spesa"
+    config: "../anagrafica/anag-voci-spesa/dataset.yml"
+    years: [2024]
