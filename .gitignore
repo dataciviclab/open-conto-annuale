@@ -4,3 +4,4 @@ out/
 __pycache__/
 .pytest_cache/
 _local/
+_local/seed/dati/

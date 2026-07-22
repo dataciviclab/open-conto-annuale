@@ -26,28 +26,28 @@ seeds:
 .PHONY: run-flessibili run-contrattazione run-passaggi run-distribuzione
 .PHONY: run-all
 
-run-occupazione:
+run-occupazione: extract-dati
 	$(TOOLKIT) run all --config occupazione/dataset.yml
 
-run-assenze:
+run-assenze: extract-dati
 	$(TOOLKIT) run all --config assenze/dataset.yml
 
-run-retribuzioni:
+run-retribuzioni: extract-dati
 	$(TOOLKIT) run all --config retribuzioni/dataset.yml
 
-run-personale:
+run-personale: extract-dati
 	$(TOOLKIT) run all --config personale/dataset.yml
 
-run-flessibili:
+run-flessibili: extract-dati
 	$(TOOLKIT) run all --config flessibili/dataset.yml
 
-run-contrattazione:
+run-contrattazione: extract-dati
 	$(TOOLKIT) run all --config contrattazione/dataset.yml
 
-run-passaggi:
+run-passaggi: extract-dati
 	$(TOOLKIT) run all --config passaggi/dataset.yml
 
-run-distribuzione:
+run-distribuzione: extract-dati
 	$(TOOLKIT) run all --config distribuzione/dataset.yml
 
 run-all: seeds run-occupazione run-assenze run-retribuzioni run-personale \
@@ -88,6 +88,20 @@ check:
 		$(TOOLKIT) inspect paths --config "$$f" --year 2024 > /dev/null 2>&1 || exit 1; \
 	done
 	@echo "✅ All configs valid"
+
+# --- Download ZIP annuale (una tantum) ---
+
+.PHONY: download
+download:
+	python3 scripts/download_zip.py
+
+# --- Estrazione dati dallo ZIP ---
+
+.PHONY: extract-dati
+extract-dati:
+	@test -f 2024Tutto.zip || { echo "❌ ZIP mancante: fai 'make download' o copia 2024Tutto.zip nella root del repo"; exit 1; }
+	unzip -j -o 2024Tutto.zip "2024Dati/*" -d _local/seed/dati/ 2>&1 | tail -1
+	@echo "✅ Dati estratti in _local/seed/dati/"
 
 # --- Pulizia ---
 
