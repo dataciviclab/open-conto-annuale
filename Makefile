@@ -31,17 +31,26 @@ DATASETS = \
 
 # --- Download ZIP annuale (una tantum) ---
 
+YEARS ?= 2024
+
 .PHONY: download
 download:
-	python3 scripts/download_zip.py
+	@for y in $(YEARS); do \
+		echo "=== Scarico $$y ==="; \
+		python3 scripts/download_zip.py $$y; \
+	done
 
 # --- Estrazione dati ---
 
 .PHONY: extract-dati
 extract-dati:
-	@test -f 2024Tutto.zip || { echo "❌ ZIP mancante: fai 'make download'"; exit 1; }
-	unzip -j -o 2024Tutto.zip "2024Dati/*" -d _local/seed/dati/ 2>&1 | tail -1
-	@echo "✅ Dati estratti in _local/seed/dati/"
+	@for y in $(YEARS); do \
+		zip="$$y""Tutto.zip"; \
+		test -f "$$zip" || { echo "❌ $$zip mancante: fai 'make download'"; exit 1; }; \
+		echo "=== Estrazione $$y ==="; \
+		unzip -j -o "$$zip" "$$y""Dati/*" -d "_local/seed/dati/$$y/" 2>&1 | tail -1; \
+	done
+	@echo "✅ Dati estratti in _local/seed/dati/{year}/"
 
 # --- Seeds ---
 

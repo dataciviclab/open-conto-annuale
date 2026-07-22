@@ -4,7 +4,7 @@ schema_version: 1
 dataset:
   name: 'distribuzione'
   source_id: "openbdap"
-  years: [2024]
+  years: [2020, 2021, 2022, 2023, 2024]
 
 raw:
   output_policy: overwrite
@@ -12,7 +12,7 @@ raw:
     - name: 'distribuzione_csv'
       type: "local_file"
       args:
-        path: '../_local/seed/dati/DISTRIBUZIONE_GEOGRAFICA_COMPARTO_2024.CSV'
+        path: '../_local/seed/dati/{year}/DISTRIBUZIONE_GEOGRAFICA_COMPARTO_{year}.CSV'
       primary: true
 
 clean:

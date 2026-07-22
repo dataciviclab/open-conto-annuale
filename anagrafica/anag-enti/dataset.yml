@@ -1,35 +1,29 @@
 root: "../../out"
 schema_version: 1
-
 dataset:
-  # Seed dell'anagrafica enti BDAP — estratta dal dump Conto Annuale.
-  # La versione 2024 è stabile; in futuro si potra' aggiornare annualmente.
   name: "ca_anag_enti_seed"
-  years: [2024]
-
+  years: [2020, 2021, 2022, 2023, 2024]
 raw:
+  output_policy: overwrite
   sources:
-    - name: "anagrafica_enti_csv"
+    - name: "seed_csv"
       type: "local_file"
       args:
-        path: "../../_local/seed/TipoIstituzione_Istituzione.CSV"
+        path: "../../_local/seed/TipoIstituzione_Istituzione_{year}.CSV"
       primary: true
-
 clean:
   sql: "sql/clean.sql"
   read:
-    mode: explicit
+    mode: latest
     header: true
     delim: ";"
     encoding: "utf-8"
   validate: {}
-
 mart:
   tables:
     - name: "ca_anag_enti_seed"
       sql: "sql/mart.sql"
   required_tables: ["ca_anag_enti_seed"]
   validate: {}
-
 validation:
   fail_on_error: true

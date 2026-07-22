@@ -4,7 +4,7 @@ schema_version: 1
 dataset:
   name: 'comandati'
   source_id: "openbdap"
-  years: [2024]
+  years: [2020, 2021, 2022, 2023, 2024]
 
 raw:
   output_policy: overwrite
@@ -12,7 +12,7 @@ raw:
     - name: 'comandati_csv'
       type: "local_file"
       args:
-        path: '../_local/seed/dati/COMANDATI_FUORI_RUOLO_ESONERI_2024.CSV'
+        path: '../_local/seed/dati/{year}/COMANDATI_FUORI_RUOLO_ESONERI_{year}.CSV'
       primary: true
 
 clean:
