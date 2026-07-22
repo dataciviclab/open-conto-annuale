@@ -1,0 +1,93 @@
+name: pipeline
+on:
+  schedule:
+    # Annuale: 1 giugno — i dati del Conto Annuale vengono pubblicati da RGS
+    # entro maggio dell'anno successivo.
+    - cron: "0 6 1 6 *"
+  workflow_dispatch:
+    inputs:
+      datasets:
+        description: "Dataset da eseguire (assenze,retribuzioni,personale,flessibili,contrattazione,passaggi,distribuzione,occupazione o all)"
+        default: "all"
+      years:
+        description: "Anni (es. 2024 o 2021,2022,2024 o all)"
+        default: "all"
+      smoke:
+        description: "Smoke mode (--sample-rows 1000, root isolato)"
+        default: false
+        type: boolean
+
+jobs:
+  conto-annuale-pipeline:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6.0.3
+      - uses: actions/setup-python@v6.2.0
+        with:
+          python-version: "3.12"
+
+      - name: Install toolkit
+        run: |
+          pip install git+https://github.com/dataciviclab/lab-connectors.git
+          pip install git+https://github.com/dataciviclab/toolkit.git
+
+      - name: Seeds anagrafici
+        run: |
+          if [ "${{ inputs.smoke }}" = "true" ]; then
+            for d in anagrafica/anag-enti anagrafica/anag-comparti anagrafica/anag-qualifiche anagrafica/anag-voci-spesa anagrafica/anag-causali anagrafica/anag-territorio anagrafica/anag-titoli-studio; do
+              python3 scripts/run_toolkit.py run all --config "$d/dataset.yml" --sample-rows 1000
+            done
+          else
+            make seeds
+          fi
+
+      - name: Run datasets
+        run: |
+          FLAG="${{ inputs.smoke && '--sample-rows 1000' || '' }}"
+          DS_INPUT="${{ inputs.datasets || 'all' }}"
+          YEARS_INPUT="${{ inputs.years || 'all' }}"
+          if [ "$YEARS_INPUT" = "all" ]; then YEARS="2024"
+          else YEARS=$(echo "$YEARS_INPUT" | tr ',' ' '); fi
+
+          if [ "$DS_INPUT" = "all" ]; then DATASETS="assenze retribuzioni personale flessibili contrattazione passaggi distribuzione occupazione"
+          else DATASETS=$(echo "$DS_INPUT" | tr ',' ' '); fi
+
+          for ds in $DATASETS; do
+            for y in $YEARS; do
+              echo "=== $ds $y $FLAG ==="
+              python3 scripts/run_toolkit.py run all --config "${ds}/dataset.yml" --year "$y" $FLAG
+            done
+          done
+
+      - name: Verify output (gate)
+        if: ${{ !inputs.smoke }}
+        run: |
+          python3 scripts/verify_output.py --all --year 2024
+
+      - name: Auth GCP e sync a GCS
+        if: ${{ !inputs.smoke }}
+        env:
+          GCP_SA_KEY: ${{ secrets.GCP_SA_KEY }}
+        run: |
+          if [ -z "$GCP_SA_KEY" ]; then
+            echo "GCP_SA_KEY non configurata — salto GCS sync"
+            exit 0
+          fi
+          if echo "$GCP_SA_KEY" | python3 -c "import json,sys; json.load(sys.stdin)" 2>/dev/null; then
+            printf '%s\n' "$GCP_SA_KEY" > /tmp/gcp-key.json
+          else
+            printf '%s\n' "$GCP_SA_KEY" | base64 -d > /tmp/gcp-key.json 2>/dev/null
+          fi
+          gcloud auth activate-service-account --key-file=/tmp/gcp-key.json
+          gsutil -m rsync -r out/data/mart/ gs://dataciviclab-mart/conto-annuale/
+          echo "✅ Synced to gs://dataciviclab-mart/conto-annuale/"
+          gsutil -m rsync -r out/data/clean/ gs://dataciviclab-clean/conto-annuale/
+          echo "✅ Clean synced to gs://dataciviclab-clean/conto-annuale/"
+
+      - name: Upload mart artifacts
+        uses: actions/upload-artifact@v7.0.1
+        with:
+          name: conto-annuale-mart${{ inputs.smoke && '-smoke' || '' }}
+          path: ${{ inputs.smoke && 'out/smoke/data/mart/' || 'out/data/mart/' }}
+          compression-level: 0
+          if-no-files-found: warn

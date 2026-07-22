@@ -1,0 +1,54 @@
+root: "../out"
+schema_version: 1
+
+dataset:
+  name: "assenze"
+  source_id: "openbdap"
+  years: [2024]
+
+raw:
+  output_policy: overwrite
+  sources:
+    - name: "assenze_csv"
+      type: "local_file"
+      args:
+        path: "../_local/seed/dati/ASSENZE_2024.CSV"
+      primary: true
+
+clean:
+  sql: "sql/clean.sql"
+  read:
+    mode: latest
+    header: true
+    delim: ";"
+    encoding: "utf-8"
+  validate:
+    min_rows: 1000
+
+mart:
+  tables:
+    - name: "assenze_comparti"
+      sql: "sql/mart_comparti.sql"
+  required_tables:
+    - "assenze_comparti"
+  validate:
+    table_rules:
+      assenze_comparti:
+        min_rows: 10
+
+validation:
+  fail_on_error: true
+
+support:
+  - name: "enti"
+    config: "../anagrafica/anag-enti/dataset.yml"
+    years: [2024]
+  - name: "comparti"
+    config: "../anagrafica/anag-comparti/dataset.yml"
+    years: [2024]
+  - name: "qualifiche"
+    config: "../anagrafica/anag-qualifiche/dataset.yml"
+    years: [2024]
+  - name: "causali"
+    config: "../anagrafica/anag-causali/dataset.yml"
+    years: [2024]

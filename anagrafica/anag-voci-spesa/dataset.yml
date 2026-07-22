@@ -1,0 +1,33 @@
+root: "../../out"
+schema_version: 1
+
+dataset:
+  name: "ca_anag_voci_spesa_seed"
+  years: [2024]
+
+raw:
+  sources:
+    - name: "anagrafica_voci_csv"
+      type: "local_file"
+      args:
+        path: "../../_local/seed/VoceSpesa.CSV"
+      primary: true
+
+clean:
+  sql: "sql/clean.sql"
+  read:
+    mode: explicit
+    header: true
+    delim: ";"
+    encoding: "utf-8"
+  validate: {}
+
+mart:
+  tables:
+    - name: "ca_anag_voci_spesa_seed"
+      sql: "sql/mart.sql"
+  required_tables: ["ca_anag_voci_spesa_seed"]
+  validate: {}
+
+validation:
+  fail_on_error: true

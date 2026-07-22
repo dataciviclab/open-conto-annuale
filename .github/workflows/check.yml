@@ -1,0 +1,48 @@
+name: check
+on:
+  pull_request:
+    paths:
+      - "**/*.py"
+      - "**/*.yml"
+      - "**/*.yaml"
+      - "**/*.sql"
+      - "**/Makefile"
+  push:
+    branches: [main]
+    paths:
+      - "**/*.py"
+      - "**/*.yml"
+      - "**/*.yaml"
+      - "**/*.sql"
+      - "**/Makefile"
+
+jobs:
+  validate-config:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6.0.3
+      - uses: actions/setup-python@v6.2.0
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: |
+          pip install git+https://github.com/dataciviclab/lab-connectors.git
+          pip install git+https://github.com/dataciviclab/toolkit.git
+          pip install duckdb mcp pytest pytest-timeout
+
+      - name: Validate all dataset configs parse correctly
+        run: |
+          for cfg in $(find . -path '*/anagrafica/*' -name dataset.yml | sort); do
+            echo "→ $cfg"
+            python3 -m toolkit.cli.app inspect paths --config "$cfg" --year 2026 > /dev/null 2>&1
+          done
+          for cfg in $(find . \( -path '*/occupazione/*' -o -path '*/assenze/*' \
+            -o -path '*/retribuzioni/*' -o -path '*/personale/*' \
+            -o -path '*/flessibili/*' -o -path '*/contrattazione/*' \
+            -o -path '*/passaggi/*' -o -path '*/distribuzione/*' \
+            \) -name dataset.yml | sort); do
+            echo "→ $cfg"
+            python3 -m toolkit.cli.app inspect paths --config "$cfg" --year 2024 > /dev/null 2>&1
+          done
+          echo "✅ All configs valid"
