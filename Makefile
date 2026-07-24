@@ -49,7 +49,7 @@ extract-dati:
 		test -f "$$zip" || { echo "❌ $$zip mancante: fai 'make download'"; exit 1; }; \
 		echo "=== Estrazione $$y ==="; \
 		mkdir -p "_local/seed/dati/$$y"; \
-		unzip -j -o "$$zip" "$$y""Dati/*" -d "_local/seed/dati/$$y/" 2>&1 | tail -1; \
+		unzip -j -o "$$zip" "*$${y}Dati/*" -d "_local/seed/dati/$$y/" 2>&1 | tail -1; \
 	done
 	@echo "✅ Dati estratti in _local/seed/dati/{year}/"
 

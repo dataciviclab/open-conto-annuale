@@ -40,7 +40,7 @@ jobs:
           else YEARS=$(echo "${{ inputs.years }}" | tr ',' ' '); fi
           for y in $YEARS; do
             mkdir -p "_local/seed/dati/${y}"
-            unzip -j -o "${y}Tutto.zip" "${y}Dati/*" -d "_local/seed/dati/${y}/"
+            unzip -j -o "${y}Tutto.zip" "*${y}Dati/*" -d "_local/seed/dati/${y}/" 2>&1 | tail -1
           done
 
       - name: Seeds

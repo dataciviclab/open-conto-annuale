@@ -3,7 +3,8 @@ schema_version: 1
 dataset:
   name: "modalita_flessibile"
   source_id: "openbdap"
-  years: [2020, 2021, 2022, 2023, 2024]
+  # 2020 escluso: colonne lavoro agile/coworking assenti (non rilevate quell'anno)
+  years: [2021, 2022, 2023, 2024]
 raw:
   output_policy: overwrite
   sources:
