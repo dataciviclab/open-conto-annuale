@@ -27,7 +27,9 @@ DATASETS = \
 	passaggi \
 	distribuzione \
 	retribuzione-media \
-	modalita-flessibile
+	modalita-flessibile \
+	occupazione \n	occupazione
+	oCCUPAZIONE \
 
 # --- Download ZIP annuale (una tantum) ---
 

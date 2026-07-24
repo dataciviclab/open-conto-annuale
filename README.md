@@ -33,7 +33,8 @@ amministrazioni italiane.
 | **passaggi** | Passaggi di qualifica | 17.131 |
 | **flessibili** | Lavoro tempo determinato, interinale, LSU | 11.306 |
 | **modalita-flessibile** | Telelavoro, lavoro agile, coworking | 8.169 |
-| **TOTALE** | | **~1,8M** |
+| **occupazione** | Dipendenti per ente, contratto, categoria, qualifica | 52.914 |
+| **TOTALE** | | **~1,85M** |
 
 ## 🚀 Come eseguire
 
