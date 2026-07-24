@@ -61,7 +61,7 @@ jobs:
                     titoli-studio comandati contrattazione flessibili passaggi distribuzione \
                     retribuzione-media modalita-flessibile occupazione; do
             for y in $YEARS; do
-              grep -q "$y" "${ds}/dataset.yml" && echo "=== $ds $y ===" || { echo "  $ds salta $y (non configurato)"; continue; }
+              python3 -c "import yaml; y=yaml.safe_load(open('${ds}/dataset.yml')); exit(0 if $y in y['dataset']['years'] else 1)" && echo "=== $ds $y ===" || { echo "  ⏭️ $ds salta $y (non configurato)"; continue; }
               python3 scripts/run_toolkit.py run all --config "${ds}/dataset.yml" --year "$y" $SMOKE
             done
           done
