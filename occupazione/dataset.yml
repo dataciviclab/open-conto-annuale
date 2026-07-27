@@ -4,8 +4,8 @@ schema_version: 1
 dataset:
   name: "occupazione"
   source_id: "openbdap"
-  # 2020 escluso: colonna tempo pieno donne ha typo (PIEDO vs PIENO) nel CSV originale
-  years: [2021, 2022, 2023, 2024]
+  # 2020 incluso: colonna PIEDO fixata via sed in extract-dati (Makefile) e CI (pipeline.yml)
+  years: [2020, 2021, 2022, 2023, 2024]
 
 raw:
   output_policy: overwrite
