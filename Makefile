@@ -54,7 +54,6 @@ extract-dati:
 		unzip -j -o "$$zip" "*$${y}Dati/*" -d "_local/seed/dati/$$y/" 2>&1 | tail -1; \
 		if [ "$$y" = "2020" ]; then \
 			sed -i 's/PERSONALE_TEMPO_PIEDO_DONNE/PERSONALE_TEMPO_PIENO_DONNE/' "_local/seed/dati/2020/OCCUPAZIONE_2020.CSV"; \
-			echo "  ⚙️  Fix 2020: PIEDO -> PIENO"; \
 		fi \
 	done
 	@echo "✅ Dati estratti in _local/seed/dati/{year}/"
