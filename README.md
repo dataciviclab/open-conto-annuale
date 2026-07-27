@@ -1,93 +1,75 @@
 # open-conto-annuale — Il personale della PA italiana, aperto e interrogabile
 
-> **Quante persone lavorano nella PA? Quanto costano? Quali retribuzioni? Assenze, età, titoli di studio.**
+**1,8 milioni di microdati su chi lavora nel pubblico: ente per ente, anno per anno.**
 
-open-conto-annuale nasce dai dati del **Conto Annuale** della Ragioneria Generale dello Stato (MEF).
-Abbiamo pulito, normalizzato e reso pubblici i microdati sul personale di tutte le pubbliche
-amministrazioni italiane.
+Il Conto Annuale della Ragioneria Generale dello Stato (MEF) raccoglie i dati
+di tutto il personale delle pubbliche amministrazioni italiane. Li abbiamo
+puliti, normalizzati e resi pubblici.
 
-## 📦 I dati in breve
+## Cosa contiene
 
-| Cosa | Quanto |
+| | |
 |---|---|
-| **Enti coperti** | ~13.000 (comuni, ASL, università, regioni, ministeri, enti pubblici) |
-| **Periodo** | 2020 — 2024 (disponibili dal 2001) |
-| **Righe processate** | ~1,8 milioni (2024), multi-anno |
-| **Join con anagrafiche** | 100% su tutti i dataset |
-| **Anni** | 2020, 2021, 2022, 2023, 2024 |
+| **Enti coperti** | ~13.000 (comuni, ASL, università, regioni, ministeri) |
+| **Periodo** | 2020 — 2024 |
+| **Righe** | ~1,85 milioni (solo 2024), multi-anno |
+| **Costo del lavoro 2024** | €186 miliardi |
 
-### Dataset
+### Trend 2020-2024
 
-| Dataset | Cosa contiene | Righe 2024 |
+| Anno | Dipendenti | % Donne |
 |---|---|---|
-| **assenze** | Giorni di assenza per causale, genere | 196.647 |
-| **composizione-retribuzione** | Scomposizione stipendi per voce spesa | 550.897 |
-| **costo-lavoro** | Totale costo del lavoro per voce | 259.961 |
-| **personale** (età) | Fasce età per categoria e genere | 174.758 |
-| **anzianita** | Anzianità di servizio per fascia | 155.657 |
-| **contrattazione** | Spese contrattazione integrativa | 215.242 |
-| **titoli-studio** | Titoli di studio del personale | 91.943 |
-| **distribuzione** | Distribuzione geografica per regione | 62.765 |
-| **retribuzione-media** | Stipendi medi pro-capite per categoria | 33.619 |
-| **comandati** | Personale in comando, fuori ruolo, esonero | 16.263 |
-| **passaggi** | Passaggi di qualifica | 17.131 |
-| **flessibili** | Lavoro tempo determinato, interinale, LSU | 11.306 |
-| **modalita-flessibile** | Telelavoro, lavoro agile, coworking | 8.169 |
-| **occupazione** | Dipendenti per ente, contratto, categoria, qualifica | 52.914 |
-| **TOTALE** | | **~1,85M** |
+| 2020 | 3.243.499 | 58,8% |
+| 2021 | 3.240.397 | 59,1% |
+| 2022 | 3.271.447 | 59,4% |
+| 2023 | 3.327.854 | 59,8% |
+| 2024 | **3.388.794** | **60,2%** |
 
-## 🚀 Come eseguire
+### Dataset disponibili (14)
 
-```bash
-# Prerequisiti: Python 3.12+, toolkit installato
-pip install git+https://github.com/dataciviclab/toolkit.git
+assenze · composizione-retribuzione · costo-lavoro · personale (età) ·
+anzianità · contrattazione · titoli-studio · distribuzione geografica ·
+retribuzione-media · comandati · passaggi · flessibili ·
+modalità-flessibile · occupazione
 
-# Scarica lo ZIP annuale (13-21 MB l'uno)
-make download              # solo 2024
-make download YEARS="2020 2021 2022 2023 2024"  # tutti
+## Esempi di domande
 
-# Estrai i CSV
-make extract-dati          # solo 2024
-YEARS="2020 2021 2022 2023 2024" make extract-dati
+- **Quanti dipendenti pubblici ci sono nel tuo comune?** E quanto costano?
+- **Qual è lo stipendio medio per categoria?** Differenze tra nord e sud?
+- **Quante assenze per malattia ci sono state nel 2024?** E per genere?
+- **Quanti dirigenti under 40 ci sono nella PA?**
+- **Quanto è aumentato il costo del lavoro anno dopo anno?**
 
-# Processa anagrafiche + dati
-make seeds
-make run-all               # tutti i dataset, tutti gli anni
+## Tre modi per accedere ai dati
+
+### 1. Via MCP (clean-query)
+
+Il dataset è accessibile via SQL dal server MCP clean-query del Lab.
+
+### 2. Via DuckDB diretto
+
+```python
+import duckdb
+duckdb.sql("""
+    SELECT anno, SUM(dipendenti) AS totale
+    FROM read_parquet('gs://dataciviclab-clean/conto-annuale/*.parquet')
+    GROUP BY anno ORDER BY anno
+""").show()
 ```
 
-### Comandi disponibili
+### 3. Via download parquet
 
-| Comando | Cosa fa |
-|---|---|
-| `make download` | Scarica ZIP annuale dal sito RGS |
-| `make extract-dati` | Estrae CSV in `_local/seed/dati/{year}/` |
-| `make seeds` | Processa le 9 anagrafiche |
-| `make run-{dataset}` | Processa un dataset (es. `run-assenze`) |
-| `make run-all` | Processa tutti i 13 dataset |
-| `make check` | Valida sintassi di tutti i config |
-| `make verify` | Verifica output (soglie minime righe) |
-| `make smoke` | Smoke test (sample 1000 righe) |
-| `make clean` | Rimuove output |
+Bucket pubblico: `gs://dataciviclab-clean/conto-annuale/`
 
-## 📊 Trend 2020-2024 in pillole
+## Partecipa
 
-| Anno | Dipendenti | Δ anno | % Donne | Saldo ass/cas |
-|---|---|---|---|---|
-| 2020 | 3.243.499 | — | 58,8% | -30.170 |
-| 2021 | 3.240.397 | -3.102 | 59,1% | -8.578 |
-| 2022 | 3.271.447 | +31.050 | 59,4% | +7.313 |
-| 2023 | 3.327.854 | +56.407 | 59,8% | +55.966 |
-| 2024 | 3.388.794 | +60.940 | 60,2% | +42.584 |
+- **Hai una domanda su questi dati?** Apri una [Discussion](https://github.com/orgs/dataciviclab/discussions/new?category=Domanda)
+- **Vuoi contribuire?** Vedi [come contribuire al Lab](https://github.com/dataciviclab/dataciviclab/blob/main/docs/come-contribuire.md)
 
-**Costo del lavoro 2024**: €186 miliardi.
-
-## 📚 Documenti
+## Documenti tecnici
 
 - [Pipeline](docs/pipeline.md) — esecuzione, struttura, output
-- [Metodologia](docs/metodologia.md) — origini dati, classificazioni, trasformazioni
-- [Tracciati](docs/Tracciati.pdf) — specifiche ufficiali dei file CSV (fonte RGS)
+- [Metodologia](docs/metodologia.md) — origini dati, classificazioni
+- [Tracciati](docs/Tracciati.pdf) — specifiche ufficiali CSV (fonte RGS)
 
-## 🏛️ DataCivicLab
-
-open-conto-annuale è un progetto di [DataCivicLab](https://github.com/dataciviclab) —
-un laboratorio civico di dati aperti italiani.
+Questo progetto fa parte di [DataCivicLab](https://github.com/dataciviclab).
