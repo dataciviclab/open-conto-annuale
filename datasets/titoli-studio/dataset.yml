@@ -1,75 +1,130 @@
-root: "../../out"
+root: ../../out
 schema_version: 1
-
 dataset:
-  name: "titoli_studio"
-  source_id: "openbdap"
-  tags: [pa, conto-annuale, titoli-studio, dipendenti-pubblici]
+  name: titoli_studio
+  source_id: openbdap
+  tags:
+  - pa
+  - conto-annuale
+  - titoli-studio
+  - dipendenti-pubblici
   category: pa
-  description: "Titoli di studio del personale delle PA italiane (2020-2024), arricchiti con anagrafica enti, comparti e qualifiche."
-  years: [2020, 2021, 2022, 2023, 2024]
+  description: Titoli di studio del personale delle PA italiane (2020-2024), arricchiti
+    con anagrafica enti, comparti e qualifiche.
+  years:
+  - 2020
+  - 2021
+  - 2022
+  - 2023
+  - 2024
   time_coverage:
     start_year: 2020
     end_year: 2024
-
 raw:
   output_policy: overwrite
   sources:
-    - name: "titoli_csv"
-      type: "local_file"
-      args:
-        path: "../../_local/seed/dati/{year}/TITOLI_STUDIO_DATI_{year}.CSV"
-      primary: true
-
+  - name: titoli_csv
+    type: local_file
+    args:
+      path: ../../_local/seed/dati/{year}/TITOLI_STUDIO_DATI_{year}.CSV
+    primary: true
 clean:
-  sql: "sql/clean.sql"
+  sql: sql/clean.sql
   read:
     source: auto
     mode: latest
     header: true
-    delim: ";"
-    encoding: "utf-8"
+    delim: ;
+    encoding: utf-8
   required_columns:
-    - anno
-    - istituzione
-    - contratto
-    - categoria
-    - qualifica
-    - titolo_studio
-    - uomini
-    - donne
-    - codi_comparto
-    - desc_comparto
+  - anno
+  - istituzione
+  - contratto
+  - categoria
+  - qualifica
+  - titolo_studio
+  - uomini
+  - donne
+  - codi_comparto
+  - desc_comparto
   validate:
     min_rows: 1000
     not_null:
-      - anno
-      - istituzione
-      - titolo_studio
-
+    - anno
+    - istituzione
+    - titolo_studio
 mart:
   tables:
-    - name: "titoli_studio_comparti"
-      sql: "sql/mart.sql"
+  - name: titoli_studio_comparti
+    sql: sql/mart.sql
+  - name: mart_sintesi
+    sql: sql/mart_sintesi.sql
+  - name: mart_trend
+    sql: sql/mart_trend.sql
+    years:
+    - 2020
+    - 2021
+    - 2022
+    - 2023
+    - 2024
+    source_layer: clean
   required_tables:
-    - "titoli_studio_comparti"
+  - titoli_studio_comparti
+  - mart_sintesi
+  - mart_trend
   validate:
     table_rules:
       titoli_studio_comparti:
-        required_columns: [anno, codi_comparto, desc_comparto, titolo_studio, tot_uomini, tot_donne, enti]
-        primary_key: [anno, codi_comparto, titolo_studio]
+        required_columns:
+        - anno
+        - codi_comparto
+        - desc_comparto
+        - titolo_studio
+        - tot_uomini
+        - tot_donne
+        - enti
+        primary_key:
+        - anno
+        - codi_comparto
+        - titolo_studio
         min_rows: 10
-
+      mart_sintesi:
+        required_columns:
+        - tot_uomini
+        - tot_donne
+        - tot_dipendenti
+        - pct_donne
+        - enti
+        primary_key:
+        - anno
+        - codi_comparto
+        min_rows: 5
+      mart_trend:
+        required_columns:
+        - codi_comparto
+        - desc_comparto
+        - first_year
+        - last_year
+        - tot_dipendenti_first
+        - tot_dipendenti_last
+        - delta_tot_dipendenti
+        - variazione_pct
+        - cagr_pct
+        primary_key:
+        - codi_comparto
+        min_rows: 5
 validation:
   fail_on_error: true
-
 support:
-  - name: "enti"
-    config: "../../support/anag-enti/dataset.yml"
-    years: [2024]
-  - name: "comparti"
-    config: "../../support/anag-comparti/dataset.yml"
-    years: [2024]
-  - name: "qualifiche"
-    config: "../../support/anag-qualifiche/dataset.yml"
-    years: [2024]
+- name: enti
+  config: ../../support/anag-enti/dataset.yml
+  years:
+  - 2024
+- name: comparti
+  config: ../../support/anag-comparti/dataset.yml
+  years:
+  - 2024
+- name: qualifiche
+  config: ../../support/anag-qualifiche/dataset.yml
+  years:
+  - 2024

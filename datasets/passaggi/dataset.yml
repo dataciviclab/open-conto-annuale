@@ -1,76 +1,125 @@
-root: "../../out"
+root: ../../out
 schema_version: 1
-
 dataset:
-  name: "passaggi"
-  source_id: "openbdap"
-  tags: [pa, conto-annuale, passaggi, dipendenti-pubblici]
+  name: passaggi
+  source_id: openbdap
+  tags:
+  - pa
+  - conto-annuale
+  - passaggi
+  - dipendenti-pubblici
   category: pa
-  description: "Passaggi di qualifica e categoria del personale delle PA italiane (2020-2024), arricchiti con anagrafica enti e comparti."
-  years: [2020, 2021, 2022, 2023, 2024]
+  description: Passaggi di qualifica e categoria del personale delle PA italiane (2020-2024),
+    arricchiti con anagrafica enti e comparti.
+  years:
+  - 2020
+  - 2021
+  - 2022
+  - 2023
+  - 2024
   time_coverage:
     start_year: 2020
     end_year: 2024
-
 raw:
   output_policy: overwrite
   sources:
-    - name: "passaggi_csv"
-      type: "local_file"
-      args:
-        path: "../../_local/seed/dati/{year}/PASSAGGI_QUALIFICA_{year}.CSV"
-      primary: true
-
+  - name: passaggi_csv
+    type: local_file
+    args:
+      path: ../../_local/seed/dati/{year}/PASSAGGI_QUALIFICA_{year}.CSV
+    primary: true
 clean:
-  sql: "sql/clean.sql"
+  sql: sql/clean.sql
   read:
     source: auto
     mode: latest
     header: true
-    delim: ";"
-    encoding: "utf-8"
+    delim: ;
+    encoding: utf-8
   required_columns:
-    - anno
-    - istituzione
-    - contratto
-    - numero_passaggi
-    - categoria_partenza
-    - qualifica_partenza
-    - categoria_arrivo
-    - qualifica_arrivo
-    - tipo_passaggio
-    - codi_comparto
-    - desc_comparto
+  - anno
+  - istituzione
+  - contratto
+  - numero_passaggi
+  - categoria_partenza
+  - qualifica_partenza
+  - categoria_arrivo
+  - qualifica_arrivo
+  - tipo_passaggio
+  - codi_comparto
+  - desc_comparto
   validate:
     min_rows: 100
     not_null:
-      - anno
-      - istituzione
-      - numero_passaggi
-
+    - anno
+    - istituzione
+    - numero_passaggi
 mart:
   tables:
-    - name: "passaggi_comparti"
-      sql: "sql/mart.sql"
+  - name: passaggi_comparti
+    sql: sql/mart.sql
+  - name: mart_sintesi
+    sql: sql/mart_sintesi.sql
+  - name: mart_trend
+    sql: sql/mart_trend.sql
+    years:
+    - 2020
+    - 2021
+    - 2022
+    - 2023
+    - 2024
+    source_layer: clean
   required_tables:
-    - "passaggi_comparti"
+  - passaggi_comparti
+  - mart_sintesi
+  - mart_trend
   validate:
     table_rules:
       passaggi_comparti:
-        required_columns: [anno, codi_comparto, desc_comparto, tot_numero_passaggi, enti]
-        primary_key: [anno, codi_comparto]
+        required_columns:
+        - anno
+        - codi_comparto
+        - desc_comparto
+        - tot_numero_passaggi
+        - enti
+        primary_key:
+        - anno
+        - codi_comparto
         min_rows: 5
-
+      mart_sintesi:
+        required_columns:
+        - tot_passaggi
+        - enti
+        primary_key:
+        - anno
+        - codi_comparto
+        min_rows: 5
+      mart_trend:
+        required_columns:
+        - codi_comparto
+        - desc_comparto
+        - first_year
+        - last_year
+        - tot_passaggi_first
+        - tot_passaggi_last
+        - delta_tot_passaggi
+        - variazione_pct
+        - cagr_pct
+        primary_key:
+        - codi_comparto
+        min_rows: 5
 validation:
   fail_on_error: true
-
 support:
-  - name: "enti"
-    config: "../../support/anag-enti/dataset.yml"
-    years: [2024]
-  - name: "comparti"
-    config: "../../support/anag-comparti/dataset.yml"
-    years: [2024]
-  - name: "qualifiche"
-    config: "../../support/anag-qualifiche/dataset.yml"
-    years: [2024]
+- name: enti
+  config: ../../support/anag-enti/dataset.yml
+  years:
+  - 2024
+- name: comparti
+  config: ../../support/anag-comparti/dataset.yml
+  years:
+  - 2024
+- name: qualifiche
+  config: ../../support/anag-qualifiche/dataset.yml
+  years:
+  - 2024

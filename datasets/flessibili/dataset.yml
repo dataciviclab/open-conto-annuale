@@ -1,80 +1,141 @@
-root: "../../out"
+root: ../../out
 schema_version: 1
-
 dataset:
-  name: "flessibili"
-  source_id: "openbdap"
-  tags: [pa, conto-annuale, lavoro-flessibile, dipendenti-pubblici]
+  name: flessibili
+  source_id: openbdap
+  tags:
+  - pa
+  - conto-annuale
+  - lavoro-flessibile
+  - dipendenti-pubblici
   category: pa
-  description: "Lavoratori flessibili delle PA italiane per tipologia di contratto (2020-2024), arricchiti con anagrafica enti e comparti."
-  years: [2020, 2021, 2022, 2023, 2024]
+  description: Lavoratori flessibili delle PA italiane per tipologia di contratto
+    (2020-2024), arricchiti con anagrafica enti e comparti.
+  years:
+  - 2020
+  - 2021
+  - 2022
+  - 2023
+  - 2024
   time_coverage:
     start_year: 2020
     end_year: 2024
-
 raw:
   output_policy: overwrite
   sources:
-    - name: "flessibili_csv"
-      type: "local_file"
-      args:
-        path: "../../_local/seed/dati/{year}/LAVORO_FLESSIBILE_{year}.CSV"
-      primary: true
-
+  - name: flessibili_csv
+    type: local_file
+    args:
+      path: ../../_local/seed/dati/{year}/LAVORO_FLESSIBILE_{year}.CSV
+    primary: true
 clean:
-  sql: "sql/clean.sql"
+  sql: sql/clean.sql
   read:
     source: auto
     mode: latest
     header: true
-    delim: ";"
-    encoding: "utf-8"
+    delim: ;
+    encoding: utf-8
   required_columns:
-    - anno
-    - istituzione
-    - contratto
-    - macrocategoria
-    - categoria
-    - td_u
-    - td_d
-    - fl_u
-    - fl_d
-    - int_u
-    - int_d
-    - lsu_u
-    - lsu_d
-    - codi_comparto
-    - desc_comparto
+  - anno
+  - istituzione
+  - contratto
+  - macrocategoria
+  - categoria
+  - td_u
+  - td_d
+  - fl_u
+  - fl_d
+  - int_u
+  - int_d
+  - lsu_u
+  - lsu_d
+  - codi_comparto
+  - desc_comparto
   validate:
     min_rows: 100
     not_null:
-      - anno
-      - istituzione
-      - contratto
-
+    - anno
+    - istituzione
+    - contratto
 mart:
   tables:
-    - name: "flessibili_comparti"
-      sql: "sql/mart.sql"
+  - name: flessibili_comparti
+    sql: sql/mart.sql
+  - name: mart_sintesi
+    sql: sql/mart_sintesi.sql
+  - name: mart_trend
+    sql: sql/mart_trend.sql
+    years:
+    - 2020
+    - 2021
+    - 2022
+    - 2023
+    - 2024
+    source_layer: clean
   required_tables:
-    - "flessibili_comparti"
+  - flessibili_comparti
+  - mart_sintesi
+  - mart_trend
   validate:
     table_rules:
       flessibili_comparti:
-        required_columns: [anno, codi_comparto, desc_comparto, tot_td_u, tot_td_d, tot_fl_u, tot_fl_d, tot_int_u, tot_int_d, tot_lsu_u, tot_lsu_d, enti]
-        primary_key: [anno, codi_comparto]
+        required_columns:
+        - anno
+        - codi_comparto
+        - desc_comparto
+        - tot_td_u
+        - tot_td_d
+        - tot_fl_u
+        - tot_fl_d
+        - tot_int_u
+        - tot_int_d
+        - tot_lsu_u
+        - tot_lsu_d
+        - enti
+        primary_key:
+        - anno
+        - codi_comparto
         min_rows: 5
-
+      mart_sintesi:
+        required_columns:
+        - tot_td
+        - tot_fl
+        - tot_int
+        - tot_lsu
+        - tot_flessibili
+        - pct_donne
+        - enti
+        primary_key:
+        - anno
+        - codi_comparto
+        min_rows: 5
+      mart_trend:
+        required_columns:
+        - codi_comparto
+        - desc_comparto
+        - first_year
+        - last_year
+        - tot_flessibili_first
+        - tot_flessibili_last
+        - delta_tot_flessibili
+        - variazione_pct
+        - cagr_pct
+        primary_key:
+        - codi_comparto
+        min_rows: 5
 validation:
   fail_on_error: true
-
 support:
-  - name: "enti"
-    config: "../../support/anag-enti/dataset.yml"
-    years: [2024]
-  - name: "comparti"
-    config: "../../support/anag-comparti/dataset.yml"
-    years: [2024]
-  - name: "qualifiche"
-    config: "../../support/anag-qualifiche/dataset.yml"
-    years: [2024]
+- name: enti
+  config: ../../support/anag-enti/dataset.yml
+  years:
+  - 2024
+- name: comparti
+  config: ../../support/anag-comparti/dataset.yml
+  years:
+  - 2024
+- name: qualifiche
+  config: ../../support/anag-qualifiche/dataset.yml
+  years:
+  - 2024

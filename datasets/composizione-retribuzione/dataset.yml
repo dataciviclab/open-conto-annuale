@@ -1,85 +1,157 @@
-root: "../../out"
+root: ../../out
 schema_version: 1
-
 dataset:
-  name: "composizione_retribuzione"
-  source_id: "openbdap"
-  tags: [pa, conto-annuale, retribuzione, spesa, dipendenti-pubblici]
+  name: composizione_retribuzione
+  source_id: openbdap
+  tags:
+  - pa
+  - conto-annuale
+  - retribuzione
+  - spesa
+  - dipendenti-pubblici
   category: pa
-  description: "Importi retributivi per voce di spesa e qualifica del personale delle PA italiane (2020-2024), arricchiti con anagrafica enti, comparti, qualifiche e voci di spesa."
-  years: [2020, 2021, 2022, 2023, 2024]
+  description: Importi retributivi per voce di spesa e qualifica del personale delle
+    PA italiane (2020-2024), arricchiti con anagrafica enti, comparti, qualifiche
+    e voci di spesa.
+  years:
+  - 2020
+  - 2021
+  - 2022
+  - 2023
+  - 2024
   time_coverage:
     start_year: 2020
     end_year: 2024
-
 raw:
   output_policy: overwrite
   sources:
-    - name: "composizione_retribuzione_csv"
-      type: "local_file"
-      args:
-        path: "../../_local/seed/dati/{year}/COMPOSIZIONE_RETRIBUZIONE_{year}.CSV"
-      primary: true
-
+  - name: composizione_retribuzione_csv
+    type: local_file
+    args:
+      path: ../../_local/seed/dati/{year}/COMPOSIZIONE_RETRIBUZIONE_{year}.CSV
+    primary: true
 clean:
-  sql: "sql/clean.sql"
+  sql: sql/clean.sql
   read:
     source: auto
     mode: latest
     header: true
-    delim: ";"
-    encoding: "utf-8"
+    delim: ;
+    encoding: utf-8
   required_columns:
-    - anno
-    - istituzione
-    - contratto
-    - categoria
-    - qualifica
-    - voce_spesa
-    - importo
-    - codi_comparto
-    - desc_comparto
+  - anno
+  - istituzione
+  - contratto
+  - categoria
+  - qualifica
+  - voce_spesa
+  - importo
+  - codi_comparto
+  - desc_comparto
   validate:
     min_rows: 1000
     not_null:
-      - anno
-      - istituzione
-      - contratto
-      - voce_spesa
-
+    - anno
+    - istituzione
+    - contratto
+    - voce_spesa
 mart:
   tables:
-    - name: "retribuzioni_comparti"
-      sql: "sql/mart_comparti.sql"
-    - name: "retribuzioni_entrate"
-      sql: "sql/mart_voci_spesa.sql"
+  - name: retribuzioni_comparti
+    sql: sql/mart_comparti.sql
+  - name: retribuzioni_entrate
+    sql: sql/mart_voci_spesa.sql
+  - name: mart_sintesi
+    sql: sql/mart_sintesi.sql
+  - name: mart_trend
+    sql: sql/mart_trend.sql
+    years:
+    - 2020
+    - 2021
+    - 2022
+    - 2023
+    - 2024
+    source_layer: clean
   required_tables:
-    - "retribuzioni_comparti"
-    - "retribuzioni_entrate"
+  - retribuzioni_comparti
+  - retribuzioni_entrate
+  - mart_sintesi
+  - mart_trend
   validate:
     table_rules:
       retribuzioni_comparti:
-        required_columns: [anno, codi_comparto, desc_comparto, codi_macrocategoria, desc_macrocategoria, codi_tipo_istituzione, voce_spesa, desc_voce_spesa, codi_tipo_voce_spesa, enti, tot_importo]
-        primary_key: [anno, codi_comparto, codi_macrocategoria, codi_tipo_istituzione, voce_spesa, codi_tipo_voce_spesa]
+        required_columns:
+        - anno
+        - codi_comparto
+        - desc_comparto
+        - codi_macrocategoria
+        - desc_macrocategoria
+        - codi_tipo_istituzione
+        - voce_spesa
+        - desc_voce_spesa
+        - codi_tipo_voce_spesa
+        - enti
+        - tot_importo
+        primary_key:
+        - anno
+        - codi_comparto
+        - codi_macrocategoria
+        - codi_tipo_istituzione
+        - voce_spesa
+        - codi_tipo_voce_spesa
         min_rows: 10
       retribuzioni_entrate:
-        required_columns: [anno, codi_tipo_voce_spesa, desc_voce_spesa, desc_comparto, tot_importo, enti]
-        primary_key: [anno, codi_tipo_voce_spesa, desc_voce_spesa, desc_comparto]
+        required_columns:
+        - anno
+        - codi_tipo_voce_spesa
+        - desc_voce_spesa
+        - desc_comparto
+        - tot_importo
+        - enti
+        primary_key:
+        - anno
+        - codi_tipo_voce_spesa
+        - desc_voce_spesa
+        - desc_comparto
         min_rows: 10
-
+      mart_sintesi:
+        required_columns:
+        - tot_importo
+        - enti
+        primary_key:
+        - anno
+        - codi_comparto
+        min_rows: 5
+      mart_trend:
+        required_columns:
+        - codi_comparto
+        - desc_comparto
+        - first_year
+        - last_year
+        - tot_importo_first
+        - tot_importo_last
+        - delta_tot_importo
+        - variazione_pct
+        - cagr_pct
+        primary_key:
+        - codi_comparto
+        min_rows: 5
 validation:
   fail_on_error: true
-
 support:
-  - name: "enti"
-    config: "../../support/anag-enti/dataset.yml"
-    years: [2024]
-  - name: "comparti"
-    config: "../../support/anag-comparti/dataset.yml"
-    years: [2024]
-  - name: "qualifiche"
-    config: "../../support/anag-qualifiche/dataset.yml"
-    years: [2024]
-  - name: "voci_spesa"
-    config: "../../support/anag-voci-spesa/dataset.yml"
-    years: [2024]
+- name: enti
+  config: ../../support/anag-enti/dataset.yml
+  years:
+  - 2024
+- name: comparti
+  config: ../../support/anag-comparti/dataset.yml
+  years:
+  - 2024
+- name: qualifiche
+  config: ../../support/anag-qualifiche/dataset.yml
+  years:
+  - 2024
+- name: voci_spesa
+  config: ../../support/anag-voci-spesa/dataset.yml
+  years:
+  - 2024

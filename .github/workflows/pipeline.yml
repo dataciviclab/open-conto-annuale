@@ -9,10 +9,6 @@ on:
       years:
         description: "Anni (es. 2024 o 2020,2021,2024 o all)"
         default: "all"
-      smoke:
-        description: "Smoke mode (--sample-rows 1000, root isolato)"
-        default: false
-        type: boolean
 
 jobs:
   conto-annuale-pipeline:
@@ -36,16 +32,14 @@ jobs:
 
       - name: Seeds
         run: |
-          SMOKE="${{ inputs.smoke && '--sample-rows 1000' || '' }}"
           for d in support/anag-enti support/anag-comparti support/anag-qualifiche \
                    support/anag-voci-spesa support/anag-causali support/anag-territorio \
                    support/anag-titoli-studio support/anag-voci-fua support/anag-fondi; do
-            toolkit run --config "$d/dataset.yml" $SMOKE
+            toolkit run --config "$d/dataset.yml"
           done
 
       - name: Run all datasets
         run: |
-          SMOKE="${{ inputs.smoke && '--sample-rows 1000' || '' }}"
           if [ "${{ inputs.years }}" = "all" ]; then YEARS="2020 2021 2022 2023 2024"
           else YEARS=$(echo "${{ inputs.years }}" | tr ',' ' '); fi
           for ds in datasets/assenze datasets/composizione-retribuzione datasets/costo-lavoro \
@@ -55,12 +49,11 @@ jobs:
                     datasets/modalita-flessibile datasets/occupazione; do
             for y in $YEARS; do
               python3 -c "import yaml; y=yaml.safe_load(open('${ds}/dataset.yml')); exit(0 if $y in y['dataset']['years'] else 1)" && echo "=== $ds $y ===" || { echo "  ⏭️ $ds salta $y (non configurato)"; continue; }
-              toolkit run --config "${ds}/dataset.yml" --year "$y" $SMOKE
+              toolkit run --config "${ds}/dataset.yml" --year "$y"
             done
           done
 
       - name: Verify output (gate)
-        if: ${{ !inputs.smoke }}
         run: |
           YEARS="${{ inputs.years || 'all' }}"
           if [ "$YEARS" = "all" ]; then
@@ -73,11 +66,9 @@ jobs:
           fi
 
       - name: Build registry
-        if: ${{ !inputs.smoke }}
         run: python3 scripts/build_registry.py --write
 
       - name: Sync to GCS
-        if: ${{ !inputs.smoke }}
         env:
           GCP_SA_KEY: ${{ secrets.GCP_SA_KEY }}
         run: |

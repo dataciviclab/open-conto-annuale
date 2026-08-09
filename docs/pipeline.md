@@ -99,7 +99,6 @@ I mart sono aggregati per comparto (codi_comparto + desc_comparto).
 | `make run-all` | seeds + tutti i dataset |
 | `make check` | Preflight su tutti i dataset.yml |
 | `make verify` | Verifica output (soglie minime) |
-| `make smoke` | Smoke test (sample 1000 righe) |
 | `make registry` | Rigenera registry/registry.json |
 | `make clean` | Rimuove output |
 
