@@ -25,7 +25,7 @@ jobs:
         run: |
           for cfg in $(find . -path '*/support/*' -name dataset.yml | sort); do
             echo "→ $cfg"
-            python3 -m toolkit.cli.app run preflight --config "$cfg" --years 2024 > /dev/null 2>&1 || exit 1
+            toolkit run preflight --config "$cfg" --years 2024 > /dev/null 2>&1 || exit 1
           done
           for d in datasets/assenze datasets/composizione-retribuzione datasets/costo-lavoro \
                    datasets/personale datasets/anzianita datasets/titoli-studio \
@@ -33,6 +33,6 @@ jobs:
                    datasets/passaggi datasets/distribuzione datasets/retribuzione-media \
                    datasets/modalita-flessibile datasets/occupazione; do
             echo "→ $d/dataset.yml"
-            python3 -m toolkit.cli.app run preflight --config "$d/dataset.yml" --years 2024 > /dev/null 2>&1 || exit 1
+            toolkit run preflight --config "$d/dataset.yml" --years 2024 > /dev/null 2>&1 || exit 1
           done
           echo "✅ All configs valid"
