@@ -64,15 +64,20 @@ def download_zip(year: int) -> pathlib.Path:
 
 
 def extract_dati(zippath: pathlib.Path, year: int) -> None:
-    """Estrae i file {year}Dati/* in _local/seed/dati/{year}/."""
+    """Estrae i file {year}Dati/* in _local/seed/dati/{year}/.
+
+    Gestisce due strutture ZIP della fonte RGS:
+    - ``{year}Dati/...`` (root dello zip, anni 2020/2022+)
+    - ``{year}Tutto/{year}Dati/...`` (sottocartella, anno 2021)
+    """
     out = OUT_DIR / str(year)
     out.mkdir(parents=True, exist_ok=True)
 
-    prefix = f"{year}Dati/"
+    marker = f"{year}Dati/"
     extracted = 0
     with zipfile.ZipFile(zippath) as z:
         for name in z.namelist():
-            if not name.startswith(prefix):
+            if marker not in name:
                 continue
             basename = pathlib.Path(name).name
             if not basename:
@@ -81,7 +86,7 @@ def extract_dati(zippath: pathlib.Path, year: int) -> None:
             extracted += 1
 
     if extracted == 0:
-        print(f"❌ Nessun file {prefix}* trovato nello ZIP")
+        print(f"❌ Nessun file {marker}* trovato nello ZIP")
         sys.exit(1)
 
     print(f"✅ {year}: estratti {extracted} file in {out}")
