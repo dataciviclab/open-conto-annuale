@@ -2,7 +2,6 @@ _local/
 # anagrafica/_data/ NOT gitignored — le anagrafiche sono parte del repo
 *Tutto.zip
 out/
-registry/
 .tmp/
 .venv/
 __pycache__/
