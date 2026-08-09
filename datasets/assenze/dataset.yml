@@ -1,79 +1,143 @@
-root: "../../out"
+root: ../../out
 schema_version: 1
-
 dataset:
-  name: "assenze"
-  source_id: "openbdap"
-  tags: [pa, conto-annuale, assenze, dipendenti-pubblici]
+  name: assenze
+  source_id: openbdap
+  tags:
+  - pa
+  - conto-annuale
+  - assenze
+  - dipendenti-pubblici
   category: pa
-  description: "Giornate di assenza per causale del personale delle PA italiane (2020-2024), arricchite con anagrafica enti, comparti, qualifiche e tipologie di causale."
-  years: [2020, 2021, 2022, 2023, 2024]
+  description: Giornate di assenza per causale del personale delle PA italiane (2020-2024),
+    arricchite con anagrafica enti, comparti, qualifiche e tipologie di causale.
+  years:
+  - 2020
+  - 2021
+  - 2022
+  - 2023
+  - 2024
   time_coverage:
     start_year: 2020
     end_year: 2024
-
 raw:
   output_policy: overwrite
   sources:
-    - name: "assenze_csv"
-      type: "local_file"
-      args:
-        path: "../../_local/seed/dati/{year}/ASSENZE_{year}.CSV"
-      primary: true
-
+  - name: assenze_csv
+    type: local_file
+    args:
+      path: ../../_local/seed/dati/{year}/ASSENZE_{year}.CSV
+    primary: true
 clean:
-  sql: "sql/clean.sql"
+  sql: sql/clean.sql
   read:
     source: auto
     mode: latest
     header: true
-    delim: ";"
-    encoding: "utf-8"
+    delim: ;
+    encoding: utf-8
   required_columns:
-    - anno
-    - istituzione
-    - contratto
-    - categoria
-    - qualifica
-    - causale_assenza
-    - assenze_uomini
-    - assenze_donne
-    - codi_comparto
-    - desc_comparto
+  - anno
+  - istituzione
+  - contratto
+  - categoria
+  - qualifica
+  - causale_assenza
+  - assenze_uomini
+  - assenze_donne
+  - codi_comparto
+  - desc_comparto
   validate:
     min_rows: 1000
     not_null:
-      - anno
-      - istituzione
-      - contratto
-      - causale_assenza
-
+    - anno
+    - istituzione
+    - contratto
+    - causale_assenza
 mart:
   tables:
-    - name: "assenze_comparti"
-      sql: "sql/mart_comparti.sql"
+  - name: assenze_comparti
+    sql: sql/mart_comparti.sql
+  - name: mart_sintesi
+    sql: sql/mart_sintesi.sql
+  - name: mart_trend
+    sql: sql/mart_trend.sql
+    years:
+    - 2020
+    - 2021
+    - 2022
+    - 2023
+    - 2024
+    source_layer: clean
   required_tables:
-    - "assenze_comparti"
+  - assenze_comparti
+  - mart_sintesi
+  - mart_trend
   validate:
     table_rules:
       assenze_comparti:
-        required_columns: [anno, codi_comparto, desc_comparto, codi_macrocategoria, desc_macrocategoria, codi_tipo_istituzione, causale_assenza, tipo_causale, descrizione_causale, enti_con_assenze, tot_assenze_uomini, tot_assenze_donne, tot_assenze]
-        primary_key: [anno, codi_comparto, codi_macrocategoria, codi_tipo_istituzione, causale_assenza]
+        required_columns:
+        - anno
+        - codi_comparto
+        - desc_comparto
+        - codi_macrocategoria
+        - desc_macrocategoria
+        - codi_tipo_istituzione
+        - causale_assenza
+        - tipo_causale
+        - descrizione_causale
+        - enti_con_assenze
+        - tot_assenze_uomini
+        - tot_assenze_donne
+        - tot_assenze
+        primary_key:
+        - anno
+        - codi_comparto
+        - codi_macrocategoria
+        - codi_tipo_istituzione
+        - causale_assenza
         min_rows: 10
-
+      mart_sintesi:
+        required_columns:
+        - tot_assenze_uomini
+        - tot_assenze_donne
+        - tot_assenze
+        - pct_assenze_donne
+        - enti
+        primary_key:
+        - anno
+        - codi_comparto
+        min_rows: 5
+      mart_trend:
+        required_columns:
+        - codi_comparto
+        - desc_comparto
+        - first_year
+        - last_year
+        - tot_assenze_first
+        - tot_assenze_last
+        - delta_tot_assenze
+        - variazione_pct
+        - cagr_pct
+        primary_key:
+        - codi_comparto
+        min_rows: 5
 validation:
   fail_on_error: true
-
 support:
-  - name: "enti"
-    config: "../../support/anag-enti/dataset.yml"
-    years: [2024]
-  - name: "comparti"
-    config: "../../support/anag-comparti/dataset.yml"
-    years: [2024]
-  - name: "qualifiche"
-    config: "../../support/anag-qualifiche/dataset.yml"
-    years: [2024]
-  - name: "causali"
-    config: "../../support/anag-causali/dataset.yml"
-    years: [2024]
+- name: enti
+  config: ../../support/anag-enti/dataset.yml
+  years:
+  - 2024
+- name: comparti
+  config: ../../support/anag-comparti/dataset.yml
+  years:
+  - 2024
+- name: qualifiche
+  config: ../../support/anag-qualifiche/dataset.yml
+  years:
+  - 2024
+- name: causali
+  config: ../../support/anag-causali/dataset.yml
+  years:
+  - 2024

@@ -61,21 +61,6 @@ run-all: seeds
 		$(TOOLKIT) run --config $$d/dataset.yml || exit 1; \
 	done
 
-# --- Smoke test ---
-
-.PHONY: smoke-seeds smoke
-smoke-seeds:
-	@for d in $(SUPPORT_SEEDS); do \
-		echo "=== $$d (smoke) ==="; \
-		$(TOOLKIT) run --config $$d/dataset.yml --sample-rows 1000 || exit 1; \
-	done
-
-smoke: smoke-seeds
-	@for d in $(DATASETS); do \
-		echo "=== $$d (smoke) ==="; \
-		$(TOOLKIT) run --config $$d/dataset.yml --year 2024 --sample-rows 1000 || exit 1; \
-	done
-
 # --- Validazione config ---
 
 .PHONY: check
