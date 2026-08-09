@@ -1,0 +1,47 @@
+root: "../../out"
+schema_version: 1
+dataset:
+  name: "ca_anag_fondi_seed"
+  source_id: "openbdap"
+  tags: [pa, conto-annuale, anagrafica, fondi, support]
+  category: pa
+  description: "Anagrafica dei fondi di contrattazione (natura e tipo voce di spesa) del Conto Annuale — dizionario di supporto."
+  years: [2024]
+raw:
+  output_policy: overwrite
+  sources:
+    - name: "seed_csv"
+      type: "local_file"
+      args:
+        path: "../../anagrafica/_data/Natura_Fondo.CSV"
+      primary: true
+clean:
+  sql: "sql/clean.sql"
+  read:
+    source: auto
+    mode: latest
+    header: true
+    delim: ";"
+    encoding: "utf-8"
+  required_columns:
+    - anno
+    - codi_contratto
+    - codi_macrocategoria
+    - codi_fondo
+    - desc_fondo
+    - codi_natura
+    - desc_natura
+  validate:
+    min_rows: 5
+mart:
+  tables:
+    - name: "ca_anag_fondi_seed"
+      sql: "sql/mart.sql"
+  required_tables: ["ca_anag_fondi_seed"]
+  validate:
+    table_rules:
+      ca_anag_fondi_seed:
+        required_columns: [anno, codi_contratto, codi_fondo, codi_natura]
+        min_rows: 5
+validation:
+  fail_on_error: true

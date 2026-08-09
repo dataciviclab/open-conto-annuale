@@ -1,117 +1,100 @@
 PYTHON ?= python3
-TOOLKIT = $(PYTHON) scripts/run_toolkit.py
+TOOLKIT = toolkit
 
-# --- Anagrafica seeds ---
+# --- Support seeds (anagrafiche) ---
 
-ANAG_SEEDS = \
-	anagrafica/anag-enti \
-	anagrafica/anag-comparti \
-	anagrafica/anag-qualifiche \
-	anagrafica/anag-voci-spesa \
-	anagrafica/anag-causali \
-	anagrafica/anag-territorio \
-	anagrafica/anag-titoli-studio \
-	anagrafica/anag-voci-fua \
-	anagrafica/anag-fondi
+SUPPORT_SEEDS = \
+	support/anag-enti \
+	support/anag-comparti \
+	support/anag-qualifiche \
+	support/anag-voci-spesa \
+	support/anag-causali \
+	support/anag-territorio \
+	support/anag-titoli-studio \
+	support/anag-voci-fua \
+	support/anag-fondi
 
 DATASETS = \
-	assenze \
-	composizione-retribuzione \
-	costo-lavoro \
-	personale \
-	anzianita \
-	titoli-studio \
-	comandati \
-	contrattazione \
-	flessibili \
-	passaggi \
-	distribuzione \
-	retribuzione-media \
-	modalita-flessibile \
-	occupazione \n	occupazione
-	oCCUPAZIONE \
+	datasets/assenze \
+	datasets/composizione-retribuzione \
+	datasets/costo-lavoro \
+	datasets/personale \
+	datasets/anzianita \
+	datasets/titoli-studio \
+	datasets/comandati \
+	datasets/contrattazione \
+	datasets/flessibili \
+	datasets/passaggi \
+	datasets/distribuzione \
+	datasets/retribuzione-media \
+	datasets/modalita-flessibile \
+	datasets/occupazione
 
-# --- Download ZIP annuale (una tantum) ---
+# --- Download + estrazione dati (unico script, 1 download per anno) ---
 
 YEARS ?= 2024
 
-.PHONY: download
-download:
-	@for y in $(YEARS); do \
-		echo "=== Scarico $$y ==="; \
-		python3 scripts/download_zip.py $$y; \
-	done
-
-# --- Estrazione dati ---
-
 .PHONY: extract-dati
 extract-dati:
-	@for y in $(YEARS); do \
-		zip="$$y""Tutto.zip"; \
-		test -f "$$zip" || { echo "❌ $$zip mancante: fai 'make download'"; exit 1; }; \
-		echo "=== Estrazione $$y ==="; \
-		mkdir -p "_local/seed/dati/$$y"; \
-		unzip -j -o "$$zip" "*$${y}Dati/*" -d "_local/seed/dati/$$y/" 2>&1 | tail -1; \
-		if [ "$$y" = "2020" ]; then \
-			sed -i 's/PERSONALE_TEMPO_PIEDO_DONNE/PERSONALE_TEMPO_PIENO_DONNE/' "_local/seed/dati/2020/OCCUPAZIONE_2020.CSV"; \
-		fi \
-	done
-	@echo "✅ Dati estratti in _local/seed/dati/{year}/"
+	python3 scripts/extract_dati.py $(YEARS)
 
 # --- Seeds ---
 
 .PHONY: seeds
 seeds:
-	@for d in $(ANAG_SEEDS); do \
+	@for d in $(SUPPORT_SEEDS); do \
 		echo "=== $$d ==="; \
-		$(TOOLKIT) run all --config $$d/dataset.yml || exit 1; \
+		$(TOOLKIT) run --config $$d/dataset.yml || exit 1; \
 	done
 
 # --- Dataset ---
 
-define run_dataset
-.PHONY: run-$(1)
-run-$(1): extract-dati
-	$(TOOLKIT) run all --config $(1)/dataset.yml
-endef
-
-$(foreach ds,$(DATASETS),$(eval $(call run_dataset,$(ds))))
+# Pattern stile dcl-bologna: make run/<slug>
+.PHONY: run/%
+run/%: extract-dati
+	$(TOOLKIT) run --config datasets/$*/dataset.yml
 
 .PHONY: run-all
 run-all: seeds
 	@for d in $(DATASETS); do \
 		echo "=== $$d ==="; \
-		$(TOOLKIT) run all --config $$d/dataset.yml || exit 1; \
+		$(TOOLKIT) run --config $$d/dataset.yml || exit 1; \
 	done
 
 # --- Smoke test ---
 
 .PHONY: smoke-seeds smoke
 smoke-seeds:
-	@for d in $(ANAG_SEEDS); do \
+	@for d in $(SUPPORT_SEEDS); do \
 		echo "=== $$d (smoke) ==="; \
-		$(TOOLKIT) run all --config $$d/dataset.yml --sample-rows 1000 || exit 1; \
+		$(TOOLKIT) run --config $$d/dataset.yml --sample-rows 1000 || exit 1; \
 	done
 
 smoke: smoke-seeds
 	@for d in $(DATASETS); do \
 		echo "=== $$d (smoke) ==="; \
-		$(TOOLKIT) run all --config $$d/dataset.yml --year 2024 --sample-rows 1000 || exit 1; \
+		$(TOOLKIT) run --config $$d/dataset.yml --year 2024 --sample-rows 1000 || exit 1; \
 	done
 
 # --- Validazione config ---
 
 .PHONY: check
 check:
-	@for f in $$(find . -path '*/anagrafica/*' -name dataset.yml | sort); do \
+	@for f in $$(find . -path '*/support/*' -name dataset.yml | sort); do \
 		echo "→ $$f"; \
-		$(TOOLKIT) inspect paths --config "$$f" --year 2024 > /dev/null 2>&1 || exit 1; \
+		$(TOOLKIT) run preflight --config "$$f" --years 2024 > /dev/null 2>&1 || exit 1; \
 	done
 	@for d in $(DATASETS); do \
 		echo "→ $$d/dataset.yml"; \
-		$(TOOLKIT) inspect paths --config "$$d/dataset.yml" --year 2024 > /dev/null 2>&1 || exit 1; \
+		$(TOOLKIT) run preflight --config "$$d/dataset.yml" --years 2024 > /dev/null 2>&1 || exit 1; \
 	done
 	@echo "✅ All configs valid"
+
+# --- Registry ---
+
+.PHONY: registry
+registry:
+	$(PYTHON) scripts/build_registry.py --write
 
 # --- Pulizia ---
 

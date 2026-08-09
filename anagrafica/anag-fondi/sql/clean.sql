@@ -1,2 +1,0 @@
-select anno, normalize_string(codi_contratto) as codi_contratto, normalize_string(codi_macrocategoria) as codi_macrocategoria, normalize_string(codi_fondo) as codi_fondo, normalize_string(desc_fondo) as desc_fondo, normalize_string(codi_natura) as codi_natura, normalize_string(desc_natura) as desc_natura, normalize_string(codi_tipo_voce_spesa) as codi_tipo_voce_spesa, normalize_string(tipo_voce_spesa) as tipo_voce_spesa
-from raw_input;

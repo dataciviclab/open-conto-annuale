@@ -1,0 +1,53 @@
+root: "../../out"
+schema_version: 1
+
+dataset:
+  name: "ca_anag_qualifiche_seed"
+  source_id: "openbdap"
+  tags: [pa, conto-annuale, anagrafica, qualifiche, support]
+  category: pa
+  description: "Anagrafica di contratti, macrocategorie, categorie e qualifiche del Conto Annuale — dizionario di supporto."
+  years: [2024]
+
+raw:
+  output_policy: overwrite
+  sources:
+    - name: "anagrafica_qualifiche_csv"
+      type: "local_file"
+      args:
+        path: "../../anagrafica/_data/ContrattoMacroCCategQualif.CSV"
+      primary: true
+
+clean:
+  sql: "sql/clean.sql"
+  read:
+    source: auto
+    mode: latest
+    header: true
+    delim: ";"
+    encoding: "utf-8"
+  required_columns:
+    - anno
+    - codi_contratto
+    - codi_macrocategoria
+    - desc_macrocategoria
+    - codi_categoria
+    - desc_categoria
+    - codi_qualifica
+    - desc_qualifica
+  validate:
+    min_rows: 5
+
+mart:
+  tables:
+    - name: "ca_anag_qualifiche_seed"
+      sql: "sql/mart.sql"
+  required_tables: ["ca_anag_qualifiche_seed"]
+  validate:
+    table_rules:
+      ca_anag_qualifiche_seed:
+        required_columns: [anno, codi_contratto, codi_macrocategoria, codi_categoria, codi_qualifica]
+        min_rows: 5
+
+validation:
+  fail_on_error: true

@@ -1,0 +1,79 @@
+root: "../../out"
+schema_version: 1
+
+dataset:
+  name: "assenze"
+  source_id: "openbdap"
+  tags: [pa, conto-annuale, assenze, dipendenti-pubblici]
+  category: pa
+  description: "Giornate di assenza per causale del personale delle PA italiane (2020-2024), arricchite con anagrafica enti, comparti, qualifiche e tipologie di causale."
+  years: [2020, 2021, 2022, 2023, 2024]
+  time_coverage:
+    start_year: 2020
+    end_year: 2024
+
+raw:
+  output_policy: overwrite
+  sources:
+    - name: "assenze_csv"
+      type: "local_file"
+      args:
+        path: "../../_local/seed/dati/{year}/ASSENZE_{year}.CSV"
+      primary: true
+
+clean:
+  sql: "sql/clean.sql"
+  read:
+    source: auto
+    mode: latest
+    header: true
+    delim: ";"
+    encoding: "utf-8"
+  required_columns:
+    - anno
+    - istituzione
+    - contratto
+    - categoria
+    - qualifica
+    - causale_assenza
+    - assenze_uomini
+    - assenze_donne
+    - codi_comparto
+    - desc_comparto
+  validate:
+    min_rows: 1000
+    not_null:
+      - anno
+      - istituzione
+      - contratto
+      - causale_assenza
+
+mart:
+  tables:
+    - name: "assenze_comparti"
+      sql: "sql/mart_comparti.sql"
+  required_tables:
+    - "assenze_comparti"
+  validate:
+    table_rules:
+      assenze_comparti:
+        required_columns: [anno, codi_comparto, desc_comparto, codi_macrocategoria, desc_macrocategoria, codi_tipo_istituzione, causale_assenza, tipo_causale, descrizione_causale, enti_con_assenze, tot_assenze_uomini, tot_assenze_donne, tot_assenze]
+        primary_key: [anno, codi_comparto, codi_macrocategoria, codi_tipo_istituzione, causale_assenza]
+        min_rows: 10
+
+validation:
+  fail_on_error: true
+
+support:
+  - name: "enti"
+    config: "../../support/anag-enti/dataset.yml"
+    years: [2024]
+  - name: "comparti"
+    config: "../../support/anag-comparti/dataset.yml"
+    years: [2024]
+  - name: "qualifiche"
+    config: "../../support/anag-qualifiche/dataset.yml"
+    years: [2024]
+  - name: "causali"
+    config: "../../support/anag-causali/dataset.yml"
+    years: [2024]

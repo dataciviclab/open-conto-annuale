@@ -1,0 +1,71 @@
+root: "../../out"
+schema_version: 1
+dataset:
+  name: "modalita_flessibile"
+  source_id: "openbdap"
+  tags: [pa, conto-annuale, lavoro-agile, telelavoro, dipendenti-pubblici]
+  category: pa
+  description: "Modalità di lavoro flessibile (telelavoro, lavoro agile, coworking, turnazione) nelle PA italiane (2021-2024), arricchite con anagrafica enti e comparti."
+  # 2020 escluso: colonne lavoro agile/coworking assenti (non rilevate quell'anno)
+  years: [2021, 2022, 2023, 2024]
+  time_coverage:
+    start_year: 2021
+    end_year: 2024
+raw:
+  output_policy: overwrite
+  sources:
+    - name: "modalita_csv"
+      type: "local_file"
+      args:
+        path: "../../_local/seed/dati/{year}/MODALITA_LAVORO_FLESSIBILE_{year}.CSV"
+      primary: true
+clean:
+  sql: "sql/clean.sql"
+  read:
+    source: auto
+    mode: latest
+    header: true
+    delim: ";"
+    encoding: "utf-8"
+  required_columns:
+    - anno
+    - istituzione
+    - contratto
+    - macrocategoria
+    - categoria
+    - tl_u
+    - tl_d
+    - agile_u
+    - agile_d
+    - cowork_u
+    - cowork_d
+    - turn_u
+    - turn_d
+    - codi_comparto
+    - desc_comparto
+  validate:
+    min_rows: 100
+    not_null:
+      - anno
+      - istituzione
+      - contratto
+mart:
+  tables:
+    - name: "modalita_flessibile_comparti"
+      sql: "sql/mart.sql"
+  required_tables: ["modalita_flessibile_comparti"]
+  validate:
+    table_rules:
+      modalita_flessibile_comparti:
+        required_columns: [anno, codi_comparto, desc_comparto, tot_tl_u, tot_tl_d, tot_agile_u, tot_agile_d, tot_cowork_u, tot_cowork_d, tot_turn_u, tot_turn_d, enti]
+        primary_key: [anno, codi_comparto]
+        min_rows: 5
+validation:
+  fail_on_error: true
+support:
+  - name: "enti"
+    config: "../../support/anag-enti/dataset.yml"
+    years: [2024]
+  - name: "comparti"
+    config: "../../support/anag-comparti/dataset.yml"
+    years: [2024]

@@ -1,0 +1,45 @@
+root: "../../out"
+schema_version: 1
+dataset:
+  name: "ca_anag_voci_fua_seed"
+  source_id: "openbdap"
+  tags: [pa, conto-annuale, anagrafica, voci-fua, support]
+  category: pa
+  description: "Anagrafica delle voci di spesa FUA (Fondo Unico di Amministrazione) del Conto Annuale — dizionario di supporto."
+  years: [2024]
+raw:
+  output_policy: overwrite
+  sources:
+    - name: "seed_csv"
+      type: "local_file"
+      args:
+        path: "../../anagrafica/_data/Voci_Spesa_FUA.CSV"
+      primary: true
+clean:
+  sql: "sql/clean.sql"
+  read:
+    source: auto
+    mode: latest
+    header: true
+    delim: ";"
+    encoding: "utf-8"
+  required_columns:
+    - anno
+    - codi_contratto
+    - codi_tipo_voce_spesa
+    - codi_voce_spesa
+    - desc_voce_spesa
+  validate:
+    min_rows: 5
+mart:
+  tables:
+    - name: "ca_anag_voci_fua_seed"
+      sql: "sql/mart.sql"
+  required_tables: ["ca_anag_voci_fua_seed"]
+  validate:
+    table_rules:
+      ca_anag_voci_fua_seed:
+        required_columns: [anno, codi_contratto, codi_tipo_voce_spesa, codi_voce_spesa]
+        min_rows: 5
+validation:
+  fail_on_error: true

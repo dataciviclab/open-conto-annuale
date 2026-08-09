@@ -1,0 +1,76 @@
+root: "../../out"
+schema_version: 1
+
+dataset:
+  name: "anzianita"
+  source_id: "openbdap"
+  tags: [pa, conto-annuale, anzianita, dipendenti-pubblici]
+  category: pa
+  description: "Distribuzione per fascia di anzianità di servizio del personale delle PA italiane (2020-2024), arricchita con anagrafica enti, comparti e qualifiche."
+  years: [2020, 2021, 2022, 2023, 2024]
+  time_coverage:
+    start_year: 2020
+    end_year: 2024
+
+raw:
+  output_policy: overwrite
+  sources:
+    - name: "anzianita_csv"
+      type: "local_file"
+      args:
+        path: "../../_local/seed/dati/{year}/ANZIANITA_{year}.CSV"
+      primary: true
+
+clean:
+  sql: "sql/clean.sql"
+  read:
+    source: auto
+    mode: latest
+    header: true
+    delim: ";"
+    encoding: "utf-8"
+  required_columns:
+    - anno
+    - istituzione
+    - contratto
+    - categoria
+    - qualifica
+    - fascia
+    - uomini
+    - donne
+    - codi_comparto
+    - desc_comparto
+  validate:
+    min_rows: 1000
+    not_null:
+      - anno
+      - istituzione
+      - contratto
+      - qualifica
+
+mart:
+  tables:
+    - name: "anzianita_comparti"
+      sql: "sql/mart.sql"
+  required_tables:
+    - "anzianita_comparti"
+  validate:
+    table_rules:
+      anzianita_comparti:
+        required_columns: [anno, codi_comparto, desc_comparto, fascia, tot_uomini, tot_donne, enti]
+        primary_key: [anno, codi_comparto, fascia]
+        min_rows: 10
+
+validation:
+  fail_on_error: true
+
+support:
+  - name: "enti"
+    config: "../../support/anag-enti/dataset.yml"
+    years: [2024]
+  - name: "comparti"
+    config: "../../support/anag-comparti/dataset.yml"
+    years: [2024]
+  - name: "qualifiche"
+    config: "../../support/anag-qualifiche/dataset.yml"
+    years: [2024]

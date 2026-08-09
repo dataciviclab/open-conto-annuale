@@ -1,0 +1,52 @@
+root: "../../out"
+schema_version: 1
+
+dataset:
+  name: "ca_anag_territorio_seed"
+  source_id: "openbdap"
+  tags: [pa, conto-annuale, anagrafica, territorio, support]
+  category: pa
+  description: "Anagrafica di comuni, province e regioni del Conto Annuale, con mapping codice catastale → regione ISTAT — dizionario di supporto."
+  years: [2024]
+
+raw:
+  output_policy: overwrite
+  sources:
+    - name: "anagrafica_territorio_csv"
+      type: "local_file"
+      args:
+        path: "../../anagrafica/_data/RegioneProvinciaCatasto.CSV"
+      primary: true
+
+clean:
+  sql: "sql/clean.sql"
+  read:
+    source: auto
+    mode: latest
+    header: true
+    delim: ";"
+    encoding: "utf-8"
+  required_columns:
+    - anno
+    - codi_catastale
+    - desc_codice_catastale
+    - codi_provincia
+    - desc_provincia
+    - codi_regione
+    - desc_regione
+  validate:
+    min_rows: 5
+
+mart:
+  tables:
+    - name: "ca_anag_territorio_seed"
+      sql: "sql/mart.sql"
+  required_tables: ["ca_anag_territorio_seed"]
+  validate:
+    table_rules:
+      ca_anag_territorio_seed:
+        required_columns: [anno, codi_catastale, codi_provincia, codi_regione]
+        min_rows: 5
+
+validation:
+  fail_on_error: true

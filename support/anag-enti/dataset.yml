@@ -1,0 +1,52 @@
+root: "../../out"
+schema_version: 1
+
+dataset:
+  name: "ca_anag_enti_seed"
+  source_id: "openbdap"
+  tags: [pa, conto-annuale, anagrafica, enti, support]
+  category: pa
+  description: "Anagrafica degli enti del Conto Annuale (tipo istituzione, codice e denominazione) — dizionario di supporto."
+  years: [2024]
+
+raw:
+  output_policy: overwrite
+  sources:
+    - name: "seed_csv"
+      type: "local_file"
+      args:
+        path: "../../anagrafica/_data/TipoIstituzione_Istituzione.CSV"
+      primary: true
+
+clean:
+  sql: "sql/clean.sql"
+  read:
+    source: auto
+    mode: latest
+    header: true
+    delim: ";"
+    encoding: "utf-8"
+  required_columns:
+    - anno
+    - codi_tipo_istituzione
+    - desc_tipo_istituzione
+    - codi_istituzione
+    - desc_istituzione
+    - codi_fiscale
+    - istituzione
+  validate:
+    min_rows: 1000
+
+mart:
+  tables:
+    - name: "ca_anag_enti_seed"
+      sql: "sql/mart.sql"
+  required_tables: ["ca_anag_enti_seed"]
+  validate:
+    table_rules:
+      ca_anag_enti_seed:
+        required_columns: [anno, codi_tipo_istituzione, codi_istituzione, desc_istituzione, istituzione]
+        min_rows: 1000
+
+validation:
+  fail_on_error: true

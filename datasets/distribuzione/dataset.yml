@@ -1,0 +1,75 @@
+root: "../../out"
+schema_version: 1
+
+dataset:
+  name: "distribuzione"
+  source_id: "openbdap"
+  tags: [pa, conto-annuale, distribuzione, territorio, dipendenti-pubblici]
+  category: pa
+  description: "Distribuzione geografica per regione del personale delle PA italiane (2020-2024), arricchita con anagrafica enti e comparti."
+  years: [2020, 2021, 2022, 2023, 2024]
+  time_coverage:
+    start_year: 2020
+    end_year: 2024
+
+raw:
+  output_policy: overwrite
+  sources:
+    - name: "distribuzione_csv"
+      type: "local_file"
+      args:
+        path: "../../_local/seed/dati/{year}/DISTRIBUZIONE_GEOGRAFICA_COMPARTO_{year}.CSV"
+      primary: true
+
+clean:
+  sql: "sql/clean.sql"
+  read:
+    source: auto
+    mode: latest
+    header: true
+    delim: ";"
+    encoding: "utf-8"
+  required_columns:
+    - anno
+    - regione
+    - istituzione
+    - contratto
+    - categoria
+    - qualifica
+    - uomini
+    - donne
+    - codi_comparto
+    - desc_comparto
+  validate:
+    min_rows: 1000
+    not_null:
+      - anno
+      - regione
+      - istituzione
+
+mart:
+  tables:
+    - name: "distribuzione_comparti"
+      sql: "sql/mart.sql"
+  required_tables:
+    - "distribuzione_comparti"
+  validate:
+    table_rules:
+      distribuzione_comparti:
+        required_columns: [anno, codi_comparto, desc_comparto, tot_uomini, tot_donne, enti]
+        primary_key: [anno, codi_comparto]
+        min_rows: 5
+
+validation:
+  fail_on_error: true
+
+support:
+  - name: "enti"
+    config: "../../support/anag-enti/dataset.yml"
+    years: [2024]
+  - name: "comparti"
+    config: "../../support/anag-comparti/dataset.yml"
+    years: [2024]
+  - name: "qualifiche"
+    config: "../../support/anag-qualifiche/dataset.yml"
+    years: [2024]

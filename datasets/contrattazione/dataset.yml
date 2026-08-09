@@ -1,0 +1,74 @@
+root: "../../out"
+schema_version: 1
+
+dataset:
+  name: "contrattazione"
+  source_id: "openbdap"
+  tags: [pa, conto-annuale, contrattazione, dipendenti-pubblici]
+  category: pa
+  description: "Spese di contrattazione integrativa delle PA italiane (2020-2024), arricchite con anagrafica enti e comparti."
+  years: [2020, 2021, 2022, 2023, 2024]
+  time_coverage:
+    start_year: 2020
+    end_year: 2024
+
+raw:
+  output_policy: overwrite
+  sources:
+    - name: "contrattazione_csv"
+      type: "local_file"
+      args:
+        path: "../../_local/seed/dati/{year}/CONTRATTAZIONE_INTEGRATIVA_{year}.CSV"
+      primary: true
+
+clean:
+  sql: "sql/clean.sql"
+  read:
+    source: auto
+    mode: latest
+    header: true
+    delim: ";"
+    encoding: "utf-8"
+  required_columns:
+    - anno
+    - istituzione
+    - contratto
+    - macrocategoria
+    - tipo_voce_spesa
+    - natura
+    - fondo
+    - voce_spesa_fua
+    - importo
+    - codi_comparto
+    - desc_comparto
+  validate:
+    min_rows: 1000
+    not_null:
+      - anno
+      - istituzione
+      - importo
+
+mart:
+  tables:
+    - name: "contrattazione_comparti"
+      sql: "sql/mart.sql"
+  required_tables:
+    - "contrattazione_comparti"
+  validate:
+    table_rules:
+      contrattazione_comparti:
+        required_columns: [anno, codi_comparto, desc_comparto, tot_importo, enti]
+        primary_key: [anno, codi_comparto]
+        min_rows: 5
+
+validation:
+  fail_on_error: true
+
+support:
+  - name: "enti"
+    config: "../../support/anag-enti/dataset.yml"
+    years: [2024]
+  - name: "comparti"
+    config: "../../support/anag-comparti/dataset.yml"
+    years: [2024]
+

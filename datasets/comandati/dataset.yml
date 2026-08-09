@@ -1,0 +1,76 @@
+root: "../../out"
+schema_version: 1
+
+dataset:
+  name: "comandati"
+  source_id: "openbdap"
+  tags: [pa, conto-annuale, comandati, dipendenti-pubblici]
+  category: pa
+  description: "Personale comandato, distaccato o fuori ruolo nelle PA italiane (2020-2024), arricchito con anagrafica enti e comparti."
+  years: [2020, 2021, 2022, 2023, 2024]
+  time_coverage:
+    start_year: 2020
+    end_year: 2024
+
+raw:
+  output_policy: overwrite
+  sources:
+    - name: "comandati_csv"
+      type: "local_file"
+      args:
+        path: "../../_local/seed/dati/{year}/COMANDATI_FUORI_RUOLO_ESONERI_{year}.CSV"
+      primary: true
+
+clean:
+  sql: "sql/clean.sql"
+  read:
+    source: auto
+    mode: latest
+    header: true
+    delim: ";"
+    encoding: "utf-8"
+  required_columns:
+    - anno
+    - istituzione
+    - contratto
+    - categoria
+    - qualifica
+    - comand_dist_u
+    - comand_dist_d
+    - fuori_ruolo_u
+    - fuori_ruolo_d
+    - codi_comparto
+    - desc_comparto
+  validate:
+    min_rows: 100
+    not_null:
+      - anno
+      - istituzione
+      - contratto
+
+mart:
+  tables:
+    - name: "comandati_comparti"
+      sql: "sql/mart.sql"
+  required_tables:
+    - "comandati_comparti"
+  validate:
+    table_rules:
+      comandati_comparti:
+        required_columns: [anno, codi_comparto, desc_comparto, tot_comand_dist_u, tot_comand_dist_d, tot_fuori_ruolo_u, tot_fuori_ruolo_d, enti]
+        primary_key: [anno, codi_comparto]
+        min_rows: 5
+
+validation:
+  fail_on_error: true
+
+support:
+  - name: "enti"
+    config: "../../support/anag-enti/dataset.yml"
+    years: [2024]
+  - name: "comparti"
+    config: "../../support/anag-comparti/dataset.yml"
+    years: [2024]
+  - name: "qualifiche"
+    config: "../../support/anag-qualifiche/dataset.yml"
+    years: [2024]

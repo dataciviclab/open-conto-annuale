@@ -1,0 +1,92 @@
+root: "../../out"
+schema_version: 1
+
+dataset:
+  name: "personale"
+  source_id: "openbdap"
+  tags: [pa, conto-annuale, personale, eta, dipendenti-pubblici]
+  category: pa
+  description: "Distribuzione per fascia di età del personale delle PA italiane (2020-2024), arricchita con anagrafica enti, comparti e qualifiche."
+  years: [2020, 2021, 2022, 2023, 2024]
+  time_coverage:
+    start_year: 2020
+    end_year: 2024
+
+raw:
+  output_policy: overwrite
+  sources:
+    - name: "eta_csv"
+      type: "local_file"
+      args:
+        path: "../../_local/seed/dati/{year}/ETA_{year}.CSV"
+      primary: true
+
+clean:
+  sql: "sql/clean.sql"
+  read:
+    source: auto
+    mode: latest
+    header: true
+    delim: ";"
+    encoding: "utf-8"
+  required_columns:
+    - anno
+    - istituzione
+    - contratto
+    - categoria
+    - qualifica
+    - fascia
+    - uomini
+    - donne
+    - codi_comparto
+    - desc_comparto
+  validate:
+    min_rows: 1000
+    not_null:
+      - anno
+      - istituzione
+      - contratto
+      - qualifica
+
+mart:
+  tables:
+    - name: "personale_eta_comparti"
+      sql: "sql/mart_eta.sql"
+    - name: "mart_sintesi"
+      sql: "sql/mart_sintesi.sql"
+    - name: "mart_trend"
+      sql: "sql/mart_trend.sql"
+      years: [2020, 2021, 2022, 2023, 2024]
+      source_layer: clean
+  required_tables:
+    - "personale_eta_comparti"
+    - "mart_sintesi"
+    - "mart_trend"
+  validate:
+    table_rules:
+      personale_eta_comparti:
+        required_columns: [anno, codi_comparto, desc_comparto, tipo_rilevazione, fascia, tot_uomini, tot_donne, enti]
+        primary_key: [anno, codi_comparto, tipo_rilevazione, fascia]
+        min_rows: 10
+      mart_sintesi:
+        required_columns: [anno, codi_comparto, desc_comparto, tot_uomini, tot_donne, tot_dipendenti, pct_donne, enti]
+        primary_key: [anno, codi_comparto]
+        min_rows: 5
+      mart_trend:
+        required_columns: [codi_comparto, desc_comparto, first_year, last_year, dipendenti_first, dipendenti_last, delta_dipendenti, variazione_pct, cagr_pct]
+        primary_key: [codi_comparto]
+        min_rows: 5
+
+validation:
+  fail_on_error: true
+
+support:
+  - name: "enti"
+    config: "../../support/anag-enti/dataset.yml"
+    years: [2024]
+  - name: "comparti"
+    config: "../../support/anag-comparti/dataset.yml"
+    years: [2024]
+  - name: "qualifiche"
+    config: "../../support/anag-qualifiche/dataset.yml"
+    years: [2024]

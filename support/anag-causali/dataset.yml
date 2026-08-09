@@ -1,0 +1,50 @@
+root: "../../out"
+schema_version: 1
+
+dataset:
+  name: "ca_anag_causali_seed"
+  source_id: "openbdap"
+  tags: [pa, conto-annuale, anagrafica, causali, support]
+  category: pa
+  description: "Anagrafica delle causali di assenza del Conto Annuale — dizionario di supporto."
+  years: [2024]
+
+raw:
+  output_policy: overwrite
+  sources:
+    - name: "anagrafica_causali_csv"
+      type: "local_file"
+      args:
+        path: "../../anagrafica/_data/Causali.CSV"
+      primary: true
+
+clean:
+  sql: "sql/clean.sql"
+  read:
+    source: auto
+    mode: latest
+    header: true
+    delim: ";"
+    encoding: "utf-8"
+  required_columns:
+    - anno
+    - codice_tipo_causale
+    - tipo_causale
+    - codice_causale
+    - descrizione_causale
+  validate:
+    min_rows: 5
+
+mart:
+  tables:
+    - name: "ca_anag_causali_seed"
+      sql: "sql/mart.sql"
+  required_tables: ["ca_anag_causali_seed"]
+  validate:
+    table_rules:
+      ca_anag_causali_seed:
+        required_columns: [anno, codice_tipo_causale, codice_causale, descrizione_causale]
+        min_rows: 5
+
+validation:
+  fail_on_error: true

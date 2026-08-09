@@ -1,0 +1,88 @@
+root: "../../out"
+schema_version: 1
+
+dataset:
+  name: "costo_lavoro"
+  source_id: "openbdap"
+  tags: [pa, conto-annuale, costo-lavoro, spesa, dipendenti-pubblici]
+  category: pa
+  description: "Costo del lavoro del personale delle PA italiane per voce di spesa (2020-2024), arricchito con anagrafica enti, comparti e voci di spesa."
+  years: [2020, 2021, 2022, 2023, 2024]
+  time_coverage:
+    start_year: 2020
+    end_year: 2024
+
+raw:
+  output_policy: overwrite
+  sources:
+    - name: "costo_lavoro_csv"
+      type: "local_file"
+      args:
+        path: "../../_local/seed/dati/{year}/COSTO_LAVORO_{year}.CSV"
+      primary: true
+
+clean:
+  sql: "sql/clean.sql"
+  read:
+    source: auto
+    mode: latest
+    header: true
+    delim: ";"
+    encoding: "utf-8"
+  required_columns:
+    - anno
+    - istituzione
+    - contratto
+    - voce_spesa
+    - totale_spesa
+    - codi_comparto
+    - desc_comparto
+  validate:
+    min_rows: 1000
+    not_null:
+      - anno
+      - istituzione
+      - voce_spesa
+
+mart:
+  tables:
+    - name: "costo_lavoro_comparti"
+      sql: "sql/mart_comparti.sql"
+    - name: "mart_sintesi"
+      sql: "sql/mart_sintesi.sql"
+    - name: "mart_trend"
+      sql: "sql/mart_trend.sql"
+      years: [2020, 2021, 2022, 2023, 2024]
+      source_layer: clean
+  required_tables:
+    - "costo_lavoro_comparti"
+    - "mart_sintesi"
+    - "mart_trend"
+  validate:
+    table_rules:
+      costo_lavoro_comparti:
+        required_columns: [anno, codi_comparto, desc_comparto, codi_tipo_istituzione, voce_spesa, desc_voce_spesa, codi_tipo_voce_spesa, enti, tot_spesa]
+        primary_key: [anno, codi_comparto, codi_tipo_istituzione, voce_spesa, codi_tipo_voce_spesa]
+        min_rows: 10
+      mart_sintesi:
+        required_columns: [anno, codi_comparto, desc_comparto, tot_spesa, tot_spesa_milioni, enti]
+        primary_key: [anno, codi_comparto]
+        min_rows: 5
+      mart_trend:
+        required_columns: [codi_comparto, desc_comparto, first_year, last_year, spesa_first, spesa_last, delta_spesa, variazione_pct, cagr_pct]
+        primary_key: [codi_comparto]
+        min_rows: 5
+
+validation:
+  fail_on_error: true
+
+support:
+  - name: "enti"
+    config: "../../support/anag-enti/dataset.yml"
+    years: [2024]
+  - name: "comparti"
+    config: "../../support/anag-comparti/dataset.yml"
+    years: [2024]
+  - name: "voci_spesa"
+    config: "../../support/anag-voci-spesa/dataset.yml"
+    years: [2024]

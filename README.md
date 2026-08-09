@@ -42,9 +42,10 @@ modalità-flessibile · occupazione
 
 ## Tre modi per accedere ai dati
 
-### 1. Via MCP (clean-query)
+### 1. Via MCP (toolkit)
 
-Il dataset è accessibile via SQL dal server MCP clean-query del Lab.
+I dataset sono accessibili via SQL dal server MCP toolkit del Lab (una query
+per ogni slug: `personale`, `assenze`, `occupazione`, ...).
 
 ### 2. Via DuckDB diretto
 
@@ -70,6 +71,7 @@ Bucket pubblico: `gs://dataciviclab-clean/conto-annuale/`
 
 - [Pipeline](docs/pipeline.md) — esecuzione, struttura, output
 - [Metodologia](docs/metodologia.md) — origini dati, classificazioni
+- [Dataset registry](docs/dataset-registry.md) — elenco dataset, mart, accesso
 - [Tracciati](docs/Tracciati.pdf) — specifiche ufficiali CSV (fonte RGS)
 
 Questo progetto fa parte di [DataCivicLab](https://github.com/dataciviclab).
