@@ -18,13 +18,10 @@ eseguiti prima di questi ultimi.
 ## Setup iniziale
 
 ```bash
-# 1. Scarica lo ZIP annuale (una tantum)
-make download
-
-# 2. Estrae i CSV dati dallo ZIP
+# 1. Scarica lo ZIP annuale ed estrae i CSV dati (script unico)
 make extract-dati
 
-# 3. Processa le anagrafiche (6 seed)
+# 2. Processa le anagrafiche (9 seed)
 make seeds
 ```
 
@@ -32,10 +29,10 @@ make seeds
 
 ```bash
 # Dataset dati (uno per volta)
-make run-assenze
-make run-composizione-retribuzione
-make run-costo-lavoro
-make run-personale
+make run/assenze
+make run/composizione-retribuzione
+make run/costo-lavoro
+make run/personale
 
 # Oppure tutti
 make run-all
@@ -44,7 +41,7 @@ make run-all
 make verify
 ```
 
-I target `run-*` includono automaticamente `extract-dati` come dipendenza.
+I target `run/*` includono automaticamente `extract-dati` come dipendenza.
 
 ## Dataset disponibili
 
@@ -96,14 +93,14 @@ I mart sono aggregati per comparto (codi_comparto + desc_comparto).
 
 | Comando | Cosa fa |
 |---|---|
-| `make download` | Scarica `{year}Tutto.zip` dal sito RGS |
-| `make extract-dati` | Estrae i CSV dati dallo ZIP in `_local/seed/dati/` |
+| `make extract-dati` | Scarica `{year}Tutto.zip` (1×) ed estrae i CSV dati in `_local/seed/dati/` |
 | `make seeds` | Processa le 6 anagrafiche |
-| `make run-{dataset}` | extract-dati + pipeline dataset |
+| `make run/{dataset}` | extract-dati + pipeline dataset |
 | `make run-all` | seeds + tutti i dataset |
-| `make check` | Valida sintassi di tutti i dataset.yml |
+| `make check` | Preflight su tutti i dataset.yml |
 | `make verify` | Verifica output (soglie minime) |
 | `make smoke` | Smoke test (sample 1000 righe) |
+| `make registry` | Rigenera registry/registry.json |
 | `make clean` | Rimuove output |
 
 ## Fonte dati

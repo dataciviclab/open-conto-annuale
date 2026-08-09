@@ -1,0 +1,95 @@
+root: "../../out"
+schema_version: 1
+
+dataset:
+  name: "occupazione"
+  source_id: "openbdap"
+  tags: [pa, conto-annuale, occupazione, tempo-pieno, part-time, dipendenti-pubblici]
+  category: pa
+  description: "Occupazione del personale delle PA italiane per regime orario (tempo pieno, part-time) e genere (2020-2024), arricchita con anagrafica enti e comparti."
+  # 2020 incluso: colonna PIEDO fixata via sed in extract-dati (Makefile) e CI (pipeline.yml)
+  years: [2020, 2021, 2022, 2023, 2024]
+  time_coverage:
+    start_year: 2020
+    end_year: 2024
+
+raw:
+  output_policy: overwrite
+  sources:
+    - name: "occupazione_csv"
+      type: "local_file"
+      args:
+        path: "../../_local/seed/dati/{year}/OCCUPAZIONE_{year}.CSV"
+      primary: true
+
+clean:
+  sql: "sql/clean.sql"
+  read:
+    source: auto
+    mode: latest
+    header: true
+    delim: ";"
+    encoding: "utf-8"
+  required_columns:
+    - anno
+    - istituzione
+    - contratto
+    - categoria
+    - qualifica
+    - tp_u
+    - tp_d
+    - pti_u
+    - pti_d
+    - pts_u
+    - pts_d
+    - codi_comparto
+    - desc_comparto
+  validate:
+    min_rows: 1000
+    not_null:
+      - anno
+      - istituzione
+      - contratto
+
+mart:
+  tables:
+    - name: "occupazione_comparti"
+      sql: "sql/mart.sql"
+    - name: "mart_sintesi"
+      sql: "sql/mart_sintesi.sql"
+    - name: "mart_trend"
+      sql: "sql/mart_trend.sql"
+      years: [2020, 2021, 2022, 2023, 2024]
+      source_layer: clean
+  required_tables:
+    - "occupazione_comparti"
+    - "mart_sintesi"
+    - "mart_trend"
+  validate:
+    table_rules:
+      occupazione_comparti:
+        required_columns: [anno, codi_comparto, desc_comparto, tot_dipendenti, tot_uomini, tot_donne, enti]
+        primary_key: [anno, codi_comparto]
+        min_rows: 5
+      mart_sintesi:
+        required_columns: [anno, codi_comparto, desc_comparto, tot_dipendenti, tot_uomini, tot_donne, pct_donne, tot_part_time, pct_part_time, enti]
+        primary_key: [anno, codi_comparto]
+        min_rows: 5
+      mart_trend:
+        required_columns: [codi_comparto, desc_comparto, first_year, last_year, dipendenti_first, dipendenti_last, delta_dipendenti, variazione_pct, cagr_pct]
+        primary_key: [codi_comparto]
+        min_rows: 5
+
+validation:
+  fail_on_error: true
+
+support:
+  - name: "enti"
+    config: "../../support/anag-enti/dataset.yml"
+    years: [2024]
+  - name: "comparti"
+    config: "../../support/anag-comparti/dataset.yml"
+    years: [2024]
+  - name: "qualifiche"
+    config: "../../support/anag-qualifiche/dataset.yml"
+    years: [2024]

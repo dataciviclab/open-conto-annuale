@@ -23,14 +23,16 @@ jobs:
 
       - name: Validate all dataset configs
         run: |
-          for cfg in $(find . -path '*/anagrafica/*' -name dataset.yml | sort); do
+          for cfg in $(find . -path '*/support/*' -name dataset.yml | sort); do
             echo "→ $cfg"
-            python3 -m toolkit.cli.app inspect paths --config "$cfg" --year 2024 > /dev/null 2>&1
+            python3 -m toolkit.cli.app run preflight --config "$cfg" --years 2024 > /dev/null 2>&1 || exit 1
           done
-          for d in assenze composizione-retribuzione costo-lavoro personale anzianita \
-                   titoli-studio comandati contrattazione flessibili passaggi distribuzione \
-                   retribuzione-media modalita-flessibile occupazione; do
+          for d in datasets/assenze datasets/composizione-retribuzione datasets/costo-lavoro \
+                   datasets/personale datasets/anzianita datasets/titoli-studio \
+                   datasets/comandati datasets/contrattazione datasets/flessibili \
+                   datasets/passaggi datasets/distribuzione datasets/retribuzione-media \
+                   datasets/modalita-flessibile datasets/occupazione; do
             echo "→ $d/dataset.yml"
-            python3 -m toolkit.cli.app inspect paths --config "$d/dataset.yml" --year 2024 > /dev/null 2>&1
+            python3 -m toolkit.cli.app run preflight --config "$d/dataset.yml" --years 2024 > /dev/null 2>&1 || exit 1
           done
           echo "✅ All configs valid"
