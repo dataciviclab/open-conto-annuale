@@ -105,17 +105,25 @@ jobs:
           done
 
       # ── Run dataset ─────────────────────────────────────────────────
+      # Un solo run per dataset con --years: il toolkit processa gli anni
+      # e poi esegue il multi-year mart UNA volta (con tutti i parquet
+      # disponibili). Un loop per-anno romperebbe il multi-year (nel primo
+      # run mancherebbero i parquet degli anni successivi).
       - name: Run datasets
         if: steps.detect.outputs.dirs != ''
         run: |
-          if [ "${{ inputs.years || 'all' }}" = "all" ]; then YEARS="2020 2021 2022 2023 2024"
-          else YEARS=$(echo "${{ inputs.years }}" | tr ',' ' '); fi
+          if [ "${{ inputs.years || 'all' }}" = "all" ]; then REQUESTED="2020 2021 2022 2023 2024"
+          else REQUESTED=$(echo "${{ inputs.years }}" | tr ',' ' '); fi
           for dir in ${{ steps.detect.outputs.dirs }}; do
             [ "${dir#datasets/}" = "${dir}" ] && continue
-            for y in $YEARS; do
-              python3 -c "import yaml; y=yaml.safe_load(open('${dir}/dataset.yml')); exit(0 if $y in y['dataset']['years'] else 1)" && echo "=== $dir $y ===" || { echo "  ⏭️ $dir salta $y (non configurato)"; continue; }
-              toolkit run --config "${dir}/dataset.yml" --year "$y"
+            # Interseca gli anni richiesti con quelli configurati nel dataset
+            YEARS=""
+            for y in $REQUESTED; do
+              python3 -c "import yaml,sys; exit(0 if $y in yaml.safe_load(open('${dir}/dataset.yml'))['dataset']['years'] else 1)" && YEARS="$YEARS $y"
             done
+            [ -z "$YEARS" ] && { echo "  ⏭️ $dir: nessun anno richiesto configurato"; continue; }
+            echo "=== $dir anni:$YEARS ==="
+            toolkit run --config "${dir}/dataset.yml" --years "$(echo $YEARS | tr ' ' ',')"
           done
 
       # ── Verify output (gate) ────────────────────────────────────────
