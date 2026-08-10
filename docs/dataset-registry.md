@@ -2,7 +2,7 @@
 
 Registry generato: `registry/registry.json` (fusion ADR, toolkit v1.49+).
 
-Rigenerazione: `python scripts/build_registry.py --write` (o `make registry`).
+Rigenerazione: `toolkit registry build --prefix conto-annuale --write` (o `make registry`).
 
 ## Dataset
 

@@ -79,7 +79,7 @@ check:
 
 .PHONY: registry
 registry:
-	$(PYTHON) scripts/build_registry.py --write
+	toolkit registry build --prefix conto-annuale --write
 
 # --- Pulizia ---
 
