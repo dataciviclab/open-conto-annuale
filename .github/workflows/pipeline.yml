@@ -5,7 +5,7 @@
 #   2. seeds anagrafiche (support)
 #   3. verify output (gate)
 #   4. sync GCS (clean + mart)
-#   5. build_registry --write (toolkit.registry, fusion ADR)
+#   5. `toolkit registry build --prefix conto-annuale --write`
 #   6. PR draft "chore(post-merge): aggiorna registry" se diff
 #
 # Triggers:
@@ -178,13 +178,13 @@ jobs:
       # ── Registry ────────────────────────────────────────────────────
       - name: Build registry
         if: steps.detect.outputs.dirs != ''
-        run: python3 scripts/build_registry.py --write
+        run: toolkit registry build --prefix conto-annuale --write
 
       - name: Check registry diff
         if: steps.detect.outputs.dirs != ''
         id: diff
         run: |
-          # registry/ è untracked su main (generato da build_registry) —
+          # registry/ è untracked su main (generato dal builder) —
           # git diff ignora gli untracked, quindi usiamo git status.
           if git status --porcelain -- registry/ | grep -q .; then
             echo "changed=true" >> "$GITHUB_OUTPUT"
