@@ -159,7 +159,7 @@
       ],
       "location": {
         "type": "gcs",
-        "path": "gs://dataciviclab-clean/anzianita/*/anzianita_*_clean.parquet",
+        "path": "gs://dataciviclab-clean/conto-annuale/anzianita/*/anzianita_*_clean.parquet",
         "multi_file": true
       },
       "stage": "incubating",
@@ -342,7 +342,7 @@
       ],
       "location": {
         "type": "gcs",
-        "path": "gs://dataciviclab-clean/assenze/*/assenze_*_clean.parquet",
+        "path": "gs://dataciviclab-clean/conto-annuale/assenze/*/assenze_*_clean.parquet",
         "multi_file": true
       },
       "stage": "incubating",
@@ -405,7 +405,7 @@
       ],
       "location": {
         "type": "gcs",
-        "path": "gs://dataciviclab-clean/ca_anag_causali_seed/2024/ca_anag_causali_seed_2024_clean.parquet",
+        "path": "gs://dataciviclab-clean/conto-annuale/ca_anag_causali_seed/2024/ca_anag_causali_seed_2024_clean.parquet",
         "multi_file": false
       },
       "stage": "incubating",
@@ -478,7 +478,7 @@
       ],
       "location": {
         "type": "gcs",
-        "path": "gs://dataciviclab-clean/ca_anag_comparti_seed/2024/ca_anag_comparti_seed_2024_clean.parquet",
+        "path": "gs://dataciviclab-clean/conto-annuale/ca_anag_comparti_seed/2024/ca_anag_comparti_seed_2024_clean.parquet",
         "multi_file": false
       },
       "stage": "incubating",
@@ -552,7 +552,7 @@
       ],
       "location": {
         "type": "gcs",
-        "path": "gs://dataciviclab-clean/ca_anag_enti_seed/2024/ca_anag_enti_seed_2024_clean.parquet",
+        "path": "gs://dataciviclab-clean/conto-annuale/ca_anag_enti_seed/2024/ca_anag_enti_seed_2024_clean.parquet",
         "multi_file": false
       },
       "stage": "incubating",
@@ -637,7 +637,7 @@
       ],
       "location": {
         "type": "gcs",
-        "path": "gs://dataciviclab-clean/ca_anag_fondi_seed/2024/ca_anag_fondi_seed_2024_clean.parquet",
+        "path": "gs://dataciviclab-clean/conto-annuale/ca_anag_fondi_seed/2024/ca_anag_fondi_seed_2024_clean.parquet",
         "multi_file": false
       },
       "stage": "incubating",
@@ -716,7 +716,7 @@
       ],
       "location": {
         "type": "gcs",
-        "path": "gs://dataciviclab-clean/ca_anag_qualifiche_seed/2024/ca_anag_qualifiche_seed_2024_clean.parquet",
+        "path": "gs://dataciviclab-clean/conto-annuale/ca_anag_qualifiche_seed/2024/ca_anag_qualifiche_seed_2024_clean.parquet",
         "multi_file": false
       },
       "stage": "incubating",
@@ -795,7 +795,7 @@
       ],
       "location": {
         "type": "gcs",
-        "path": "gs://dataciviclab-clean/ca_anag_territorio_seed/2024/ca_anag_territorio_seed_2024_clean.parquet",
+        "path": "gs://dataciviclab-clean/conto-annuale/ca_anag_territorio_seed/2024/ca_anag_territorio_seed_2024_clean.parquet",
         "multi_file": false
       },
       "stage": "incubating",
@@ -844,7 +844,7 @@
       ],
       "location": {
         "type": "gcs",
-        "path": "gs://dataciviclab-clean/ca_anag_titoli_studio_seed/2024/ca_anag_titoli_studio_seed_2024_clean.parquet",
+        "path": "gs://dataciviclab-clean/conto-annuale/ca_anag_titoli_studio_seed/2024/ca_anag_titoli_studio_seed_2024_clean.parquet",
         "multi_file": false
       },
       "stage": "incubating",
@@ -917,7 +917,7 @@
       ],
       "location": {
         "type": "gcs",
-        "path": "gs://dataciviclab-clean/ca_anag_voci_fua_seed/2024/ca_anag_voci_fua_seed_2024_clean.parquet",
+        "path": "gs://dataciviclab-clean/conto-annuale/ca_anag_voci_fua_seed/2024/ca_anag_voci_fua_seed_2024_clean.parquet",
         "multi_file": false
       },
       "stage": "incubating",
@@ -984,7 +984,7 @@
       ],
       "location": {
         "type": "gcs",
-        "path": "gs://dataciviclab-clean/ca_anag_voci_spesa_seed/2024/ca_anag_voci_spesa_seed_2024_clean.parquet",
+        "path": "gs://dataciviclab-clean/conto-annuale/ca_anag_voci_spesa_seed/2024/ca_anag_voci_spesa_seed_2024_clean.parquet",
         "multi_file": false
       },
       "stage": "incubating",
@@ -1098,7 +1098,7 @@
       ],
       "location": {
         "type": "gcs",
-        "path": "gs://dataciviclab-clean/comandati/*/comandati_*_clean.parquet",
+        "path": "gs://dataciviclab-clean/conto-annuale/comandati/*/comandati_*_clean.parquet",
         "multi_file": true
       },
       "stage": "incubating",
@@ -1276,7 +1276,7 @@
       ],
       "location": {
         "type": "gcs",
-        "path": "gs://dataciviclab-clean/composizione_retribuzione/*/composizione_retribuzione_*_clean.parquet",
+        "path": "gs://dataciviclab-clean/conto-annuale/composizione_retribuzione/*/composizione_retribuzione_*_clean.parquet",
         "multi_file": true
       },
       "stage": "incubating",
@@ -1393,7 +1393,7 @@
       ],
       "location": {
         "type": "gcs",
-        "path": "gs://dataciviclab-clean/contrattazione/*/contrattazione_*_clean.parquet",
+        "path": "gs://dataciviclab-clean/conto-annuale/contrattazione/*/contrattazione_*_clean.parquet",
         "multi_file": true
       },
       "stage": "incubating",
@@ -1535,7 +1535,7 @@
       ],
       "location": {
         "type": "gcs",
-        "path": "gs://dataciviclab-clean/costo_lavoro/*/costo_lavoro_*_clean.parquet",
+        "path": "gs://dataciviclab-clean/conto-annuale/costo_lavoro/*/costo_lavoro_*_clean.parquet",
         "multi_file": true
       },
       "stage": "incubating",
@@ -1647,7 +1647,7 @@
       ],
       "location": {
         "type": "gcs",
-        "path": "gs://dataciviclab-clean/distribuzione/*/distribuzione_*_clean.parquet",
+        "path": "gs://dataciviclab-clean/conto-annuale/distribuzione/*/distribuzione_*_clean.parquet",
         "multi_file": true
       },
       "stage": "incubating",
@@ -1787,7 +1787,7 @@
       ],
       "location": {
         "type": "gcs",
-        "path": "gs://dataciviclab-clean/flessibili/*/flessibili_*_clean.parquet",
+        "path": "gs://dataciviclab-clean/conto-annuale/flessibili/*/flessibili_*_clean.parquet",
         "multi_file": true
       },
       "stage": "incubating",
@@ -1928,7 +1928,7 @@
       ],
       "location": {
         "type": "gcs",
-        "path": "gs://dataciviclab-clean/modalita_flessibile/*/modalita_flessibile_*_clean.parquet",
+        "path": "gs://dataciviclab-clean/conto-annuale/modalita_flessibile/*/modalita_flessibile_*_clean.parquet",
         "multi_file": true
       },
       "stage": "incubating",
@@ -2058,7 +2058,7 @@
       ],
       "location": {
         "type": "gcs",
-        "path": "gs://dataciviclab-clean/occupazione/*/occupazione_*_clean.parquet",
+        "path": "gs://dataciviclab-clean/conto-annuale/occupazione/*/occupazione_*_clean.parquet",
         "multi_file": true
       },
       "stage": "incubating",
@@ -2205,7 +2205,7 @@
       ],
       "location": {
         "type": "gcs",
-        "path": "gs://dataciviclab-clean/passaggi/*/passaggi_*_clean.parquet",
+        "path": "gs://dataciviclab-clean/conto-annuale/passaggi/*/passaggi_*_clean.parquet",
         "multi_file": true
       },
       "stage": "incubating",
@@ -2377,7 +2377,7 @@
       ],
       "location": {
         "type": "gcs",
-        "path": "gs://dataciviclab-clean/personale/*/personale_*_clean.parquet",
+        "path": "gs://dataciviclab-clean/conto-annuale/personale/*/personale_*_clean.parquet",
         "multi_file": true
       },
       "stage": "incubating",
@@ -2499,7 +2499,7 @@
       ],
       "location": {
         "type": "gcs",
-        "path": "gs://dataciviclab-clean/retribuzione_media/*/retribuzione_media_*_clean.parquet",
+        "path": "gs://dataciviclab-clean/conto-annuale/retribuzione_media/*/retribuzione_media_*_clean.parquet",
         "multi_file": true
       },
       "stage": "incubating",
@@ -2664,7 +2664,7 @@
       ],
       "location": {
         "type": "gcs",
-        "path": "gs://dataciviclab-clean/titoli_studio/*/titoli_studio_*_clean.parquet",
+        "path": "gs://dataciviclab-clean/conto-annuale/titoli_studio/*/titoli_studio_*_clean.parquet",
         "multi_file": true
       },
       "stage": "incubating",
@@ -2682,7 +2682,7 @@
       "table": "anzianita_comparti",
       "location": {
         "type": "gcs",
-        "path": "gs://dataciviclab-mart/anzianita/2024/anzianita_comparti.parquet",
+        "path": "gs://dataciviclab-mart/conto-annuale/anzianita/2024/anzianita_comparti.parquet",
         "multi_file": false
       }
     },
@@ -2692,7 +2692,7 @@
       "table": "mart_sintesi",
       "location": {
         "type": "gcs",
-        "path": "gs://dataciviclab-mart/anzianita/2024/mart_sintesi.parquet",
+        "path": "gs://dataciviclab-mart/conto-annuale/anzianita/2024/mart_sintesi.parquet",
         "multi_file": false
       }
     },
@@ -2702,7 +2702,7 @@
       "table": "mart_trend",
       "location": {
         "type": "gcs",
-        "path": "gs://dataciviclab-mart/anzianita/mart_trend.parquet",
+        "path": "gs://dataciviclab-mart/conto-annuale/anzianita/mart_trend.parquet",
         "multi_file": false
       }
     },
@@ -2712,7 +2712,7 @@
       "table": "assenze_comparti",
       "location": {
         "type": "gcs",
-        "path": "gs://dataciviclab-mart/assenze/2024/assenze_comparti.parquet",
+        "path": "gs://dataciviclab-mart/conto-annuale/assenze/2024/assenze_comparti.parquet",
         "multi_file": false
       }
     },
@@ -2722,7 +2722,7 @@
       "table": "mart_sintesi",
       "location": {
         "type": "gcs",
-        "path": "gs://dataciviclab-mart/assenze/2024/mart_sintesi.parquet",
+        "path": "gs://dataciviclab-mart/conto-annuale/assenze/2024/mart_sintesi.parquet",
         "multi_file": false
       }
     },
@@ -2732,7 +2732,7 @@
       "table": "mart_trend",
       "location": {
         "type": "gcs",
-        "path": "gs://dataciviclab-mart/assenze/mart_trend.parquet",
+        "path": "gs://dataciviclab-mart/conto-annuale/assenze/mart_trend.parquet",
         "multi_file": false
       }
     },
@@ -2742,7 +2742,7 @@
       "table": "ca_anag_causali_seed",
       "location": {
         "type": "gcs",
-        "path": "gs://dataciviclab-mart/ca_anag_causali_seed/2024/ca_anag_causali_seed.parquet",
+        "path": "gs://dataciviclab-mart/conto-annuale/ca_anag_causali_seed/2024/ca_anag_causali_seed.parquet",
         "multi_file": false
       }
     },
@@ -2752,7 +2752,7 @@
       "table": "ca_anag_comparti_seed",
       "location": {
         "type": "gcs",
-        "path": "gs://dataciviclab-mart/ca_anag_comparti_seed/2024/ca_anag_comparti_seed.parquet",
+        "path": "gs://dataciviclab-mart/conto-annuale/ca_anag_comparti_seed/2024/ca_anag_comparti_seed.parquet",
         "multi_file": false
       }
     },
@@ -2762,7 +2762,7 @@
       "table": "ca_anag_enti_seed",
       "location": {
         "type": "gcs",
-        "path": "gs://dataciviclab-mart/ca_anag_enti_seed/2024/ca_anag_enti_seed.parquet",
+        "path": "gs://dataciviclab-mart/conto-annuale/ca_anag_enti_seed/2024/ca_anag_enti_seed.parquet",
         "multi_file": false
       }
     },
@@ -2772,7 +2772,7 @@
       "table": "ca_anag_fondi_seed",
       "location": {
         "type": "gcs",
-        "path": "gs://dataciviclab-mart/ca_anag_fondi_seed/2024/ca_anag_fondi_seed.parquet",
+        "path": "gs://dataciviclab-mart/conto-annuale/ca_anag_fondi_seed/2024/ca_anag_fondi_seed.parquet",
         "multi_file": false
       }
     },
@@ -2782,7 +2782,7 @@
       "table": "ca_anag_qualifiche_seed",
       "location": {
         "type": "gcs",
-        "path": "gs://dataciviclab-mart/ca_anag_qualifiche_seed/2024/ca_anag_qualifiche_seed.parquet",
+        "path": "gs://dataciviclab-mart/conto-annuale/ca_anag_qualifiche_seed/2024/ca_anag_qualifiche_seed.parquet",
         "multi_file": false
       }
     },
@@ -2792,7 +2792,7 @@
       "table": "ca_anag_territorio_seed",
       "location": {
         "type": "gcs",
-        "path": "gs://dataciviclab-mart/ca_anag_territorio_seed/2024/ca_anag_territorio_seed.parquet",
+        "path": "gs://dataciviclab-mart/conto-annuale/ca_anag_territorio_seed/2024/ca_anag_territorio_seed.parquet",
         "multi_file": false
       }
     },
@@ -2802,7 +2802,7 @@
       "table": "ca_anag_titoli_studio_seed",
       "location": {
         "type": "gcs",
-        "path": "gs://dataciviclab-mart/ca_anag_titoli_studio_seed/2024/ca_anag_titoli_studio_seed.parquet",
+        "path": "gs://dataciviclab-mart/conto-annuale/ca_anag_titoli_studio_seed/2024/ca_anag_titoli_studio_seed.parquet",
         "multi_file": false
       }
     },
@@ -2812,7 +2812,7 @@
       "table": "ca_anag_voci_fua_seed",
       "location": {
         "type": "gcs",
-        "path": "gs://dataciviclab-mart/ca_anag_voci_fua_seed/2024/ca_anag_voci_fua_seed.parquet",
+        "path": "gs://dataciviclab-mart/conto-annuale/ca_anag_voci_fua_seed/2024/ca_anag_voci_fua_seed.parquet",
         "multi_file": false
       }
     },
@@ -2822,7 +2822,7 @@
       "table": "ca_anag_voci_spesa_seed",
       "location": {
         "type": "gcs",
-        "path": "gs://dataciviclab-mart/ca_anag_voci_spesa_seed/2024/ca_anag_voci_spesa_seed.parquet",
+        "path": "gs://dataciviclab-mart/conto-annuale/ca_anag_voci_spesa_seed/2024/ca_anag_voci_spesa_seed.parquet",
         "multi_file": false
       }
     },
@@ -2832,7 +2832,7 @@
       "table": "comandati_comparti",
       "location": {
         "type": "gcs",
-        "path": "gs://dataciviclab-mart/comandati/2024/comandati_comparti.parquet",
+        "path": "gs://dataciviclab-mart/conto-annuale/comandati/2024/comandati_comparti.parquet",
         "multi_file": false
       }
     },
@@ -2842,7 +2842,7 @@
       "table": "mart_sintesi",
       "location": {
         "type": "gcs",
-        "path": "gs://dataciviclab-mart/comandati/2024/mart_sintesi.parquet",
+        "path": "gs://dataciviclab-mart/conto-annuale/comandati/2024/mart_sintesi.parquet",
         "multi_file": false
       }
     },
@@ -2852,7 +2852,7 @@
       "table": "mart_trend",
       "location": {
         "type": "gcs",
-        "path": "gs://dataciviclab-mart/comandati/mart_trend.parquet",
+        "path": "gs://dataciviclab-mart/conto-annuale/comandati/mart_trend.parquet",
         "multi_file": false
       }
     },
@@ -2862,7 +2862,7 @@
       "table": "mart_sintesi",
       "location": {
         "type": "gcs",
-        "path": "gs://dataciviclab-mart/composizione_retribuzione/2024/mart_sintesi.parquet",
+        "path": "gs://dataciviclab-mart/conto-annuale/composizione_retribuzione/2024/mart_sintesi.parquet",
         "multi_file": false
       }
     },
@@ -2872,7 +2872,7 @@
       "table": "mart_trend",
       "location": {
         "type": "gcs",
-        "path": "gs://dataciviclab-mart/composizione_retribuzione/mart_trend.parquet",
+        "path": "gs://dataciviclab-mart/conto-annuale/composizione_retribuzione/mart_trend.parquet",
         "multi_file": false
       }
     },
@@ -2882,7 +2882,7 @@
       "table": "retribuzioni_comparti",
       "location": {
         "type": "gcs",
-        "path": "gs://dataciviclab-mart/composizione_retribuzione/2024/retribuzioni_comparti.parquet",
+        "path": "gs://dataciviclab-mart/conto-annuale/composizione_retribuzione/2024/retribuzioni_comparti.parquet",
         "multi_file": false
       }
     },
@@ -2892,7 +2892,7 @@
       "table": "retribuzioni_entrate",
       "location": {
         "type": "gcs",
-        "path": "gs://dataciviclab-mart/composizione_retribuzione/2024/retribuzioni_entrate.parquet",
+        "path": "gs://dataciviclab-mart/conto-annuale/composizione_retribuzione/2024/retribuzioni_entrate.parquet",
         "multi_file": false
       }
     },
@@ -2902,7 +2902,7 @@
       "table": "contrattazione_comparti",
       "location": {
         "type": "gcs",
-        "path": "gs://dataciviclab-mart/contrattazione/2024/contrattazione_comparti.parquet",
+        "path": "gs://dataciviclab-mart/conto-annuale/contrattazione/2024/contrattazione_comparti.parquet",
         "multi_file": false
       }
     },
@@ -2912,7 +2912,7 @@
       "table": "mart_sintesi",
       "location": {
         "type": "gcs",
-        "path": "gs://dataciviclab-mart/contrattazione/2024/mart_sintesi.parquet",
+        "path": "gs://dataciviclab-mart/conto-annuale/contrattazione/2024/mart_sintesi.parquet",
         "multi_file": false
       }
     },
@@ -2922,7 +2922,7 @@
       "table": "mart_trend",
       "location": {
         "type": "gcs",
-        "path": "gs://dataciviclab-mart/contrattazione/mart_trend.parquet",
+        "path": "gs://dataciviclab-mart/conto-annuale/contrattazione/mart_trend.parquet",
         "multi_file": false
       }
     },
@@ -2932,7 +2932,7 @@
       "table": "costo_lavoro_comparti",
       "location": {
         "type": "gcs",
-        "path": "gs://dataciviclab-mart/costo_lavoro/2024/costo_lavoro_comparti.parquet",
+        "path": "gs://dataciviclab-mart/conto-annuale/costo_lavoro/2024/costo_lavoro_comparti.parquet",
         "multi_file": false
       }
     },
@@ -2942,7 +2942,7 @@
       "table": "mart_sintesi",
       "location": {
         "type": "gcs",
-        "path": "gs://dataciviclab-mart/costo_lavoro/2024/mart_sintesi.parquet",
+        "path": "gs://dataciviclab-mart/conto-annuale/costo_lavoro/2024/mart_sintesi.parquet",
         "multi_file": false
       }
     },
@@ -2952,7 +2952,7 @@
       "table": "mart_trend",
       "location": {
         "type": "gcs",
-        "path": "gs://dataciviclab-mart/costo_lavoro/mart_trend.parquet",
+        "path": "gs://dataciviclab-mart/conto-annuale/costo_lavoro/mart_trend.parquet",
         "multi_file": false
       }
     },
@@ -2962,7 +2962,7 @@
       "table": "distribuzione_comparti",
       "location": {
         "type": "gcs",
-        "path": "gs://dataciviclab-mart/distribuzione/2024/distribuzione_comparti.parquet",
+        "path": "gs://dataciviclab-mart/conto-annuale/distribuzione/2024/distribuzione_comparti.parquet",
         "multi_file": false
       }
     },
@@ -2972,7 +2972,7 @@
       "table": "mart_sintesi",
       "location": {
         "type": "gcs",
-        "path": "gs://dataciviclab-mart/distribuzione/2024/mart_sintesi.parquet",
+        "path": "gs://dataciviclab-mart/conto-annuale/distribuzione/2024/mart_sintesi.parquet",
         "multi_file": false
       }
     },
@@ -2982,7 +2982,7 @@
       "table": "mart_trend",
       "location": {
         "type": "gcs",
-        "path": "gs://dataciviclab-mart/distribuzione/mart_trend.parquet",
+        "path": "gs://dataciviclab-mart/conto-annuale/distribuzione/mart_trend.parquet",
         "multi_file": false
       }
     },
@@ -2992,7 +2992,7 @@
       "table": "flessibili_comparti",
       "location": {
         "type": "gcs",
-        "path": "gs://dataciviclab-mart/flessibili/2024/flessibili_comparti.parquet",
+        "path": "gs://dataciviclab-mart/conto-annuale/flessibili/2024/flessibili_comparti.parquet",
         "multi_file": false
       }
     },
@@ -3002,7 +3002,7 @@
       "table": "mart_sintesi",
       "location": {
         "type": "gcs",
-        "path": "gs://dataciviclab-mart/flessibili/2024/mart_sintesi.parquet",
+        "path": "gs://dataciviclab-mart/conto-annuale/flessibili/2024/mart_sintesi.parquet",
         "multi_file": false
       }
     },
@@ -3012,7 +3012,7 @@
       "table": "mart_trend",
       "location": {
         "type": "gcs",
-        "path": "gs://dataciviclab-mart/flessibili/mart_trend.parquet",
+        "path": "gs://dataciviclab-mart/conto-annuale/flessibili/mart_trend.parquet",
         "multi_file": false
       }
     },
@@ -3022,7 +3022,7 @@
       "table": "mart_sintesi",
       "location": {
         "type": "gcs",
-        "path": "gs://dataciviclab-mart/modalita_flessibile/2024/mart_sintesi.parquet",
+        "path": "gs://dataciviclab-mart/conto-annuale/modalita_flessibile/2024/mart_sintesi.parquet",
         "multi_file": false
       }
     },
@@ -3032,7 +3032,7 @@
       "table": "mart_trend",
       "location": {
         "type": "gcs",
-        "path": "gs://dataciviclab-mart/modalita_flessibile/mart_trend.parquet",
+        "path": "gs://dataciviclab-mart/conto-annuale/modalita_flessibile/mart_trend.parquet",
         "multi_file": false
       }
     },
@@ -3042,7 +3042,7 @@
       "table": "modalita_flessibile_comparti",
       "location": {
         "type": "gcs",
-        "path": "gs://dataciviclab-mart/modalita_flessibile/2024/modalita_flessibile_comparti.parquet",
+        "path": "gs://dataciviclab-mart/conto-annuale/modalita_flessibile/2024/modalita_flessibile_comparti.parquet",
         "multi_file": false
       }
     },
@@ -3052,7 +3052,7 @@
       "table": "mart_sintesi",
       "location": {
         "type": "gcs",
-        "path": "gs://dataciviclab-mart/occupazione/2024/mart_sintesi.parquet",
+        "path": "gs://dataciviclab-mart/conto-annuale/occupazione/2024/mart_sintesi.parquet",
         "multi_file": false
       }
     },
@@ -3062,7 +3062,7 @@
       "table": "mart_trend",
       "location": {
         "type": "gcs",
-        "path": "gs://dataciviclab-mart/occupazione/mart_trend.parquet",
+        "path": "gs://dataciviclab-mart/conto-annuale/occupazione/mart_trend.parquet",
         "multi_file": false
       }
     },
@@ -3072,7 +3072,7 @@
       "table": "occupazione_comparti",
       "location": {
         "type": "gcs",
-        "path": "gs://dataciviclab-mart/occupazione/2024/occupazione_comparti.parquet",
+        "path": "gs://dataciviclab-mart/conto-annuale/occupazione/2024/occupazione_comparti.parquet",
         "multi_file": false
       }
     },
@@ -3082,7 +3082,7 @@
       "table": "mart_sintesi",
       "location": {
         "type": "gcs",
-        "path": "gs://dataciviclab-mart/passaggi/2024/mart_sintesi.parquet",
+        "path": "gs://dataciviclab-mart/conto-annuale/passaggi/2024/mart_sintesi.parquet",
         "multi_file": false
       }
     },
@@ -3092,7 +3092,7 @@
       "table": "mart_trend",
       "location": {
         "type": "gcs",
-        "path": "gs://dataciviclab-mart/passaggi/mart_trend.parquet",
+        "path": "gs://dataciviclab-mart/conto-annuale/passaggi/mart_trend.parquet",
         "multi_file": false
       }
     },
@@ -3102,7 +3102,7 @@
       "table": "passaggi_comparti",
       "location": {
         "type": "gcs",
-        "path": "gs://dataciviclab-mart/passaggi/2024/passaggi_comparti.parquet",
+        "path": "gs://dataciviclab-mart/conto-annuale/passaggi/2024/passaggi_comparti.parquet",
         "multi_file": false
       }
     },
@@ -3112,7 +3112,7 @@
       "table": "mart_sintesi",
       "location": {
         "type": "gcs",
-        "path": "gs://dataciviclab-mart/personale/2024/mart_sintesi.parquet",
+        "path": "gs://dataciviclab-mart/conto-annuale/personale/2024/mart_sintesi.parquet",
         "multi_file": false
       }
     },
@@ -3122,7 +3122,7 @@
       "table": "mart_trend",
       "location": {
         "type": "gcs",
-        "path": "gs://dataciviclab-mart/personale/mart_trend.parquet",
+        "path": "gs://dataciviclab-mart/conto-annuale/personale/mart_trend.parquet",
         "multi_file": false
       }
     },
@@ -3132,7 +3132,7 @@
       "table": "personale_eta_comparti",
       "location": {
         "type": "gcs",
-        "path": "gs://dataciviclab-mart/personale/2024/personale_eta_comparti.parquet",
+        "path": "gs://dataciviclab-mart/conto-annuale/personale/2024/personale_eta_comparti.parquet",
         "multi_file": false
       }
     },
@@ -3142,7 +3142,7 @@
       "table": "mart_sintesi",
       "location": {
         "type": "gcs",
-        "path": "gs://dataciviclab-mart/retribuzione_media/2024/mart_sintesi.parquet",
+        "path": "gs://dataciviclab-mart/conto-annuale/retribuzione_media/2024/mart_sintesi.parquet",
         "multi_file": false
       }
     },
@@ -3152,7 +3152,7 @@
       "table": "mart_trend",
       "location": {
         "type": "gcs",
-        "path": "gs://dataciviclab-mart/retribuzione_media/mart_trend.parquet",
+        "path": "gs://dataciviclab-mart/conto-annuale/retribuzione_media/mart_trend.parquet",
         "multi_file": false
       }
     },
@@ -3162,7 +3162,7 @@
       "table": "retribuzione_media_comparti",
       "location": {
         "type": "gcs",
-        "path": "gs://dataciviclab-mart/retribuzione_media/2024/retribuzione_media_comparti.parquet",
+        "path": "gs://dataciviclab-mart/conto-annuale/retribuzione_media/2024/retribuzione_media_comparti.parquet",
         "multi_file": false
       }
     },
@@ -3172,7 +3172,7 @@
       "table": "mart_sintesi",
       "location": {
         "type": "gcs",
-        "path": "gs://dataciviclab-mart/titoli_studio/2024/mart_sintesi.parquet",
+        "path": "gs://dataciviclab-mart/conto-annuale/titoli_studio/2024/mart_sintesi.parquet",
         "multi_file": false
       }
     },
@@ -3182,7 +3182,7 @@
       "table": "mart_trend",
       "location": {
         "type": "gcs",
-        "path": "gs://dataciviclab-mart/titoli_studio/mart_trend.parquet",
+        "path": "gs://dataciviclab-mart/conto-annuale/titoli_studio/mart_trend.parquet",
         "multi_file": false
       }
     },
@@ -3192,7 +3192,7 @@
       "table": "titoli_studio_comparti",
       "location": {
         "type": "gcs",
-        "path": "gs://dataciviclab-mart/titoli_studio/2024/titoli_studio_comparti.parquet",
+        "path": "gs://dataciviclab-mart/conto-annuale/titoli_studio/2024/titoli_studio_comparti.parquet",
         "multi_file": false
       }
     }
