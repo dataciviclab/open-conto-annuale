@@ -8,31 +8,8 @@ on:
 
 jobs:
   validate-config:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v6.0.3
-      - uses: actions/setup-python@v6.2.0
-        with:
-          python-version: "3.12"
-
-      - name: Install dependencies
-        run: |
-          pip install git+https://github.com/dataciviclab/lab-connectors.git
-          pip install git+https://github.com/dataciviclab/toolkit.git
-          pip install duckdb mcp pytest pytest-timeout
-
-      - name: Validate all dataset configs
-        run: |
-          for cfg in $(find . -path '*/support/*' -name dataset.yml | sort); do
-            echo "→ $cfg"
-            toolkit run preflight --config "$cfg" --years 2024 > /dev/null 2>&1 || exit 1
-          done
-          for d in datasets/assenze datasets/composizione-retribuzione datasets/costo-lavoro \
-                   datasets/personale datasets/anzianita datasets/titoli-studio \
-                   datasets/comandati datasets/contrattazione datasets/flessibili \
-                   datasets/passaggi datasets/distribuzione datasets/retribuzione-media \
-                   datasets/modalita-flessibile datasets/occupazione; do
-            echo "→ $d/dataset.yml"
-            toolkit run preflight --config "$d/dataset.yml" --years 2024 > /dev/null 2>&1 || exit 1
-          done
-          echo "✅ All configs valid"
+    uses: dataciviclab/.github/.github/workflows/dataset-config-check-reusable.yml@main
+    with:
+      install: "pip install -r requirements.txt"
+      globs: "support datasets"
+      years: "from-config"

@@ -15,7 +15,6 @@ Usage:
 """
 import pathlib
 import sys
-import urllib.request
 import zipfile
 
 REPO = pathlib.Path(__file__).resolve().parent.parent
@@ -46,10 +45,15 @@ def download_zip(year: int) -> pathlib.Path:
 
     url = f"{BASE}{year}Tutto.zip"
     print(f"⬇️  Download {url} ...")
-    req = urllib.request.Request(url, headers=_HEADERS)
     try:
-        with urllib.request.urlopen(req, timeout=180) as resp:
-            data = resp.read()
+        from lab_connectors.http import HttpClient
+
+        with HttpClient(timeout=180) as client:
+            result = client.get(url, headers=_HEADERS)
+        if not result.is_ok or result.response is None:
+            print(f"❌ Download fallito: {result.err or result.response}")
+            sys.exit(1)
+        data = result.response.content
     except Exception as e:
         print(f"❌ Download fallito: {e}")
         sys.exit(1)
