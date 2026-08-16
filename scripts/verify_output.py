@@ -23,18 +23,16 @@ def check_clean(dataset: str, year: int):
     if not os.path.isfile(path):
         errors.append(f"MISSING clean: {path}")
         return errors
-    import duckdb
-    con = duckdb.connect()
-    try:
-        row_count = con.execute(f"SELECT count(*) FROM '{path}'").fetchone()[0]
-        if row_count < 100:
-            errors.append(f"CLEAN {dataset}/{year}: solo {row_count} righe (min 100)")
-        else:
-            print(f"  ✅ clean {dataset}/{year}: {row_count:>8,} righe")
-    except Exception as e:
-        errors.append(f"CLEAN {dataset}/{year}: errore: {e}")
-    finally:
-        con.close()
+    from lab_connectors.duckdb import safe_connect
+    with safe_connect() as con:
+        try:
+            row_count = con.execute(f"SELECT count(*) FROM '{path}'").fetchone()[0]
+            if row_count < 100:
+                errors.append(f"CLEAN {dataset}/{year}: solo {row_count} righe (min 100)")
+            else:
+                print(f"  ✅ clean {dataset}/{year}: {row_count:>8,} righe")
+        except Exception as e:
+            errors.append(f"CLEAN {dataset}/{year}: errore: {e}")
     return errors
 
 def check_mart(dataset: str, year: int):
@@ -43,18 +41,17 @@ def check_mart(dataset: str, year: int):
     if not os.path.isdir(dirpath):
         errors.append(f"MISSING mart dir: {dirpath}")
         return errors
-    import duckdb
-    con = duckdb.connect()
-    for f in os.listdir(dirpath):
-        if not f.endswith(".parquet"):
-            continue
-        path = os.path.join(dirpath, f)
-        try:
-            row_count = con.execute(f"SELECT count(*) FROM '{path}'").fetchone()[0]
-            print(f"  ✅ mart {f}/{year}: {row_count:>8,} righe")
-        except Exception as e:
-            errors.append(f"MART {f}/{year}: errore: {e}")
-    con.close()
+    from lab_connectors.duckdb import safe_connect
+    with safe_connect() as con:
+        for f in os.listdir(dirpath):
+            if not f.endswith(".parquet"):
+                continue
+            path = os.path.join(dirpath, f)
+            try:
+                row_count = con.execute(f"SELECT count(*) FROM '{path}'").fetchone()[0]
+                print(f"  ✅ mart {f}/{year}: {row_count:>8,} righe")
+            except Exception as e:
+                errors.append(f"MART {f}/{year}: errore: {e}")
     return errors
 
 def main():

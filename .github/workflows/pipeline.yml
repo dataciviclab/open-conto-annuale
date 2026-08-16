@@ -1,19 +1,14 @@
 # Pipeline — open-conto-annuale
 #
-# Workflow unico post-merge + refresh (pattern eurostat). Fa tutto:
-#   1. run dei dataset (cambiati se PR merged, TUTTI se schedule/manuale)
-#   2. seeds anagrafiche (support)
-#   3. verify output (gate)
-#   4. sync GCS (clean + mart)
-#   5. `toolkit registry build --prefix conto-annuale --write`
-#   6. PR draft "chore(post-merge): aggiorna registry" se diff
+# Workflow unico post-merge + refresh. Fa tutto:
+#   1. make run-all (extract RGS → seeds → tutti i dataset)
+#   2. make verify (gate)
+#   3. sync GCS (clean + mart)
+#   4. registry → PR draft (composite `registry-update-pr`)
 #
-# Triggers:
-#   - pull_request closed (merged) su datasets/** → run + sync + registry
-#     dei dataset cambiati
-#   - schedule annuale (1 giugno 06:00 UTC) → run completo + sync + registry
-#     (i dati del Conto Annuale vengono pubblicati da RGS entro maggio)
-#   - workflow_dispatch → manuale, selezione anni
+# Conto Annuale: dataset paralleli che condividono l'estrazione RGS
+# (extract_dati.py) — si runna SEMPRE tutto, in ordine, via Makefile
+# (modello ADR-001: il pipeline è il sistema che refresca).
 
 name: pipeline
 
@@ -24,20 +19,19 @@ on:
       - "datasets/**"
       - "support/**"
       - "scripts/**"
+      - ".github/workflows/pipeline.yml"
   schedule:
+    # Annuale: 1 giugno 06:00 UTC — i dati Conto Annuale vengono pubblicati
+    # annualmente (l'anno di riferimento chiude il 31/12).
     - cron: '0 6 1 6 *'
   workflow_dispatch:
-    inputs:
-      years:
-        description: "Anni (es. 2024 o 2020,2021,2024 o all)"
-        default: "all"
 
 concurrency:
   group: conto-annuale-pipeline-${{ github.event.pull_request.number || github.ref || 'schedule' }}
   cancel-in-progress: false
 
 jobs:
-  pipeline:
+  conto-annuale-pipeline:
     if: github.event.pull_request.merged == true || github.event_name != 'pull_request'
     runs-on: ubuntu-latest
     permissions:
@@ -45,179 +39,37 @@ jobs:
       pull-requests: write
 
     steps:
-      - uses: actions/checkout@v6.0.3
+      - uses: actions/checkout@v7
         with:
           ref: ${{ github.event.pull_request.merge_commit_sha || github.ref }}
           fetch-depth: 0
 
-      - uses: actions/setup-python@v6.2.0
-        with:
-          python-version: "3.12"
+      - uses: dataciviclab/.github/actions/python-setup@main
 
-      - name: Install toolkit
-        run: |
-          pip install git+https://github.com/dataciviclab/lab-connectors.git
-          pip install git+https://github.com/dataciviclab/toolkit.git
+      - name: Run all datasets (extract → seeds → datasets)
+        run: make run-all
 
-      # ── Determinare i dataset da processare ─────────────────────────
-      - name: Detect datasets to run
-        id: detect
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          PR_NUMBER: ${{ github.event.pull_request.number }}
-          EVENT: ${{ github.event_name }}
-        run: |
-          if [ "$EVENT" = "pull_request" ]; then
-            # PR merged: solo i dataset cambiati (e i seed relativi)
-            gh pr view "$PR_NUMBER" --json files --jq ".files[].path" | \
-              grep -E '^(datasets|support)/' | cut -d/ -f1,2 | sort -u > dirs.txt
-          else
-            # Schedule/manuale: tutti i dataset
-            find datasets support -mindepth 1 -maxdepth 1 -type d -printf '%p\n' | sort > dirs.txt
-          fi
-          # Filtra solo dir con dataset.yml
-          DIRS=""
-          while read -r d; do
-            [ -n "$d" ] && [ -f "$d/dataset.yml" ] && DIRS="$DIRS $d"
-          done < dirs.txt
-          if [ -n "$DIRS" ]; then
-            echo "dirs=$DIRS" >> "$GITHUB_OUTPUT"
-          else
-            echo "dirs=" >> "$GITHUB_OUTPUT"
-          fi
-
-      # ── Download + estrazione dati (solo se servono dataset dati) ───
-      - name: Download + extract data
-        if: steps.detect.outputs.dirs != ''
-        run: |
-          if [ "${{ inputs.years || 'all' }}" = "all" ]; then YEARS="2020 2021 2022 2023 2024"
-          else YEARS=$(echo "${{ inputs.years }}" | tr ',' ' '); fi
-          python3 scripts/extract_dati.py $YEARS
-
-      # ── Seeds ───────────────────────────────────────────────────────
-      - name: Seeds
-        if: steps.detect.outputs.dirs != ''
-        run: |
-          for d in support/anag-enti support/anag-comparti support/anag-qualifiche \
-                   support/anag-voci-spesa support/anag-causali support/anag-territorio \
-                   support/anag-titoli-studio support/anag-voci-fua support/anag-fondi; do
-            toolkit run --config "$d/dataset.yml"
-          done
-
-      # ── Run dataset ─────────────────────────────────────────────────
-      # Un solo run per dataset con --years: il toolkit processa gli anni
-      # e poi esegue il multi-year mart UNA volta (con tutti i parquet
-      # disponibili). Un loop per-anno romperebbe il multi-year (nel primo
-      # run mancherebbero i parquet degli anni successivi).
-      - name: Run datasets
-        if: steps.detect.outputs.dirs != ''
-        run: |
-          if [ "${{ inputs.years || 'all' }}" = "all" ]; then REQUESTED="2020 2021 2022 2023 2024"
-          else REQUESTED=$(echo "${{ inputs.years }}" | tr ',' ' '); fi
-          for dir in ${{ steps.detect.outputs.dirs }}; do
-            [ "${dir#datasets/}" = "${dir}" ] && continue
-            # Interseca gli anni richiesti con quelli configurati nel dataset
-            YEARS=""
-            for y in $REQUESTED; do
-              python3 -c "import yaml,sys; exit(0 if $y in yaml.safe_load(open('${dir}/dataset.yml'))['dataset']['years'] else 1)" && YEARS="$YEARS $y"
-            done
-            [ -z "$YEARS" ] && { echo "  ⏭️ $dir: nessun anno richiesto configurato"; continue; }
-            echo "=== $dir anni:$YEARS ==="
-            toolkit run --config "${dir}/dataset.yml" --years "$(echo $YEARS | tr ' ' ',')"
-          done
-
-      # ── Verify output (gate) ────────────────────────────────────────
       - name: Verify output (gate)
-        if: steps.detect.outputs.dirs != ''
-        run: |
-          YEARS="${{ inputs.years || 'all' }}"
-          if [ "$YEARS" = "all" ]; then
-            python3 scripts/verify_output.py --all --year 2024
-            python3 scripts/verify_output.py --all --year 2023
-          else
-            for y in $(echo "$YEARS" | tr ',' ' '); do
-              python3 scripts/verify_output.py --all --year "$y"
-            done
-          fi
+        run: make verify
 
-      # ── Sync a GCS (solo dataset dati, per-slug) ────────────────────
-      - name: GCP Auth
+      - name: Auth GCP
         id: gcs
+        uses: dataciviclab/.github/actions/gcs-auth@main
         env:
           GCP_SA_KEY: ${{ secrets.GCP_SA_KEY }}
-        run: |
-          if [ -z "$GCP_SA_KEY" ]; then
-            echo "❌ GCP_SA_KEY secret non configurato — skip GCS sync"
-            echo "ready=false" >> "$GITHUB_OUTPUT"
-            exit 0
-          fi
-          if echo "$GCP_SA_KEY" | python3 -c "import json,sys; json.load(sys.stdin)" 2>/dev/null; then
-            printf '%s\n' "$GCP_SA_KEY" > /tmp/gcp-key.json
-          else
-            printf '%s\n' "$GCP_SA_KEY" | base64 -d > /tmp/gcp-key.json 2>/dev/null
-          fi
-          echo "ready=true" >> "$GITHUB_OUTPUT"
-
-      - name: Set up gcloud
-        if: steps.gcs.outputs.ready == 'true'
-        uses: google-github-actions/setup-gcloud@v3
-        with:
-          project_id: ${{ vars.GCP_PROJECT_ID }}
-
-      - name: Auth gcloud
-        if: steps.gcs.outputs.ready == 'true'
-        run: gcloud auth activate-service-account --key-file=/tmp/gcp-key.json
 
       - name: Sync to GCS
-        if: steps.gcs.outputs.ready == 'true' && steps.detect.outputs.dirs != ''
+        if: steps.gcs.outputs.ready == 'true'
         run: |
           gsutil -m rsync -r out/data/mart/ gs://dataciviclab-mart/conto-annuale/
           gsutil -m rsync -r out/data/clean/ gs://dataciviclab-clean/conto-annuale/
           echo "✅ Synced to gs://dataciviclab-mart|clean/conto-annuale/"
 
-      # ── Registry ────────────────────────────────────────────────────
-      - name: Build registry
-        if: steps.detect.outputs.dirs != ''
-        run: toolkit registry build --prefix conto-annuale --write
-
-      - name: Check registry diff
-        if: steps.detect.outputs.dirs != ''
-        id: diff
-        run: |
-          # registry/ è untracked su main (generato dal builder) —
-          # git diff ignora gli untracked, quindi usiamo git status.
-          if git status --porcelain -- registry/ | grep -q .; then
-            echo "changed=true" >> "$GITHUB_OUTPUT"
-          else
-            echo "changed=false" >> "$GITHUB_OUTPUT"
-          fi
-
-      # ── PR draft registry (pattern eurostat/DI) ─────────────────────
-      - name: Create draft registry PR
-        if: steps.diff.outputs.changed == 'true'
+      # Registry → draft PR (composite, nello stesso job del run: il registry
+      # deriva le entry dai parquet locali in out/).
+      - name: Registry update PR
+        uses: dataciviclab/.github/actions/registry-update-pr@main
+        with:
+          prefix: "conto-annuale"
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          PR_NUMBER: ${{ github.event.pull_request.number || 'schedule' }}
-        run: |
-          BRANCH="post-merge-registry/${PR_NUMBER}-registry"
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git checkout -B "$BRANCH"
-          git add registry/
-          git commit -m "chore(post-merge): aggiorna registry ($PR_NUMBER)" || exit 0
-          git push --force-with-lease -u origin "$BRANCH"
-          EXISTING_PR=$(gh pr list --head "$BRANCH" --json number --jq '.[0].number // empty')
-          if [ -n "$EXISTING_PR" ]; then
-            gh pr edit "$EXISTING_PR" \
-              --title "chore(post-merge): aggiorna registry ($PR_NUMBER)" \
-              --body "Registry artifacts updated after pipeline run." \
-              --add-label post-merge
-          else
-            gh pr create \
-              --base main \
-              --head "$BRANCH" \
-              --title "chore(post-merge): aggiorna registry ($PR_NUMBER)" \
-              --body "Registry artifacts updated after pipeline run." \
-              --label post-merge \
-              --draft
-          fi

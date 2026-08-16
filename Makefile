@@ -31,8 +31,9 @@ DATASETS = \
 	datasets/occupazione
 
 # --- Download + estrazione dati (unico script, 1 download per anno) ---
+# Default: tutti gli anni dichiarati dai dataset (ADR-001 §8, anni da config).
 
-YEARS ?= 2024
+YEARS ?= 2020 2021 2022 2023 2024
 
 .PHONY: extract-dati
 extract-dati:
@@ -55,7 +56,7 @@ run/%: extract-dati
 	$(TOOLKIT) run --config datasets/$*/dataset.yml
 
 .PHONY: run-all
-run-all: seeds
+run-all: extract-dati seeds
 	@for d in $(DATASETS); do \
 		echo "=== $$d ==="; \
 		$(TOOLKIT) run --config $$d/dataset.yml || exit 1; \
@@ -67,11 +68,11 @@ run-all: seeds
 check:
 	@for f in $$(find . -path '*/support/*' -name dataset.yml | sort); do \
 		echo "→ $$f"; \
-		$(TOOLKIT) run preflight --config "$$f" --years 2024 > /dev/null 2>&1 || exit 1; \
+		$(TOOLKIT) run preflight --config "$$f" > /dev/null 2>&1 || exit 1; \
 	done
 	@for d in $(DATASETS); do \
 		echo "→ $$d/dataset.yml"; \
-		$(TOOLKIT) run preflight --config "$$d/dataset.yml" --years 2024 > /dev/null 2>&1 || exit 1; \
+		$(TOOLKIT) run preflight --config "$$d/dataset.yml" > /dev/null 2>&1 || exit 1; \
 	done
 	@echo "✅ All configs valid"
 
@@ -94,6 +95,7 @@ clean-runs:
 .PHONY: verify
 verify:
 	$(PYTHON) scripts/verify_output.py --all --year 2024
+	$(PYTHON) scripts/verify_output.py --all --year 2023
 
 .PHONY: help
 help:
