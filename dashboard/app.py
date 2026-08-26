@@ -18,9 +18,8 @@ pages = {
         st.Page("pages/01_Panoramica.py", title="Panoramica PA", icon="📊", default=True),
     ],
     "Analisi": [
-        st.Page("pages/02_Occupazione.py", title="Occupazione & Costo", icon="👥"),
+        st.Page("pages/02_Personale.py", title="Personale", icon="👥"),
         st.Page("pages/03_Retribuzioni.py", title="Retribuzioni", icon="💰"),
-        st.Page("pages/04_Ausenze.py", title="Assenze & Flessibilità", icon="🏥"),
     ],
 }
 

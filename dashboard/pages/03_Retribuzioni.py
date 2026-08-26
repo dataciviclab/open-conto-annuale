@@ -1,21 +1,17 @@
-"""Retribuzioni — Stipendi, composizione, confronti."""
+"""Retribuzioni — stipendi, trend, confronti territoriali."""
 
 import altair as alt
 import pandas as pd
 import streamlit as st
 
-from sources import YEARS, fmt_eur, fmt_num, load_mart
+from sources import YEARS, fmt_num, fmt_pct, load_mart, load_trend
 
 st.title("💰 Retribuzioni")
-st.markdown("Stipendi medi, composizione e confronti tra comparti.")
+st.markdown("Stipendi medi, trend nel tempo e confronti tra territori.")
 
 anno = st.selectbox("Anno", YEARS, index=len(YEARS) - 1, key="ret_anno")
 
-df_ret = load_mart("retribuzione_media", "mart_sintesi", anno)
-df_comp = load_mart("composizione_retribuzione", "retribuzioni_entrate", anno)
-
-# ── Stipendio medio per dipendente ──────────────────────────────────────────
-# Incrocia costo_lavoro (spesa totale) con occupazione (n. dipendenti)
+# -- Stipendio medio per dipendente ------------------------------------------
 
 st.subheader("Stipendio medio annuo per dipendente")
 
@@ -34,7 +30,7 @@ chart_ret = (
     alt.Chart(df_stipendio)
     .mark_bar(cornerRadiusTopLeft=3, cornerRadiusTopRight=3)
     .encode(
-        x=alt.X("stipendio_medio:Q", title="Stipendio medio (€/anno)"),
+        x=alt.X("stipendio_medio:Q", title="Stipendio medio (EUR/anno)"),
         y=alt.Y("desc_comparto:N", title="", sort="-x"),
         color=alt.Color("stipendio_medio:Q", scale=alt.Scale(scheme="greens"), legend=None),
         tooltip=[
@@ -49,55 +45,98 @@ st.altair_chart(chart_ret, width="stretch")
 
 st.markdown("---")
 
-# ── Composizione retribuzione ──────────────────────────────────────────────
+# -- Trend costo lavoro -------------------------------------------------------
 
-col_comp, col_confronto = st.columns(2)
+st.subheader("📈 Trend costo lavoro per comparto")
 
-with col_comp:
-    st.subheader("Composizione retribuzione")
-    if not df_comp.empty:
-        df_voci = df_comp.sort_values("tot_importo", ascending=False).head(8)
-        df_voci["voce"] = df_voci["desc_voce_spesa"].str[:40]
-
-        chart_comp = (
-            alt.Chart(df_voci)
-            .mark_bar(cornerRadiusTopLeft=3, cornerRadiusTopRight=3, color="#10b981")
-            .encode(
-                x=alt.X("tot_importo:Q", title="Importo totale (€)", axis=alt.Axis(format="~s")),
-                y=alt.Y("voce:N", title="", sort="-x"),
-                tooltip=[
-                    alt.Tooltip("desc_voce_spesa:N", title="Voce"),
-                    alt.Tooltip("tot_importo:Q", title="Totale", format=",.0f"),
-                    alt.Tooltip("enti:N", title="Enti", format=",.0f"),
-                ],
-            )
-            .properties(height=350)
+df_trend_costo = load_trend("costo_lavoro")
+if not df_trend_costo.empty:
+    df_top = df_trend_costo.sort_values("variazione_pct", ascending=True)
+    chart_trend = (
+        alt.Chart(df_top)
+        .mark_bar(cornerRadiusTopLeft=3, cornerRadiusTopRight=3)
+        .encode(
+            x=alt.X("variazione_pct:Q", title="Variazione %"),
+            y=alt.Y("desc_comparto:N", title="", sort="-x"),
+            color=alt.Color(
+                "variazione_pct:Q",
+                scale=alt.Scale(domain=[-2, 0, 10], range=["#ef4444", "#6b7280", "#10b981"]),
+                legend=None,
+            ),
+            tooltip=["desc_comparto", "delta_spesa", "variazione_pct"],
         )
-        st.altair_chart(chart_comp, width="stretch")
+        .properties(height=280)
+    )
+    st.altair_chart(chart_trend, width="stretch")
 
-with col_confronto:
-    st.subheader("Spesa per comparto")
-    if not df_comp.empty:
-        df_comparti = (
-            df_comp.groupby("desc_comparto", as_index=False)
-            .agg(totale=("tot_importo", "sum"))
-            .sort_values("totale", ascending=False)
-            .head(10)
-        )
+st.markdown("---")
 
-        chart_comp = (
-            alt.Chart(df_comparti)
-            .mark_bar(cornerRadiusTopLeft=3, cornerRadiusTopRight=3, color="#8b5cf6")
-            .encode(
-                x=alt.X("totale:Q", title="Importo totale (€)", axis=alt.Axis(format="~s")),
-                y=alt.Y("desc_comparto:N", title="", sort="-x"),
-                tooltip=[
-                    alt.Tooltip("desc_comparto:N", title="Comparto"),
-                    alt.Tooltip("totale:Q", title="Totale", format=",.0f"),
-                ],
-            )
-            .properties(height=350)
+# -- Confronto Nord vs Sud ----------------------------------------------------
+
+st.subheader("🌍 Confronto Nord vs Sud")
+
+try:
+    from sources import run_sql
+    sql_nord_sud = (
+        "SELECT "
+        "CASE "
+        "WHEN regione_beneficiario IN ('PIEMONTE','LOMBARDIA','VENETO','EMILIA-ROMAGNA',"
+        "'LIGURIA','TRENTINO-ALTO ADIGE','FRIULI VENEZIA GIULIA') THEN 'Nord' "
+        "WHEN regione_beneficiario IN ('CAMPANIA','PUGLIA','CALABRIA','SICILIA',"
+        "'SARDEGNA','BASILICATA','ABRUZZO','MOLISE') THEN 'Sud' "
+        "ELSE 'Centro/Isole' "
+        "END AS area, "
+        "COUNT(DISTINCT istituzione) AS n_enti, "
+        "COUNT(*) AS n_dipendenti, "
+        "ROUND(SUM(tot_spesa) / COUNT(*), 0) AS stipendio_medio "
+        "FROM clean_input "
+        "GROUP BY area "
+        "ORDER BY stipendio_medio DESC"
+    )
+    df_geo = run_sql(sql_nord_sud, tuple(YEARS))
+
+    chart_geo = (
+        alt.Chart(df_geo)
+        .mark_bar(cornerRadiusTopLeft=3, cornerRadiusTopRight=3)
+        .encode(
+            x=alt.X("stipendio_medio:Q", title="Stipendio medio (EUR/anno)"),
+            y=alt.Y("area:N", title="", sort="-x"),
+            color=alt.Color(
+                "area:N",
+                scale=alt.Scale(domain=["Nord", "Centro/Isole", "Sud"], range=["#3b82f6", "#f59e0b", "#ef4444"]),
+                legend=None,
+            ),
+            tooltip=["area", alt.Tooltip("stipendio_medio:Q", format=",.0f"), "n_dipendenti", "n_enti"],
         )
-        st.altair_chart(chart_comp, width="stretch")
+        .properties(height=200)
+    )
+    st.altair_chart(chart_geo, width="stretch")
+except Exception as e:
+    st.info(f"Confronto territoriale non disponibile: {e}")
+
+# -- Spesa per comparto -------------------------------------------------------
+
+st.markdown("---")
+st.subheader("Spesa totale per comparto")
+
+df_comp = load_mart("composizione_retribuzione", "retribuzioni_entrate", anno)
+if not df_comp.empty:
+    df_comparti = (
+        df_comp.groupby("desc_comparto", as_index=False)
+        .agg(totale=("tot_importo", "sum"))
+        .sort_values("totale", ascending=False)
+        .head(10)
+    )
+    chart_comp = (
+        alt.Chart(df_comparti)
+        .mark_bar(cornerRadiusTopLeft=3, cornerRadiusTopRight=3, color="#8b5cf6")
+        .encode(
+            x=alt.X("totale:Q", title="Importo totale (EUR)", axis=alt.Axis(format="~s")),
+            y=alt.Y("desc_comparto:N", title="", sort="-x"),
+            tooltip=["desc_comparto", alt.Tooltip("totale:Q", format=",.0f")],
+        )
+        .properties(height=300)
+    )
+    st.altair_chart(chart_comp, width="stretch")
 
 st.caption(f"Dati: Conto Annuale RGS/MEF · {anno} · CC BY 4.0")
