@@ -12,12 +12,14 @@ import streamlit as st
 from lab_connectors.duckdb.queries import (
     load_mart_table as _load_mart_table,
     load_mart_all_years as _load_mart_all_years,
+    query_clean as _query_clean,
     count_rows as _count_rows,
 )
 
 # ── Costanti dominio ────────────────────────────────────────────────────────
 
 PREFIX = "conto-annuale/"
+SLUG = "conto_annuale"
 YEARS = [2020, 2021, 2022, 2023, 2024]
 
 # ── Cached wrappers ─────────────────────────────────────────────────────────
@@ -51,6 +53,12 @@ def load_trend(slug: str):
 def get_row_count(slug: str, year: int):
     """Conta righe clean per un anno (cached 1h)."""
     return _count_rows(slug, year, prefix=PREFIX)
+
+
+@st.cache_data(ttl=3600, show_spinner=False)
+def run_sql(sql: str, years: tuple[int, ...] = tuple(YEARS)):
+    """Esegue SQL sul clean layer (cached 1h)."""
+    return _query_clean(SLUG, sql, list(years), prefix=PREFIX)
 
 
 # ── Formattazione ───────────────────────────────────────────────────────────
