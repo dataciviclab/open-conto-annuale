@@ -16,14 +16,14 @@ df_comp = load_mart("composizione_retribuzione", "retribuzioni_entrate", anno)
 
 # ── Retribuzione media per comparto ────────────────────────────────────────
 
-st.subheader("Stipendio medio annuo per comparto")
+st.subheader("Spesa media annua per ente e comparto")
 df_ret_sorted = df_ret.sort_values("avg_stipendio", ascending=False)
 
 chart_ret = (
     alt.Chart(df_ret_sorted)
     .mark_bar(cornerRadiusTopLeft=3, cornerRadiusTopRight=3)
     .encode(
-        x=alt.X("avg_stipendio:Q", title="Stipendio medio (€/anno)"),
+        x=alt.X("avg_stipendio:Q", title="Spesa media per ente (€/anno)"),
         y=alt.Y("desc_comparto:N", title="", sort="-x"),
         color=alt.Color("avg_stipendio:Q", scale=alt.Scale(scheme="greens"), legend=None),
         tooltip=[
