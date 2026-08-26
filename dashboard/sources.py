@@ -31,8 +31,20 @@ def load_mart(slug: str, table: str, year: int):
 
 @st.cache_data(ttl=3600, show_spinner=False)
 def load_trend(slug: str):
-    """Carica il mart_trend multi-anno (cached 1h)."""
-    return _load_mart_table(slug, "mart_trend", 2024, prefix=PREFIX)
+    """Carica il mart_trend multi-anno (cached 1h).
+
+    Il trend non è partizionato per anno — sta in {slug}/mart_trend.parquet.
+    Costruiamo l'URL manualmente.
+    """
+    from lab_connectors.gcs.paths import https_url
+
+    # Il pattern mart_parquet richiede year, ma il trend non ce l'ha.
+    # Usiamo URL diretto: bucket/slug/mart_trend.parquet
+    url = f"https://storage.googleapis.com/dataciviclab-mart/{PREFIX}{slug}/mart_trend.parquet"
+    import duckdb
+
+    with duckdb.connect() as con:
+        return con.sql(f"SELECT * FROM read_parquet('{url}')").df()
 
 
 @st.cache_data(ttl=3600, show_spinner=False)
