@@ -21,6 +21,9 @@ pages = {
         st.Page("pages/02_Personale.py", title="Personale", icon="👥"),
         st.Page("pages/03_Retribuzioni.py", title="Retribuzioni", icon="💰"),
     ],
+    "Strumenti": [
+        st.Page("pages/04_SQL.py", title="Query SQL", icon="🧪"),
+    ],
 }
 
 pg = st.navigation(pages, position="sidebar")
