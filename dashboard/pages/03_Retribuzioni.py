@@ -14,23 +14,33 @@ anno = st.selectbox("Anno", YEARS, index=len(YEARS) - 1, key="ret_anno")
 df_ret = load_mart("retribuzione_media", "mart_sintesi", anno)
 df_comp = load_mart("composizione_retribuzione", "retribuzioni_entrate", anno)
 
-# ── Retribuzione media per comparto ────────────────────────────────────────
+# ── Stipendio medio per dipendente ──────────────────────────────────────────
+# Incrocia costo_lavoro (spesa totale) con occupazione (n. dipendenti)
 
-st.subheader("Spesa media annua per ente e comparto")
-df_ret_sorted = df_ret.sort_values("avg_stipendio", ascending=False)
+st.subheader("Stipendio medio annuo per dipendente")
+
+df_occ = load_mart("occupazione", "mart_sintesi", anno)
+df_costo = load_mart("costo_lavoro", "mart_sintesi", anno)
+
+df_stipendio = pd.merge(
+    df_occ[["desc_comparto", "tot_dipendenti"]],
+    df_costo[["desc_comparto", "tot_spesa"]],
+    on="desc_comparto",
+)
+df_stipendio["stipendio_medio"] = df_stipendio["tot_spesa"] / df_stipendio["tot_dipendenti"]
+df_stipendio = df_stipendio.sort_values("stipendio_medio", ascending=False)
 
 chart_ret = (
-    alt.Chart(df_ret_sorted)
+    alt.Chart(df_stipendio)
     .mark_bar(cornerRadiusTopLeft=3, cornerRadiusTopRight=3)
     .encode(
-        x=alt.X("avg_stipendio:Q", title="Spesa media per ente (€/anno)"),
+        x=alt.X("stipendio_medio:Q", title="Stipendio medio (€/anno)"),
         y=alt.Y("desc_comparto:N", title="", sort="-x"),
-        color=alt.Color("avg_stipendio:Q", scale=alt.Scale(scheme="greens"), legend=None),
+        color=alt.Color("stipendio_medio:Q", scale=alt.Scale(scheme="greens"), legend=None),
         tooltip=[
             alt.Tooltip("desc_comparto:N", title="Comparto"),
-            alt.Tooltip("avg_stipendio:Q", title="Stipendio", format=",.0f"),
-            alt.Tooltip("avg_tredicesima:Q", title="13a media", format=",.0f"),
-            alt.Tooltip("avg_straordinario:Q", title="Straordinari medi", format=",.0f"),
+            alt.Tooltip("stipendio_medio:Q", title="Stipendio medio", format=",.0f"),
+            alt.Tooltip("tot_dipendenti:Q", title="Dipendenti", format=",.0f"),
         ],
     )
     .properties(height=350)
