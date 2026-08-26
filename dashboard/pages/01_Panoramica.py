@@ -41,13 +41,19 @@ st.markdown("---")
 col_trend, col_costo = st.columns(2)
 
 with col_trend:
-    st.subheader("📈 Trend occupazione")
+    st.subheader("📈 Variazione occupazione 2020→2024")
+    df_trend_sorted = df_trend.sort_values("variazione_pct", ascending=True)
     chart_trend = (
-        alt.Chart(df_trend)
-        .mark_line(point=True, color="#10b981", strokeWidth=2)
+        alt.Chart(df_trend_sorted)
+        .mark_bar(cornerRadiusTopLeft=3, cornerRadiusTopRight=3)
         .encode(
             x=alt.X("variazione_pct:Q", title="Variazione %"),
-            y=alt.Y("desc_comparto:N", title=""),
+            y=alt.Y("desc_comparto:N", title="", sort="-x"),
+            color=alt.Color(
+                "variazione_pct:Q",
+                scale=alt.Scale(domain=[-2, 0, 8], range=["#ef4444", "#6b7280", "#10b981"]),
+                legend=None,
+            ),
             tooltip=[
                 alt.Tooltip("desc_comparto:N", title="Comparto"),
                 alt.Tooltip("delta_dipendenti:Q", title="Delta", format=",.0f"),
