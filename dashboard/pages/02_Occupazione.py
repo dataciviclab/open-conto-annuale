@@ -67,14 +67,14 @@ with col_pt:
 with col_fl:
     st.subheader("Contratti flessibili")
     df_fl = load_mart("flessibili", "mart_sintesi", anno)
-    df_fl_sorted = df_fl.sort_values("tot_dipendenti", ascending=False).head(10) if "tot_dipendenti" in df_fl.columns else df_fl.head(10)
+    df_fl_sorted = df_fl.sort_values("tot_flessibili", ascending=False).head(10) if "tot_flessibili" in df_fl.columns else df_fl.head(10)
     chart_fl = (
         alt.Chart(df_fl_sorted)
         .mark_bar(cornerRadiusTopLeft=3, cornerRadiusTopRight=3, color="#f97316")
         .encode(
-            x=alt.X("tot_dipendenti:Q", title="Dipendenti flessibili", axis=alt.Axis(format="~s")),
+            x=alt.X("tot_flessibili:Q", title="Dipendenti flessibili", axis=alt.Axis(format="~s")),
             y=alt.Y("desc_comparto:N", title="", sort="-x"),
-            tooltip=["desc_comparto", alt.Tooltip("tot_dipendenti:Q", format=",.0f")],
+            tooltip=["desc_comparto", alt.Tooltip("tot_flessibili:Q", format=",.0f")],
         )
         .properties(height=280)
     )

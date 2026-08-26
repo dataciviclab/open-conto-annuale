@@ -46,34 +46,31 @@ col_trend, col_fl = st.columns(2)
 
 with col_trend:
     st.subheader("📈 Trend assenze")
-    try:
-        df_trend_ass = load_trend("assenze")
-        if not df_trend_ass.empty:
-            chart_trend = (
-                alt.Chart(df_trend_ass)
-                .mark_line(point=True, strokeWidth=2)
-                .encode(
-                    x=alt.X("desc_comparto:N", title=""),
-                    y=alt.Y("delta_dipendenti:Q", title="Variazione"),
-                    color=alt.Color("desc_comparto:N", legend=None),
-                    tooltip=["desc_comparto", "delta_dipendenti", "variazione_pct"],
-                )
-                .properties(height=300)
+    df_trend_ass = load_trend("assenze")
+    if not df_trend_ass.empty:
+        chart_trend = (
+            alt.Chart(df_trend_ass)
+            .mark_line(point=True, strokeWidth=2)
+            .encode(
+                x=alt.X("desc_comparto:N", title=""),
+                y=alt.Y("delta_tot_assenze:Q", title="Variazione assenze"),
+                color=alt.Color("desc_comparto:N", legend=None),
+                tooltip=["desc_comparto", "delta_tot_assenze", "variazione_pct"],
             )
-            st.altair_chart(chart_trend, width="stretch")
-    except Exception:
-        st.info("Trend non disponibile.")
+            .properties(height=300)
+        )
+        st.altair_chart(chart_trend, width="stretch")
 
 with col_fl:
     st.subheader("Contratti flessibili per comparto")
-    df_fless_sorted = df_fless.sort_values("tot_dipendenti", ascending=False).head(10)
+    df_fless_sorted = df_fless.sort_values("tot_flessibili", ascending=False).head(10)
     chart_fl = (
         alt.Chart(df_fless_sorted)
         .mark_bar(cornerRadiusTopLeft=3, cornerRadiusTopRight=3, color="#f97316")
         .encode(
-            x=alt.X("tot_dipendenti:Q", title="Dipendenti flessibili", axis=alt.Axis(format="~s")),
+            x=alt.X("tot_flessibili:Q", title="Dipendenti flessibili", axis=alt.Axis(format="~s")),
             y=alt.Y("desc_comparto:N", title="", sort="-x"),
-            tooltip=["desc_comparto", alt.Tooltip("tot_dipendenti:Q", format=",.0f")],
+            tooltip=["desc_comparto", alt.Tooltip("tot_flessibili:Q", format=",.0f")],
         )
         .properties(height=300)
     )

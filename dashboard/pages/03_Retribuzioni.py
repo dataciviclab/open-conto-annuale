@@ -12,7 +12,7 @@ st.markdown("Stipendi medi, composizione e confronti tra comparti.")
 anno = st.selectbox("Anno", YEARS, index=len(YEARS) - 1, key="ret_anno")
 
 df_ret = load_mart("retribuzione_media", "mart_sintesi", anno)
-df_comp = load_mart("composizione_retribuzione", "mart_sintesi", anno)
+df_comp = load_mart("composizione_retribuzione", "retribuzioni_entrate", anno)
 
 # ── Retribuzione media per comparto ────────────────────────────────────────
 
@@ -46,46 +46,38 @@ col_comp, col_confronto = st.columns(2)
 with col_comp:
     st.subheader("Composizione retribuzione")
     if not df_comp.empty:
-        # Raggruppa per voce e somma
-        voci = [c for c in df_comp.columns if c.startswith("avg_")]
-        if voci:
-            df_voci = df_comp[["desc_comparto"] + voci].copy()
-            # Prendi top 6 comparti
-            top_comparti = df_ret.nlargest(6, "avg_stipendio")["desc_comparto"].tolist()
-            df_voci = df_voci[df_voci["desc_comparto"].isin(top_comparti)]
-            df_melted = df_voci.melt(id_vars="desc_comparto", var_name="voce", value_name="importo")
-            df_melted["voce"] = df_melted["voce"].str.replace("avg_", "").str.replace("_", " ").str.title()
+        df_voci = df_comp.sort_values("tot_importo", ascending=False).head(8)
+        df_voci["voce"] = df_voci["desc_voce_spesa"].str[:40]
 
-            chart_comp = (
-                alt.Chart(df_melted)
-                .mark_bar()
-                .encode(
-                    x=alt.X("desc_comparto:N", title="", sort="-y"),
-                    y=alt.Y("importo:Q", title="€/anno", stack="normalize", axis=alt.Axis(format="%")),
-                    color=alt.Color("voce:N", title="Voce"),
-                    tooltip=["desc_comparto", "voce", alt.Tooltip("importo:Q", format=",.0f")],
-                )
-                .properties(height=350)
+        chart_comp = (
+            alt.Chart(df_voci)
+            .mark_bar(cornerRadiusTopLeft=3, cornerRadiusTopRight=3, color="#10b981")
+            .encode(
+                x=alt.X("tot_importo:Q", title="Importo totale (€)", axis=alt.Axis(format="~s")),
+                y=alt.Y("voce:N", title="", sort="-x"),
+                tooltip=[
+                    alt.Tooltip("desc_voce_spesa:N", title="Voce"),
+                    alt.Tooltip("tot_importo:Q", title="Totale", format=",.0f"),
+                    alt.Tooltip("enti:N", title="Enti", format=",.0f"),
+                ],
             )
-            st.altair_chart(chart_comp, width="stretch")
-    else:
-        st.info("Dati composizione non disponibili per questo anno.")
+            .properties(height=350)
+        )
+        st.altair_chart(chart_comp, width="stretch")
 
 with col_confronto:
     st.subheader("Confronto voci retributive")
     if not df_comp.empty:
-        # Media per voce (tutti i comparti)
-        media_voci = df_comp[voci].mean()
-        media_df = pd.DataFrame({"voce": [v.replace("avg_", "").replace("_", " ").title() for v in voci], "media": media_voci.values})
-        media_df = media_df.sort_values("media", ascending=False)
+        df_voci = df_comp.sort_values("tot_importo", ascending=False).head(8)
+        df_voci["voce"] = df_voci["desc_voce_spesa"].str[:40]
 
         chart_voci = (
-            alt.Chart(media_df)
-            .mark_bar(cornerRadiusTopLeft=3, cornerRadiusTopRight=3, color="#10b981")
+            alt.Chart(df_voci)
+            .mark_bar(cornerRadiusTopLeft=3, cornerRadiusTopRight=3, color="#8b5cf6")
             .encode(
-                x=alt.X("media:Q", title="Media €/anno"),
+                x=alt.X("tot_importo:Q", title="Importo totale (€)", axis=alt.Axis(format="~s")),
                 y=alt.Y("voce:N", title="", sort="-x"),
-                tooltip=["voce", alt.Tooltip("media:Q", format=",.0f")],
+                tooltip=["voce", alt.Tooltip("tot_importo:Q", format=",.0f")],
             )
             .properties(height=350)
         )
