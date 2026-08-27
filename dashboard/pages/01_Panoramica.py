@@ -31,7 +31,7 @@ n_comparti = df_occ["codi_comparto"].nunique()
 k1, k2, k3, k4 = st.columns(4)
 k1.metric("Dipendenti", fmt_num(tot_dip))
 k2.metric("% Donne", fmt_pct(pct_donne))
-k3.metric("Costo lavoro", fmt_eur(tot_costo))
+k3.metric("Costo lavoro", fmt_eur(tot_costo, compact=True))
 k4.metric("Comparti", n_comparti)
 
 st.markdown("---")
