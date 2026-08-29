@@ -17,6 +17,7 @@ from lab_connectors.duckdb.queries import (
     years_from_registry,
 )
 from lab_connectors.registry import load_registry
+from lab_connectors.formatters import fmt_eur, fmt_num, fmt_pct
 from pathlib import Path
 
 # ── Costanti dominio ────────────────────────────────────────────────────────
