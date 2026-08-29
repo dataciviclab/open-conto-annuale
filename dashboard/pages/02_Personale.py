@@ -34,7 +34,7 @@ with tab_occ:
     display = df_occ[["desc_comparto", "tot_dipendenti", "tot_donne", "tot_uomini", "pct_donne", "pct_part_time"]].copy()
     display.columns = ["Comparto", "Dipendenti", "Donne", "Uomini", "% Donne", "% PT"]
     display = display.sort_values("Dipendenti", ascending=False)
-    st.dataframe(display, use_container_width=True, height=250)
+    st.dataframe(display, width='stretch', height=250)
 
     # Trend variazione
     st.subheader("Variazione 2020→2024")
