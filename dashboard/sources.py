@@ -16,7 +16,6 @@ from lab_connectors.duckdb.queries import (
     count_rows as _count_rows,
     years_from_registry,
 )
-from lab_connectors.formatters import fmt_eur, fmt_num, fmt_pct
 from lab_connectors.registry import load_registry
 from pathlib import Path
 

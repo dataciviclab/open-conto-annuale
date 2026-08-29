@@ -1,7 +1,6 @@
 """Personale — occupazione, assenze, flessibilità (unificato)."""
 
 import altair as alt
-import pandas as pd
 import streamlit as st
 
 from sources import YEARS, fmt_num, fmt_pct, load_mart, load_trend
