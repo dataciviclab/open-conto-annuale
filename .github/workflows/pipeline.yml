@@ -1,15 +1,3 @@
-# Pipeline — open-conto-annuale
-#
-# Workflow unico post-merge + refresh. Fa tutto:
-#   1. make run-all (extract RGS → seeds → tutti i dataset)
-#   2. make verify (gate)
-#   3. sync GCS (clean + mart)
-#   4. registry → PR draft (composite `registry-update-pr`)
-#
-# Conto Annuale: dataset paralleli che condividono l'estrazione RGS
-# (extract_dati.py) — si runna SEMPRE tutto, in ordine, via Makefile
-# (modello ADR-001: il pipeline è il sistema che refresca).
-
 name: pipeline
 
 on:
@@ -21,8 +9,7 @@ on:
       - "scripts/**"
       - ".github/workflows/pipeline.yml"
   schedule:
-    # Annuale: 1 giugno 06:00 UTC — i dati Conto Annuale vengono pubblicati
-    # annualmente (l'anno di riferimento chiude il 31/12).
+    # Annuale: 1 giugno 06:00 UTC
     - cron: '0 6 1 6 *'
   workflow_dispatch:
 
@@ -31,45 +18,10 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  conto-annuale-pipeline:
-    if: github.event.pull_request.merged == true || github.event_name != 'pull_request'
-    runs-on: ubuntu-latest
-    permissions:
-      contents: write
-      pull-requests: write
-
-    steps:
-      - uses: actions/checkout@v7
-        with:
-          ref: ${{ github.event.pull_request.merge_commit_sha || github.ref }}
-          fetch-depth: 0
-
-      - uses: dataciviclab/.github/actions/python-setup@main
-
-      - name: Run all datasets (extract → seeds → datasets)
-        run: make run-all
-
-      - name: Verify output (gate)
-        run: make verify
-
-      - name: Auth GCP
-        id: gcs
-        uses: dataciviclab/.github/actions/gcs-auth@main
-        env:
-          GCP_SA_KEY: ${{ secrets.GCP_SA_KEY }}
-
-      - name: Sync to GCS
-        if: steps.gcs.outputs.ready == 'true'
-        run: |
-          gsutil -m rsync -r out/data/mart/ gs://dataciviclab-mart/conto-annuale/
-          gsutil -m rsync -r out/data/clean/ gs://dataciviclab-clean/conto-annuale/
-          echo "✅ Synced to gs://dataciviclab-mart|clean/conto-annuale/"
-
-      # Registry → draft PR (composite, nello stesso job del run: il registry
-      # deriva le entry dai parquet locali in out/).
-      - name: Registry update PR
-        uses: dataciviclab/.github/actions/registry-update-pr@main
-        with:
-          prefix: "conto-annuale"
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  pipeline:
+    uses: dataciviclab/.github/.github/workflows/pipeline-reusable.yml@main
+    with:
+      repo-slug: conto-annuale
+      run-command: make run-all
+      verify-command: make verify
+    secrets: inherit
