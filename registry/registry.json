@@ -2,7 +2,7 @@
   "schema_version": 1,
   "repo": "open-conto-annuale",
   "source_repo": "dataciviclab/open-conto-annuale",
-  "updated_at": "2026-08-31",
+  "updated_at": "2026-09-01",
   "datasets": [
     {
       "slug": "anzianita",
@@ -3206,7 +3206,7 @@
       "detail": "anni 2020-2024 — mart: si",
       "action": "",
       "run": {
-        "run_id": "20260831T162157Z_d94cc54d",
+        "run_id": "20260901T174350Z_4a6adb1a",
         "year": 2024,
         "status": "SUCCESS",
         "quality_score": {
@@ -3224,9 +3224,9 @@
           "clean": 1800064,
           "mart": 3893
         },
-        "started_at": "2026-08-31T16:21:57.030199+00:00",
-        "finished_at": "2026-08-31T16:21:58.241391+00:00",
-        "duration_seconds": 1.211
+        "started_at": "2026-09-01T17:43:50.320419+00:00",
+        "finished_at": "2026-09-01T17:43:51.639805+00:00",
+        "duration_seconds": 1.319
       }
     },
     {
@@ -3237,7 +3237,7 @@
       "detail": "anni 2020-2024 — mart: si",
       "action": "",
       "run": {
-        "run_id": "20260831T162118Z_3099f124",
+        "run_id": "20260901T174316Z_85cc4b4b",
         "year": 2024,
         "status": "SUCCESS",
         "quality_score": {
@@ -3253,11 +3253,11 @@
         "output_bytes": {
           "raw": 6278841,
           "clean": 2627172,
-          "mart": 25133
+          "mart": 25180
         },
-        "started_at": "2026-08-31T16:21:18.522577+00:00",
-        "finished_at": "2026-08-31T16:21:19.923695+00:00",
-        "duration_seconds": 1.401
+        "started_at": "2026-09-01T17:43:16.240139+00:00",
+        "finished_at": "2026-09-01T17:43:17.491753+00:00",
+        "duration_seconds": 1.252
       }
     },
     {
@@ -3268,7 +3268,7 @@
       "detail": "anni 2020-2024 — mart: si",
       "action": "",
       "run": {
-        "run_id": "20260831T162210Z_d6c32bd4",
+        "run_id": "20260901T174402Z_ace939a4",
         "year": 2024,
         "status": "SUCCESS",
         "quality_score": {
@@ -3284,11 +3284,11 @@
         "output_bytes": {
           "raw": 884176,
           "clean": 197410,
-          "mart": 3158
+          "mart": 3154
         },
-        "started_at": "2026-08-31T16:22:10.613858+00:00",
-        "finished_at": "2026-08-31T16:22:11.611809+00:00",
-        "duration_seconds": 0.998
+        "started_at": "2026-09-01T17:44:02.705621+00:00",
+        "finished_at": "2026-09-01T17:44:03.471001+00:00",
+        "duration_seconds": 0.765
       }
     },
     {
@@ -3299,7 +3299,7 @@
       "detail": "anni 2020-2024 — mart: si",
       "action": "",
       "run": {
-        "run_id": "20260831T162133Z_63bd397a",
+        "run_id": "20260901T174328Z_f3860125",
         "year": 2024,
         "status": "SUCCESS",
         "quality_score": {
@@ -3314,12 +3314,12 @@
         },
         "output_bytes": {
           "raw": 17948851,
-          "clean": 6161655,
-          "mart": 49215
+          "clean": 6161600,
+          "mart": 49418
         },
-        "started_at": "2026-08-31T16:21:33.231402+00:00",
-        "finished_at": "2026-08-31T16:21:35.469147+00:00",
-        "duration_seconds": 2.238
+        "started_at": "2026-09-01T17:43:28.969117+00:00",
+        "finished_at": "2026-09-01T17:43:30.934456+00:00",
+        "duration_seconds": 1.965
       }
     },
     {
@@ -3330,7 +3330,7 @@
       "detail": "anni 2020-2024 — mart: si",
       "action": "",
       "run": {
-        "run_id": "20260831T162217Z_f0fe855b",
+        "run_id": "20260901T174409Z_489371e4",
         "year": 2024,
         "status": "SUCCESS",
         "quality_score": {
@@ -3348,9 +3348,9 @@
           "clean": 1786908,
           "mart": 2145
         },
-        "started_at": "2026-08-31T16:22:17.416509+00:00",
-        "finished_at": "2026-08-31T16:22:18.658740+00:00",
-        "duration_seconds": 1.242
+        "started_at": "2026-09-01T17:44:09.027989+00:00",
+        "finished_at": "2026-09-01T17:44:10.098260+00:00",
+        "duration_seconds": 1.07
       }
     },
     {
@@ -3361,7 +3361,7 @@
       "detail": "anni 2020-2024 — mart: si",
       "action": "",
       "run": {
-        "run_id": "20260831T162141Z_bc0bd16d",
+        "run_id": "20260901T174336Z_de9456ea",
         "year": 2024,
         "status": "SUCCESS",
         "quality_score": {
@@ -3377,11 +3377,11 @@
         "output_bytes": {
           "raw": 5949462,
           "clean": 2927710,
-          "mart": 35883
+          "mart": 35929
         },
-        "started_at": "2026-08-31T16:21:41.625601+00:00",
-        "finished_at": "2026-08-31T16:21:42.859164+00:00",
-        "duration_seconds": 1.234
+        "started_at": "2026-09-01T17:43:36.526465+00:00",
+        "finished_at": "2026-09-01T17:43:37.626105+00:00",
+        "duration_seconds": 1.1
       }
     },
     {
@@ -3392,7 +3392,7 @@
       "detail": "anni 2020-2024 — mart: si",
       "action": "",
       "run": {
-        "run_id": "20260831T162232Z_da8a67cf",
+        "run_id": "20260901T174422Z_7652d8a0",
         "year": 2024,
         "status": "SUCCESS",
         "quality_score": {
@@ -3408,11 +3408,11 @@
         "output_bytes": {
           "raw": 2123022,
           "clean": 684373,
-          "mart": 2815
+          "mart": 2817
         },
-        "started_at": "2026-08-31T16:22:32.982272+00:00",
-        "finished_at": "2026-08-31T16:22:33.785119+00:00",
-        "duration_seconds": 0.803
+        "started_at": "2026-09-01T17:44:22.258919+00:00",
+        "finished_at": "2026-09-01T17:44:23.114604+00:00",
+        "duration_seconds": 0.856
       }
     },
     {
@@ -3423,7 +3423,7 @@
       "detail": "anni 2020-2024 — mart: si",
       "action": "",
       "run": {
-        "run_id": "20260831T162222Z_cd8e8b6d",
+        "run_id": "20260901T174413Z_de50cf69",
         "year": 2024,
         "status": "SUCCESS",
         "quality_score": {
@@ -3439,11 +3439,11 @@
         "output_bytes": {
           "raw": 428354,
           "clean": 190240,
-          "mart": 4101
+          "mart": 4110
         },
-        "started_at": "2026-08-31T16:22:22.769413+00:00",
-        "finished_at": "2026-08-31T16:22:23.510261+00:00",
-        "duration_seconds": 0.741
+        "started_at": "2026-09-01T17:44:13.719039+00:00",
+        "finished_at": "2026-09-01T17:44:14.337526+00:00",
+        "duration_seconds": 0.618
       }
     },
     {
@@ -3454,7 +3454,7 @@
       "detail": "anni 2021-2024 — mart: si",
       "action": "",
       "run": {
-        "run_id": "20260831T162242Z_f4c76420",
+        "run_id": "20260901T174431Z_37af4ee8",
         "year": 2024,
         "status": "SUCCESS",
         "quality_score": {
@@ -3470,11 +3470,11 @@
         "output_bytes": {
           "raw": 321742,
           "clean": 113345,
-          "mart": 4006
+          "mart": 4003
         },
-        "started_at": "2026-08-31T16:22:42.170408+00:00",
-        "finished_at": "2026-08-31T16:22:42.883231+00:00",
-        "duration_seconds": 0.713
+        "started_at": "2026-09-01T17:44:31.362448+00:00",
+        "finished_at": "2026-09-01T17:44:31.938483+00:00",
+        "duration_seconds": 0.576
       }
     },
     {
@@ -3485,7 +3485,7 @@
       "detail": "anni 2020-2024 — mart: si",
       "action": "",
       "run": {
-        "run_id": "20260831T162248Z_276260f4",
+        "run_id": "20260901T174436Z_05b94419",
         "year": 2024,
         "status": "SUCCESS",
         "quality_score": {
@@ -3503,9 +3503,9 @@
           "clean": 511024,
           "mart": 3355
         },
-        "started_at": "2026-08-31T16:22:48.426195+00:00",
-        "finished_at": "2026-08-31T16:22:49.373939+00:00",
-        "duration_seconds": 0.948
+        "started_at": "2026-09-01T17:44:36.803350+00:00",
+        "finished_at": "2026-09-01T17:44:37.624629+00:00",
+        "duration_seconds": 0.821
       }
     },
     {
@@ -3516,7 +3516,7 @@
       "detail": "anni 2020-2024 — mart: si",
       "action": "",
       "run": {
-        "run_id": "20260831T162227Z_56dc876c",
+        "run_id": "20260901T174417Z_2f67a040",
         "year": 2024,
         "status": "SUCCESS",
         "quality_score": {
@@ -3532,11 +3532,11 @@
         "output_bytes": {
           "raw": 513853,
           "clean": 276229,
-          "mart": 2140
+          "mart": 2138
         },
-        "started_at": "2026-08-31T16:22:27.443360+00:00",
-        "finished_at": "2026-08-31T16:22:28.136238+00:00",
-        "duration_seconds": 0.693
+        "started_at": "2026-09-01T17:44:17.637798+00:00",
+        "finished_at": "2026-09-01T17:44:18.205084+00:00",
+        "duration_seconds": 0.567
       }
     },
     {
@@ -3547,7 +3547,7 @@
       "detail": "anni 2020-2024 — mart: si",
       "action": "",
       "run": {
-        "run_id": "20260831T162149Z_9d2e28d9",
+        "run_id": "20260901T174343Z_4d4b6821",
         "year": 2024,
         "status": "SUCCESS",
         "quality_score": {
@@ -3563,11 +3563,11 @@
         "output_bytes": {
           "raw": 5341663,
           "clean": 2004683,
-          "mart": 4136
+          "mart": 4128
         },
-        "started_at": "2026-08-31T16:21:49.540553+00:00",
-        "finished_at": "2026-08-31T16:21:50.790163+00:00",
-        "duration_seconds": 1.25
+        "started_at": "2026-09-01T17:43:43.389427+00:00",
+        "finished_at": "2026-09-01T17:43:44.599675+00:00",
+        "duration_seconds": 1.21
       }
     },
     {
@@ -3578,7 +3578,7 @@
       "detail": "anni 2020-2024 — mart: si",
       "action": "",
       "run": {
-        "run_id": "20260831T162238Z_cb1dd6bf",
+        "run_id": "20260901T174427Z_1e5e1d8a",
         "year": 2024,
         "status": "SUCCESS",
         "quality_score": {
@@ -3594,11 +3594,11 @@
         "output_bytes": {
           "raw": 1808327,
           "clean": 876870,
-          "mart": 9016
+          "mart": 9001
         },
-        "started_at": "2026-08-31T16:22:38.151078+00:00",
-        "finished_at": "2026-08-31T16:22:38.978096+00:00",
-        "duration_seconds": 0.827
+        "started_at": "2026-09-01T17:44:27.228321+00:00",
+        "finished_at": "2026-09-01T17:44:27.930361+00:00",
+        "duration_seconds": 0.702
       }
     },
     {
@@ -3609,7 +3609,7 @@
       "detail": "anni 2020-2024 — mart: si",
       "action": "",
       "run": {
-        "run_id": "20260831T162204Z_d9f950a9",
+        "run_id": "20260901T174356Z_35a25e4d",
         "year": 2024,
         "status": "SUCCESS",
         "quality_score": {
@@ -3625,11 +3625,11 @@
         "output_bytes": {
           "raw": 4288858,
           "clean": 1292478,
-          "mart": 3854
+          "mart": 3849
         },
-        "started_at": "2026-08-31T16:22:04.099139+00:00",
-        "finished_at": "2026-08-31T16:22:05.145133+00:00",
-        "duration_seconds": 1.046
+        "started_at": "2026-09-01T17:43:56.871466+00:00",
+        "finished_at": "2026-09-01T17:43:57.775991+00:00",
+        "duration_seconds": 0.905
       }
     },
     {
@@ -3640,7 +3640,7 @@
       "detail": "anno 2024 — mart: si",
       "action": "",
       "run": {
-        "run_id": "20260831T162106Z_47626b2d",
+        "run_id": "20260901T174305Z_169a5447",
         "year": 2024,
         "status": "SUCCESS",
         "quality_score": {
@@ -3658,9 +3658,9 @@
           "clean": 1745,
           "mart": 1745
         },
-        "started_at": "2026-08-31T16:21:06.993680+00:00",
-        "finished_at": "2026-08-31T16:21:07.382757+00:00",
-        "duration_seconds": 0.389
+        "started_at": "2026-09-01T17:43:05.339588+00:00",
+        "finished_at": "2026-09-01T17:43:05.715780+00:00",
+        "duration_seconds": 0.376
       }
     },
     {
@@ -3671,7 +3671,7 @@
       "detail": "anno 2024 — mart: si",
       "action": "",
       "run": {
-        "run_id": "20260831T162104Z_48d468c6",
+        "run_id": "20260901T174302Z_f6c9a45f",
         "year": 2024,
         "status": "SUCCESS",
         "quality_score": {
@@ -3689,9 +3689,9 @@
           "clean": 2914,
           "mart": 2914
         },
-        "started_at": "2026-08-31T16:21:04.493983+00:00",
-        "finished_at": "2026-08-31T16:21:04.885729+00:00",
-        "duration_seconds": 0.392
+        "started_at": "2026-09-01T17:43:02.982488+00:00",
+        "finished_at": "2026-09-01T17:43:03.446282+00:00",
+        "duration_seconds": 0.464
       }
     },
     {
@@ -3702,7 +3702,7 @@
       "detail": "anno 2024 — mart: si",
       "action": "",
       "run": {
-        "run_id": "20260831T162103Z_3f8058cd",
+        "run_id": "20260901T174302Z_4204dc71",
         "year": 2024,
         "status": "SUCCESS",
         "quality_score": {
@@ -3720,9 +3720,9 @@
           "clean": 268613,
           "mart": 268613
         },
-        "started_at": "2026-08-31T16:21:03.410172+00:00",
-        "finished_at": "2026-08-31T16:21:04.107270+00:00",
-        "duration_seconds": 0.697
+        "started_at": "2026-09-01T17:43:02.026463+00:00",
+        "finished_at": "2026-09-01T17:43:02.627554+00:00",
+        "duration_seconds": 0.601
       }
     },
     {
@@ -3733,7 +3733,7 @@
       "detail": "anno 2024 — mart: si",
       "action": "",
       "run": {
-        "run_id": "20260831T162110Z_7ad43f1e",
+        "run_id": "20260901T174308Z_d8ff92a4",
         "year": 2024,
         "status": "SUCCESS",
         "quality_score": {
@@ -3751,9 +3751,9 @@
           "clean": 4506,
           "mart": 4506
         },
-        "started_at": "2026-08-31T16:21:10.498899+00:00",
-        "finished_at": "2026-08-31T16:21:10.931613+00:00",
-        "duration_seconds": 0.433
+        "started_at": "2026-09-01T17:43:08.414245+00:00",
+        "finished_at": "2026-09-01T17:43:09.159840+00:00",
+        "duration_seconds": 0.746
       }
     },
     {
@@ -3764,7 +3764,7 @@
       "detail": "anno 2024 — mart: si",
       "action": "",
       "run": {
-        "run_id": "20260831T162105Z_6f0ab5cb",
+        "run_id": "20260901T174303Z_377d0eb6",
         "year": 2024,
         "status": "SUCCESS",
         "quality_score": {
@@ -3782,9 +3782,9 @@
           "clean": 20987,
           "mart": 20987
         },
-        "started_at": "2026-08-31T16:21:05.269201+00:00",
-        "finished_at": "2026-08-31T16:21:05.810608+00:00",
-        "duration_seconds": 0.541
+        "started_at": "2026-09-01T17:43:03.754455+00:00",
+        "finished_at": "2026-09-01T17:43:04.222758+00:00",
+        "duration_seconds": 0.468
       }
     },
     {
@@ -3795,7 +3795,7 @@
       "detail": "anno 2024 — mart: si",
       "action": "",
       "run": {
-        "run_id": "20260831T162107Z_6937fda1",
+        "run_id": "20260901T174306Z_bb987e69",
         "year": 2024,
         "status": "SUCCESS",
         "quality_score": {
@@ -3813,9 +3813,9 @@
           "clean": 90652,
           "mart": 90652
         },
-        "started_at": "2026-08-31T16:21:07.767643+00:00",
-        "finished_at": "2026-08-31T16:21:08.436377+00:00",
-        "duration_seconds": 0.669
+        "started_at": "2026-09-01T17:43:06.020800+00:00",
+        "finished_at": "2026-09-01T17:43:06.644637+00:00",
+        "duration_seconds": 0.624
       }
     },
     {
@@ -3826,7 +3826,7 @@
       "detail": "anno 2024 — mart: si",
       "action": "",
       "run": {
-        "run_id": "20260831T162108Z_89ce1943",
+        "run_id": "20260901T174306Z_83daa3c4",
         "year": 2024,
         "status": "SUCCESS",
         "quality_score": {
@@ -3844,9 +3844,9 @@
           "clean": 846,
           "mart": 846
         },
-        "started_at": "2026-08-31T16:21:08.820844+00:00",
-        "finished_at": "2026-08-31T16:21:09.204684+00:00",
-        "duration_seconds": 0.384
+        "started_at": "2026-09-01T17:43:06.957159+00:00",
+        "finished_at": "2026-09-01T17:43:07.303146+00:00",
+        "duration_seconds": 0.346
       }
     },
     {
@@ -3857,7 +3857,7 @@
       "detail": "anno 2024 — mart: si",
       "action": "",
       "run": {
-        "run_id": "20260831T162109Z_3311e5b0",
+        "run_id": "20260901T174307Z_6e83cb15",
         "year": 2024,
         "status": "SUCCESS",
         "quality_score": {
@@ -3875,9 +3875,9 @@
           "clean": 22791,
           "mart": 22791
         },
-        "started_at": "2026-08-31T16:21:09.587942+00:00",
-        "finished_at": "2026-08-31T16:21:10.106761+00:00",
-        "duration_seconds": 0.519
+        "started_at": "2026-09-01T17:43:07.640734+00:00",
+        "finished_at": "2026-09-01T17:43:08.097236+00:00",
+        "duration_seconds": 0.457
       }
     },
     {
@@ -3888,7 +3888,7 @@
       "detail": "anno 2024 — mart: si",
       "action": "",
       "run": {
-        "run_id": "20260831T162106Z_d758f41e",
+        "run_id": "20260901T174304Z_da454c0e",
         "year": 2024,
         "status": "SUCCESS",
         "quality_score": {
@@ -3906,9 +3906,9 @@
           "clean": 4790,
           "mart": 4790
         },
-        "started_at": "2026-08-31T16:21:06.201084+00:00",
-        "finished_at": "2026-08-31T16:21:06.605183+00:00",
-        "duration_seconds": 0.404
+        "started_at": "2026-09-01T17:43:04.595367+00:00",
+        "finished_at": "2026-09-01T17:43:05.028208+00:00",
+        "duration_seconds": 0.433
       }
     }
   ],
