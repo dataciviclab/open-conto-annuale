@@ -74,7 +74,11 @@ if not df_anz.empty:
     )
     df_anz_agg["totale"] = df_anz_agg["tot_uomini"] + df_anz_agg["tot_donne"]
     df_anz_agg["pct_donne"] = (df_anz_agg["tot_donne"] / df_anz_agg["totale"] * 100).round(1)
-    df_anz_agg = df_anz_agg.sort_values("fascia")
+
+    # Ordine cronologico (A0, A6, A11, ...) — estrai la parte numerica
+    df_anz_agg["_sort_key"] = df_anz_agg["fascia"].str.extract(r"(\d+)").fillna("0").astype(int)
+    df_anz_agg = df_anz_agg.sort_values("_sort_key").reset_index(drop=True)
+    fascia_order = df_anz_agg["fascia"].tolist()
 
     # Piramide anzianità
     df_pira = df_anz_agg[["fascia", "tot_uomini", "tot_donne"]].copy()
@@ -87,7 +91,7 @@ if not df_anz.empty:
         .mark_bar(cornerRadiusTopLeft=2, cornerRadiusTopRight=2)
         .encode(
             x=alt.X("dipendenti:Q", title="Dipendenti", axis=alt.Axis(format="~s", labelExpr="abs(datum.value)")),
-            y=alt.Y("fascia:N", title="Fascia anzianità", sort="ascending"),
+            y=alt.Y("fascia:N", title="Fascia anzianità", sort=fascia_order),
             color=alt.Color(
                 "genere:N",
                 scale=alt.Scale(domain=["uomini", "donne"], range=["#3b82f6", "#ec4899"]),
