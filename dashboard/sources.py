@@ -41,7 +41,13 @@ def load_mart(slug: str, table: str, year: int):
 @st.cache_data(ttl=3600, show_spinner=False)
 def load_trend(slug: str):
     """Carica il mart_trend multi-anno (cached 1h)."""
-    return _load_mart_flat(slug, "mart_trend", prefix=PREFIX)
+    return _load_mart_flat(slug, "mart_trend", prefix=_PREFIX)
+
+
+@st.cache_data(ttl=3600, show_spinner=False)
+def load_mart_flat(slug: str, table: str):
+    """Carica un mart multi-anno (cached 1h)."""
+    return _load_mart_flat(slug, table, prefix=_PREFIX)
 
 
 @st.cache_data(ttl=3600, show_spinner=False)
