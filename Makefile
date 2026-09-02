@@ -33,7 +33,7 @@ DATASETS = \
 # --- Download + estrazione dati (unico script, 1 download per anno) ---
 # Default: tutti gli anni dichiarati dai dataset (ADR-001 §8, anni da config).
 
-YEARS ?= 2020 2021 2022 2023 2024
+YEARS ?= 2017 2018 2019 2020 2021 2022 2023 2024
 
 .PHONY: extract-dati
 extract-dati:

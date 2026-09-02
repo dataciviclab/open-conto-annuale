@@ -36,7 +36,7 @@ with tab_occ:
     st.dataframe(display, width='stretch', height=250)
 
     # Trend variazione
-    st.subheader("Variazione 2020→2024")
+    st.subheader("Variazione 2017→2024")
     df_trend_sorted = df_trend.sort_values("variazione_pct", ascending=True)
     chart_trend = (
         alt.Chart(df_trend_sorted)

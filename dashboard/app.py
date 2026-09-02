@@ -20,6 +20,8 @@ pages = {
     "Analisi": [
         st.Page("pages/02_Personale.py", title="Personale", icon="👥"),
         st.Page("pages/03_Retribuzioni.py", title="Retribuzioni", icon="💰"),
+        st.Page("pages/05_Organizzazione.py", title="Organizzazione", icon="📋"),
+        st.Page("pages/06_Innovazione.py", title="Innovazione", icon="🚀"),
     ],
     "Strumenti": [
         st.Page("pages/04_SQL.py", title="Query SQL", icon="🧪"),
