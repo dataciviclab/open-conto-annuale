@@ -11,15 +11,18 @@ dataset:
   - dipendenti-pubblici
   category: pa
   description: Distribuzione geografica per regione del personale delle PA italiane
-    (2020-2024), arricchita con anagrafica enti e comparti.
+    (2017-2024), arricchita con anagrafica enti e comparti.
   years:
+  - 2017
+  - 2018
+  - 2019
   - 2020
   - 2021
   - 2022
   - 2023
   - 2024
   time_coverage:
-    start_year: 2020
+    start_year: 2017
     end_year: 2024
 raw:
   output_policy: overwrite
@@ -58,11 +61,26 @@ mart:
   tables:
   - name: distribuzione_comparti
     sql: sql/mart.sql
+  - name: distribuzione_italia
+    sql: sql/mart_italia.sql
+    years:
+    - 2017
+    - 2018
+    - 2019
+    - 2020
+    - 2021
+    - 2022
+    - 2023
+    - 2024
+    source_layer: clean
   - name: mart_sintesi
     sql: sql/mart_sintesi.sql
   - name: mart_trend
     sql: sql/mart_trend.sql
     years:
+    - 2017
+    - 2018
+    - 2019
     - 2020
     - 2021
     - 2022
@@ -71,10 +89,28 @@ mart:
     source_layer: clean
   required_tables:
   - distribuzione_comparti
+  - distribuzione_italia
   - mart_sintesi
   - mart_trend
   validate:
     table_rules:
+      distribuzione_italia:
+        required_columns:
+        - anno
+        - regione
+        - codi_comparto
+        - desc_comparto
+        - tot_uomini
+        - tot_donne
+        - tot_dipendenti
+        - pct_donne
+        - pct_nazionale
+        - enti
+        primary_key:
+        - anno
+        - regione
+        - codi_comparto
+        min_rows: 100
       distribuzione_comparti:
         required_columns:
         - anno
@@ -125,5 +161,9 @@ support:
   - 2024
 - name: qualifiche
   config: ../../support/anag-qualifiche/dataset.yml
+  years:
+  - 2024
+- name: territorio
+  config: ../../support/anag-territorio/dataset.yml
   years:
   - 2024

@@ -11,11 +11,11 @@ puliti, normalizzati e resi pubblici.
 | | |
 |---|---|
 | **Enti coperti** | ~13.000 (comuni, ASL, università, regioni, ministeri) |
-| **Periodo** | 2020 — 2024 |
+| **Periodo** | 2017 — 2024 |
 | **Righe** | ~1,85 milioni (solo 2024), multi-anno |
 | **Costo del lavoro 2024** | €186 miliardi |
 
-### Trend 2020-2024
+### Trend 2017-2024
 
 | Anno | Dipendenti | % Donne |
 |---|---|---|

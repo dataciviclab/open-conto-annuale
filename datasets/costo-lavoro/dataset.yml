@@ -6,10 +6,10 @@ dataset:
   source_id: "openbdap"
   tags: [pa, conto-annuale, costo-lavoro, spesa, dipendenti-pubblici]
   category: pa
-  description: "Costo del lavoro del personale delle PA italiane per voce di spesa (2020-2024), arricchito con anagrafica enti, comparti e voci di spesa."
-  years: [2020, 2021, 2022, 2023, 2024]
+  description: "Costo del lavoro del personale delle PA italiane per voce di spesa (2017-2024), arricchito con anagrafica enti, comparti e voci di spesa."
+  years: [2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024]
   time_coverage:
-    start_year: 2020
+    start_year: 2017
     end_year: 2024
 
 raw:
@@ -52,7 +52,7 @@ mart:
       sql: "sql/mart_sintesi.sql"
     - name: "mart_trend"
       sql: "sql/mart_trend.sql"
-      years: [2020, 2021, 2022, 2023, 2024]
+      years: [2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024]
       source_layer: clean
   required_tables:
     - "costo_lavoro_comparti"

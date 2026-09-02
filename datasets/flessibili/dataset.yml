@@ -10,15 +10,18 @@ dataset:
   - dipendenti-pubblici
   category: pa
   description: Lavoratori flessibili delle PA italiane per tipologia di contratto
-    (2020-2024), arricchiti con anagrafica enti e comparti.
+    (2017-2024), arricchiti con anagrafica enti e comparti.
   years:
+  - 2017
+  - 2018
+  - 2019
   - 2020
   - 2021
   - 2022
   - 2023
   - 2024
   time_coverage:
-    start_year: 2020
+    start_year: 2017
     end_year: 2024
 raw:
   output_policy: overwrite
@@ -67,6 +70,9 @@ mart:
   - name: mart_trend
     sql: sql/mart_trend.sql
     years:
+    - 2017
+    - 2018
+    - 2019
     - 2020
     - 2021
     - 2022

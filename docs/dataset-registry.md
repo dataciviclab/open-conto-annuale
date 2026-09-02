@@ -8,20 +8,20 @@ Rigenerazione: `toolkit registry build --prefix conto-annuale --write` (o `make 
 
 | Slug | Descrizione | Periodo | Mart |
 |---|---|---|---|
-| `personale` | Distribuzione per fascia di età del personale PA | 2020–2024 | `personale_eta_comparti` |
-| `anzianita` | Anzianità di servizio del personale PA | 2020–2024 | `anzianita_comparti` |
-| `assenze` | Giornate di assenza per causale | 2020–2024 | `assenze_comparti` |
-| `costo_lavoro` | Costo del lavoro per voce di spesa | 2020–2024 | `costo_lavoro_comparti` |
-| `composizione_retribuzione` | Importi retributivi per voce di spesa | 2020–2024 | `retribuzioni_comparti`, `retribuzioni_entrate` |
-| `contrattazione` | Spese di contrattazione integrativa | 2020–2024 | `contrattazione_comparti` |
-| `titoli_studio` | Titoli di studio del personale PA | 2020–2024 | `titoli_studio_comparti` |
-| `comandati` | Personale comandato/fuori ruolo | 2020–2024 | `comandati_comparti` |
-| `flessibili` | Lavoratori flessibili per tipologia | 2020–2024 | `flessibili_comparti` |
-| `passaggi` | Passaggi di qualifica | 2020–2024 | `passaggi_comparti` |
-| `distribuzione` | Distribuzione geografica per regione | 2020–2024 | `distribuzione_comparti` |
-| `retribuzione_media` | Retribuzione media per componente | 2020–2024 | `retribuzione_media_comparti` |
-| `modalita_flessibile` | Telelavoro, lavoro agile, coworking | 2021–2024 | `modalita_flessibile_comparti` |
-| `occupazione` | Occupazione per regime orario | 2020–2024 | `occupazione_comparti` |
+| `personale` | Distribuzione per fascia di età del personale PA | 2017–2024 | `personale_eta_comparti` |
+| `anzianita` | Anzianità di servizio del personale PA | 2017–2024 | `anzianita_comparti` |
+| `assenze` | Giornate di assenza per causale | 2017–2024 | `assenze_comparti` |
+| `costo_lavoro` | Costo del lavoro per voce di spesa | 2017–2024 | `costo_lavoro_comparti` |
+| `composizione_retribuzione` | Importi retributivi per voce di spesa | 2017–2024 | `retribuzioni_comparti`, `retribuzioni_entrate` |
+| `contrattazione` | Spese di contrattazione integrativa | 2017–2024 | `contrattazione_comparti` |
+| `titoli_studio` | Titoli di studio del personale PA | 2017–2024 | `titoli_studio_comparti` |
+| `comandati` | Personale comandato/fuori ruolo | 2017–2024 | `comandati_comparti` |
+| `flessibili` | Lavoratori flessibili per tipologia | 2017–2024 | `flessibili_comparti` |
+| `passaggi` | Passaggi di qualifica | 2017–2024 | `passaggi_comparti` |
+| `distribuzione` | Distribuzione geografica per regione | 2017–2024 | `distribuzione_comparti` |
+| `retribuzione_media` | Retribuzione media per componente | 2017–2024 | `retribuzione_media_comparti` |
+| `modalita_flessibile` | Telelavoro, lavoro agile, coworking | 2017–2024 | `modalita_flessibile_comparti` |
+| `occupazione` | Occupazione per regime orario | 2017–2024 | `occupazione_comparti` |
 
 ### Anagrafiche di supporto (`support/`)
 

@@ -6,10 +6,10 @@ dataset:
   source_id: "openbdap"
   tags: [pa, conto-annuale, personale, eta, dipendenti-pubblici]
   category: pa
-  description: "Distribuzione per fascia di età del personale delle PA italiane (2020-2024), arricchita con anagrafica enti, comparti e qualifiche."
-  years: [2020, 2021, 2022, 2023, 2024]
+  description: "Distribuzione per fascia di età del personale delle PA italiane (2017-2024), arricchita con anagrafica enti, comparti e qualifiche."
+  years: [2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024]
   time_coverage:
-    start_year: 2020
+    start_year: 2017
     end_year: 2024
 
 raw:
@@ -52,18 +52,27 @@ mart:
   tables:
     - name: "personale_eta_comparti"
       sql: "sql/mart_eta.sql"
+    - name: "personale_eta_italia"
+      sql: "sql/mart_eta_italia.sql"
+      years: [2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024]
+      source_layer: clean
     - name: "mart_sintesi"
       sql: "sql/mart_sintesi.sql"
     - name: "mart_trend"
       sql: "sql/mart_trend.sql"
-      years: [2020, 2021, 2022, 2023, 2024]
+      years: [2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024]
       source_layer: clean
   required_tables:
     - "personale_eta_comparti"
+    - "personale_eta_italia"
     - "mart_sintesi"
     - "mart_trend"
   validate:
     table_rules:
+      personale_eta_italia:
+        required_columns: [anno, fascia, tot_uomini, tot_donne, tot_fascia, pct_donne, enti]
+        primary_key: [anno, fascia]
+        min_rows: 10
       personale_eta_comparti:
         required_columns: [anno, codi_comparto, desc_comparto, tipo_rilevazione, fascia, tot_uomini, tot_donne, enti]
         primary_key: [anno, codi_comparto, tipo_rilevazione, fascia]
