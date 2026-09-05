@@ -6,12 +6,15 @@ Il personale della PA italiana, aperto e interrogabile.
 
 import streamlit as st
 
-st.set_page_config(
-    page_title="Conto Annuale PA · Dashboard",
+from lab_connectors.branding import apply_branding
+
+st.set_page_config(    page_title="Conto Annuale PA · Dashboard",
     page_icon="🏛️",
     layout="wide",
     initial_sidebar_state="expanded",
 )
+
+apply_branding(repo_name="open-conto-annuale", repo_url="https://github.com/dataciviclab/open-conto-annuale")
 
 pages = {
     "": [
@@ -29,10 +32,5 @@ pages = {
 }
 
 pg = st.navigation(pages, position="sidebar")
-
-st.sidebar.markdown("---")
-st.sidebar.caption("Dati: [Conto Annuale RGS](https://contoaunweb.rgs.mef.gov.it/) · MEF")
-st.sidebar.caption("Codice: [dataciviclab/open-conto-annuale](https://github.com/dataciviclab/open-conto-annuale)")
-st.sidebar.caption("[DataCivicLab](https://dataciviclab.org/) · CC BY 4.0")
 
 pg.run()
