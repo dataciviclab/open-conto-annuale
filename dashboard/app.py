@@ -5,16 +5,18 @@ Il personale della PA italiana, aperto e interrogabile.
 """
 
 import streamlit as st
-
 from lab_connectors.branding import apply_branding
 
-st.set_page_config(    page_title="Conto Annuale PA · Dashboard",
+st.set_page_config(
+    page_title="Conto Annuale PA · Dashboard",
     page_icon="🏛️",
     layout="wide",
     initial_sidebar_state="expanded",
 )
 
-apply_branding(repo_name="open-conto-annuale", repo_url="https://github.com/dataciviclab/open-conto-annuale")
+apply_branding(
+    repo_name="open-conto-annuale", repo_url="https://github.com/dataciviclab/open-conto-annuale"
+)
 
 pages = {
     "": [
