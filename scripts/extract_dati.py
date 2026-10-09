@@ -295,6 +295,41 @@ def normalize_csv_files(year: int, out: pathlib.Path) -> None:
     # 4. Aggiungi colonne mancanti per dataset con schema crescente
     _add_missing_columns(year, out)
 
+    # 5. Scarta righe vuote (tutti i campi vuoti) — presenti in alcuni CSV
+    #    fonte (es. LAVORO_FLESSIBILE 2013) e fatali per le validazioni clean.
+    dropped = _drop_empty_rows(year, out)
+    if dropped:
+        print(f"  {year}: scartate {dropped} righe vuote dai CSV")
+
+
+def _drop_empty_rows(year: int, out: pathlib.Path) -> int:
+    """Rimuove le righe i cui campi sono tutti vuoti (delimitatore-only)."""
+    total = 0
+    for csv_path in sorted(out.glob("*.CSV")):
+        text = csv_path.read_text(encoding="utf-8", errors="replace")
+        lines = text.split("\n")
+        if len(lines) <= 1:
+            continue
+        header = lines[0]
+        kept = [header]
+        removed = 0
+        for line in lines[1:]:
+            stripped = line.rstrip("\r")
+            if not stripped.strip():
+                continue
+            fields = [f.strip() for f in stripped.split(";")]
+            if all(not f for f in fields):
+                removed += 1
+                continue
+            kept.append(stripped)
+        if removed:
+            # trailing newline come nel sorgente
+            csv_path.write_text(
+                "\n".join(kept) + ("\n" if text.endswith("\n") else ""), encoding="utf-8"
+            )
+            total += removed
+    return total
+
 
 # Colonne aggiunte nel 2021 che non esistono nei CSV 2017-2020
 MISSING_COLUMNS = {
@@ -350,9 +385,8 @@ def _add_missing_columns(year: int, out: pathlib.Path) -> None:
 
 
 def apply_fixes(year: int) -> None:
-    if year < 2017:
-        return
-
+    # PIEDO compare nel 2017+ e in alcuni anni early (es. 2001-2005): il fix è
+    # no-op se la colonna non c'è, quindi applichiamo sempre.
     out = OUT_DIR / str(year)
     for csv_path in out.glob("*.CSV"):
         if "OCCUPAZIONE" not in csv_path.name.upper():
