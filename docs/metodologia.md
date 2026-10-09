@@ -18,7 +18,9 @@ italiane. Ogni ente trasmette annualmente i dati relativi a:
 - Passaggi di qualifica
 - Distribuzione geografica
 
-Copertura: **dal 2001** sull'intero perimetro delle PA italiane.
+Copertura ufficiale portale: **dal 2001**. Copertura attuale della pipeline: **2015–2024**
+(anni pre-2017 normalizzati in `extract_dati.py` verso lo schema 2017+: header UPPER_SNAKE,
+fix bug fonte ETA/COMANDATI/OCCUPAZIONE/MODALITA).
 
 Il portale genera file ZIP su richiesta (`Tutto.zip`, `Anagrafiche.zip`, `Dati.zip`)
 con tutti i microdati in formato CSV per l'anno selezionato.

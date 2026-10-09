@@ -7,9 +7,11 @@
    encoding Latin-1 → UTF-8. I nomi delle colonne restano INTATTI.
 4. Applica il fix PIEDO → PIENO (colonna OCCUPAZIONE, anni 2017-2024).
 """
+
 import csv
 import io
 import pathlib
+import re
 import sys
 import zipfile
 
@@ -39,6 +41,7 @@ def download_zip(year: int) -> pathlib.Path:
     print(f"  Download {url} ...")
     try:
         from lab_connectors.http import HttpClient
+
         with HttpClient(timeout=180) as client:
             result = client.get(url, headers=_HEADERS)
         if not result.is_ok or result.response is None:
@@ -138,8 +141,9 @@ def normalize_csv(path: pathlib.Path) -> None:
         fieldnames = [fn.strip() for fn in reader.fieldnames]
 
         out = io.StringIO()
-        writer = csv.DictWriter(out, fieldnames=fieldnames, delimiter=";",
-                                quoting=csv.QUOTE_MINIMAL)
+        writer = csv.DictWriter(
+            out, fieldnames=fieldnames, delimiter=";", quoting=csv.QUOTE_MINIMAL
+        )
         writer.writeheader()
 
         for row in reader:
@@ -151,6 +155,99 @@ def normalize_csv(path: pathlib.Path) -> None:
             writer.writerow(new_row)
 
         path.write_text(out.getvalue(), encoding="utf-8")
+
+
+def _style_header(h: str) -> str:
+    """Title Case + spazi (pre-2017) → UPPER_SNAKE compatibile col schema 2017+.
+
+    Mantiene ``%`` (es. PART_TIME_INF50%_UOMINI). Accenti → ASCII.
+    """
+    h = h.strip().replace("%", "\x00")
+    for a, b in (
+        ("à", "a"),
+        ("è", "e"),
+        ("é", "e"),
+        ("ì", "i"),
+        ("ò", "o"),
+        ("ù", "u"),
+        ("À", "A"),
+        ("È", "E"),
+        ("É", "E"),
+        ("Ì", "I"),
+        ("Ò", "O"),
+        ("Ù", "U"),
+    ):
+        h = h.replace(a, b)
+    h = re.sub(r"[^A-Za-z0-9\x00]+", "_", h).strip("_").upper()
+    return h.replace("\x00", "%")
+
+
+# Rename espliciti pre-2017 → header 2017 (dopo _style_header).
+# Chiavi = nome stilizzato del pre-2017; valori = header esatto 2017
+# (i clean.sql dipendono da questi nomi, typo fonte inclusi).
+_HEADER_OVERRIDES_PRE2017 = {
+    "ETA": {
+        # Bug fonte 2015/2016: header "Fascia Anzianità", valori = fasce età (E*)
+        "FASCIA_ANZIANITA": "Fascia Età",
+    },
+    "ETA_MEDIA": {
+        "FASCIA_ANZIANITA": "Fascia Età",
+    },
+    "COSTO_LAVORO": {
+        "VOCE_DI_SPESA": "VOCE_SPESA",
+    },
+    "COMANDATI_FUORI_RUOLO_ESONERI": {
+        # 2015/2016: spelling corretto; 2017+ typo DOMME (usato dai clean.sql)
+        "COMANDATIDISTACCATIDONNE": "COMANDATI_DISTACCATI_DOMME",
+        # 2015/2016: "Esoneri Interno 70%" ≠ 2017 "Aspettative" — non mappare
+        # la semantica; solo normalizzazione stile per evitare spazi/% nei nomi.
+        "ESONERI_INTERNO_70%_UOMINI": "ESONERI_INTERNO_70_UOMINI",
+        "ESONERI_INTERNO_70%_DONNE": "ESONERI_INTERNO_70_DONNE",
+    },
+    "OCCUPAZIONE": {
+        # 2015: "Part TimeSup50%" senza spazio → stile sbagliato
+        "PART_TIMESUP50%_UOMINI": "PART_TIME_SUP50%_UOMINI",
+        "PART_TIMESUP50%_DONNE": "PART_TIME_SUP50%_DONNE",
+    },
+    "MODALITA_LAVORO_FLESSIBILE": {
+        # Typo fonte 2015/2016: "Soggeti" → "Soggetti"
+        "SOGGETI_REPERIBILITA_UOMINI": "SOGGETTI_REPERIBILITA_UOMINI",
+        "SOGGETI_REPERIBILITA_DONNE": "SOGGETTI_REPERIBILITA_DONNE",
+    },
+}
+
+
+def _rename_headers_pre2017(csv_path: pathlib.Path, table: str) -> bool:
+    """Riscrive header CSV pre-2017 allo schema 2017+ (UPPER_SNAKE + override)."""
+    text = csv_path.read_text(encoding="utf-8", errors="replace")
+    lines = text.split("\n")
+    if not lines or not lines[0].strip():
+        return False
+
+    header_line = lines[0]
+    bom = ""
+    if header_line.startswith("﻿"):
+        bom = "﻿"
+        header_line = header_line[1:]
+    header_line = header_line.rstrip("\r")
+
+    cols = [c.strip() for c in header_line.split(";")]
+    overrides = _HEADER_OVERRIDES_PRE2017.get(table, {})
+    new_cols = []
+    changed = False
+    for c in cols:
+        styled = _style_header(c)
+        new_c = overrides.get(styled, styled)
+        if new_c != c:
+            changed = True
+        new_cols.append(new_c)
+
+    if not changed:
+        return False
+
+    lines[0] = bom + ";".join(new_cols)
+    csv_path.write_text("\n".join(lines), encoding="utf-8")
+    return True
 
 
 def normalize_csv_files(year: int, out: pathlib.Path) -> None:
@@ -172,6 +269,17 @@ def normalize_csv_files(year: int, out: pathlib.Path) -> None:
         for csv_path in out.glob("*.CSV"):
             normalize_csv(csv_path)
 
+    # 3b. Pre-2017: riscrivi header allo schema 2017+ (UPPER_SNAKE + fix bug fonte)
+    if year < 2017:
+        renamed = 0
+        for csv_path in sorted(out.glob("*.CSV")):
+            m = re.match(rf"(.+?)_{year}\.CSV$", csv_path.name)
+            table = m.group(1) if m else csv_path.stem
+            if _rename_headers_pre2017(csv_path, table):
+                renamed += 1
+        if renamed:
+            print(f"  {year}: header normalizzati su {renamed} file (schema 2017+)")
+
     # 4. Aggiungi colonne mancanti per dataset con schema crescente
     _add_missing_columns(year, out)
 
@@ -179,8 +287,12 @@ def normalize_csv_files(year: int, out: pathlib.Path) -> None:
 # Colonne aggiunte nel 2021 che non esistono nei CSV 2017-2020
 MISSING_COLUMNS = {
     "MODALITA_LAVORO_FLESSIBILE": {
-        2021: ["PERS_LAVORO_AGILE_U", "PERS_LAVORO_AGILE_D",
-                "PERS_COWORKING_U", "PERS_COWORKING_D"],
+        2021: [
+            "PERS_LAVORO_AGILE_U",
+            "PERS_LAVORO_AGILE_D",
+            "PERS_COWORKING_U",
+            "PERS_COWORKING_D",
+        ],
     },
 }
 
