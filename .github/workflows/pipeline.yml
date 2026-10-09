@@ -5,6 +5,7 @@ on:
     types: [closed]
     paths:
       - "datasets/**"
+      - "compose/**"
       - "support/**"
       - "scripts/**"
       - ".github/workflows/pipeline.yml"
@@ -22,6 +23,8 @@ jobs:
     uses: dataciviclab/.github/.github/workflows/pipeline-reusable.yml@main
     with:
       repo-slug: conto-annuale
-      run-command: make run-all
+      # run-all produce i 13 dataset base; compose legge i mart_sintesi
+      # e deve girare dopo (prerequisito locale documentato in README/make).
+      run-command: make run-all && make compose
       verify-command: make verify
     secrets: inherit
