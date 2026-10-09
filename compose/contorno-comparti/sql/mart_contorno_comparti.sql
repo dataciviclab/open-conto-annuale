@@ -1,10 +1,8 @@
 -- mart_contorno_comparti — compose Conto Annuale
 --
 -- Grano: (anno, codi_comparto). Spine = personale mart_sintesi.
--- Join: costo_lavoro, occupazione, assenze, retribuzione_media
---       (inner/left dove la copertura e' stabile).
--- Left: comandati, contrattazione, flessibili, passaggi,
---       titoli_studio, anzianita, modalita_flessibile, distribuzione.
+-- Tutti i join verso gli altri mart_sintesi sono LEFT JOIN (spine personale
+-- sempre presente; le altre metriche sono nullable per costruzione).
 --
 -- Metriche derivate:
 --   spesa_per_dipendente  = tot_spesa_milioni / tot_dipendenti (k€/anno)
