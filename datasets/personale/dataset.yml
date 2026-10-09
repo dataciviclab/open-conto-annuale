@@ -6,10 +6,10 @@ dataset:
   source_id: "openbdap"
   tags: [pa, conto-annuale, personale, eta, dipendenti-pubblici]
   category: pa
-  description: "Distribuzione per fascia di età del personale delle PA italiane (2017-2024), arricchita con anagrafica enti, comparti e qualifiche."
-  years: [2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024]
+  description: "Distribuzione per fascia di età del personale delle PA italiane (2015-2024), arricchita con anagrafica enti, comparti e qualifiche."
+  years: [2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024]
   time_coverage:
-    start_year: 2017
+    start_year: 2015
     end_year: 2024
 
 raw:
@@ -54,13 +54,13 @@ mart:
       sql: "sql/mart_eta.sql"
     - name: "personale_eta_italia"
       sql: "sql/mart_eta_italia.sql"
-      years: [2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024]
+      years: [2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024]
       source_layer: clean
     - name: "mart_sintesi"
       sql: "sql/mart_sintesi.sql"
     - name: "mart_trend"
       sql: "sql/mart_trend.sql"
-      years: [2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024]
+      years: [2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024]
       source_layer: clean
   required_tables:
     - "personale_eta_comparti"
