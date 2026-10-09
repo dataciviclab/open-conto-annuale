@@ -83,3 +83,32 @@ def test_rename_headers_eta_mappa_fascia(tmp_path):
     header = csv_path.read_text(encoding="utf-8").split("\n")[0]
     assert "Fascia Età" in header
     assert "Fascia Anzianità" not in header
+
+
+@pytest.mark.pure_unit
+def test_rename_headers_idempotente(tmp_path):
+    """Seconda esecuzione su header già normalizzati non deve cambiare nulla."""
+    csv_path = tmp_path / "ETA_2015.CSV"
+    csv_path.write_text(
+        "ISTITUZIONE;CONTRATTO;CATEGORIA;QUALIFICA;Fascia Età;UOMINI;DONNE\n"
+        "C001;MNST;IR;0IR000;E40;10;5\n",
+        encoding="utf-8",
+    )
+    assert extract_dati._rename_headers_pre2017(csv_path, "ETA") is False
+    header = csv_path.read_text(encoding="utf-8").split("\n")[0]
+    assert "Fascia Età" in header
+    assert "FASCIA_ETA" not in header
+
+
+@pytest.mark.pure_unit
+def test_rename_headers_idempotente_occupazione(tmp_path):
+    csv_path = tmp_path / "OCCUPAZIONE_2015.CSV"
+    normalized = (
+        "ISTITUZIONE;CONTRATTO;CATEGORIA;QUALIFICA;"
+        "PERSONALE_TEMPO_PIENO_UOMINI;PERSONALE_TEMPO_PIENO_DONNE;"
+        "PART_TIME_INF50%_UOMINI;PART_TIME_INF50%_DONNE;"
+        "PART_TIME_SUP50%_UOMINI;PART_TIME_SUP50%_DONNE\n"
+    )
+    csv_path.write_text(normalized, encoding="utf-8")
+    assert extract_dati._rename_headers_pre2017(csv_path, "OCCUPAZIONE") is False
+    assert csv_path.read_text(encoding="utf-8").split("\n")[0] == normalized.strip()

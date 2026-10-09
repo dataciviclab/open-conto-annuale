@@ -4,7 +4,10 @@
 1. Scarica lo ZIP ``{year}Tutto.zip`` dal sito RGS.
 2. Estrae SOLO i file di ``{year}Dati/`` in ``_local/seed/dati/{year}/``.
 3. Normalizza i CSV: delimitatore virgola → punto e virgola,
-   encoding Latin-1 → UTF-8. I nomi delle colonne restano INTATTI.
+   encoding Latin-1 → UTF-8. Per gli anni >= 2017 i nomi delle colonne
+   restano INTATTI; per year < 2017 gli header vengono riscritti allo
+   schema 2017+ (UPPER_SNAKE + override per bug fonte — vedi
+   ``_HEADER_OVERRIDES_PRE2017``).
 4. Applica il fix PIEDO → PIENO (colonna OCCUPAZIONE, anni 2017-2024).
 """
 
@@ -218,7 +221,12 @@ _HEADER_OVERRIDES_PRE2017 = {
 
 
 def _rename_headers_pre2017(csv_path: pathlib.Path, table: str) -> bool:
-    """Riscrive header CSV pre-2017 allo schema 2017+ (UPPER_SNAKE + override)."""
+    """Riscrive header CSV pre-2017 allo schema 2017+ (UPPER_SNAKE + override).
+
+    Idempotente: una colonna già uguale a un target di override (o già in
+    stile UPPER_SNAKE senza override applicabile) resta invariata, così una
+    seconda esecuzione sullo stesso file non rompe il match dei clean.sql.
+    """
     text = csv_path.read_text(encoding="utf-8", errors="replace")
     lines = text.split("\n")
     if not lines or not lines[0].strip():
@@ -233,11 +241,15 @@ def _rename_headers_pre2017(csv_path: pathlib.Path, table: str) -> bool:
 
     cols = [c.strip() for c in header_line.split(";")]
     overrides = _HEADER_OVERRIDES_PRE2017.get(table, {})
+    override_targets = set(overrides.values())
     new_cols = []
     changed = False
     for c in cols:
-        styled = _style_header(c)
-        new_c = overrides.get(styled, styled)
+        if c in override_targets:
+            new_c = c
+        else:
+            styled = _style_header(c)
+            new_c = overrides.get(styled, styled)
         if new_c != c:
             changed = True
         new_cols.append(new_c)
