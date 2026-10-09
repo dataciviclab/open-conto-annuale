@@ -82,6 +82,12 @@ check:
 registry:
 	toolkit registry build --prefix conto-annuale --write
 
+# --- Compose ---
+
+.PHONY: compose
+compose:
+	$(TOOLKIT) run --config compose/contorno-comparti/dataset.yml
+
 # --- Pulizia ---
 
 .PHONY: clean clean-runs

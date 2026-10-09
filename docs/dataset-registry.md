@@ -23,6 +23,15 @@ Rigenerazione: `toolkit registry build --prefix conto-annuale --write` (o `make 
 | `modalita_flessibile` | Telelavoro, lavoro agile, coworking | 2011–2024 | `modalita_flessibile_comparti` |
 | `occupazione` | Occupazione per regime orario | 2011–2024 | `occupazione_comparti` |
 
+### Compose
+
+| Slug | Descrizione | Periodo | Grano | Mart |
+|---|---|---|---|---|
+| `contorno_comparti` | Paniere metriche per comparto × anno (occupazione, costo, assenze, retribuzioni, …) | 2011–2024 | `(anno, codi_comparto)` | `mart_contorno_comparti`, `mart_contorno_italia` |
+
+Prerequisito: `make run-all` dei dataset base, poi `make compose`.
+Sorgente: `compose/contorno-comparti/` (mart-only, pattern pil-intelligence).
+
 ### Anagrafiche di supporto (`support/`)
 
 Dizionari usati dai dataset per arricchimento (join in clean.sql via `{support.*.mart}`):
