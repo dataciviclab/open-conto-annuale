@@ -112,3 +112,25 @@ def test_rename_headers_idempotente_occupazione(tmp_path):
     csv_path.write_text(normalized, encoding="utf-8")
     assert extract_dati._rename_headers_pre2017(csv_path, "OCCUPAZIONE") is False
     assert csv_path.read_text(encoding="utf-8").split("\n")[0] == normalized.strip()
+
+
+@pytest.mark.pure_unit
+def test_drop_empty_rows(tmp_path):
+    """Righe delimitatore-only (es. LAVORO_FLESSIBILE 2013) vengono scartate."""
+    year = 2013
+    out = tmp_path / str(year)
+    out.mkdir()
+    csv_path = out / f"LAVORO_FLESSIBILE_{year}.CSV"
+    csv_path.write_text(
+        "ISTITUZIONE;CONTRATTO;MACROCATEGORIA;CATEGORIA;X_U;X_D;Y_U;Y_D;Z_U;Z_D;W_U;W_D\n"
+        "C001;RALN;ND;CC;1;0;0;0;0;0;0;0\n"
+        ";;;;;;;;;;;\n"
+        ";;;;;;;;;;;\n"
+        "C002;RALN;ND;CD;0;1;0;0;0;0;0;0\n",
+        encoding="utf-8",
+    )
+    removed = extract_dati._drop_empty_rows(year, out)
+    assert removed == 2
+    lines = [ln for ln in csv_path.read_text(encoding="utf-8").splitlines() if ln.strip()]
+    assert len(lines) == 3  # header + 2 dati
+    assert all(not all(not f.strip() for f in ln.split(";")) for ln in lines)

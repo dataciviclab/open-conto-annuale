@@ -10,9 +10,13 @@ dataset:
   - spesa
   - dipendenti-pubblici
   category: pa
-  description: Importi retributivi per voce di spesa e qualifica del personale delle PA italiane (2015-2024),
+  description: Importi retributivi per voce di spesa e qualifica del personale delle PA italiane (2011-2024),
     arricchiti con anagrafica enti, comparti, qualifiche e voci di spesa.
   years:
+  - 2011
+  - 2012
+  - 2013
+  - 2014
   - 2015
   - 2016
   - 2017
@@ -24,7 +28,7 @@ dataset:
   - 2023
   - 2024
   time_coverage:
-    start_year: 2015
+    start_year: 2011
     end_year: 2024
 raw:
   output_policy: overwrite
@@ -70,6 +74,10 @@ mart:
   - name: mart_trend
     sql: sql/mart_trend.sql
     years:
+    - 2011
+    - 2012
+    - 2013
+    - 2014
     - 2015
     - 2016
     - 2017

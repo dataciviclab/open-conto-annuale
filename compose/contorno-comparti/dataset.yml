@@ -1,0 +1,112 @@
+root: "../../out"
+schema_version: 1
+
+dataset:
+  name: "contorno_comparti"
+  source_id: "dataciviclab_composite"
+  tags: [pa, conto-annuale, compose, comparti, personale, costo-lavoro, intelligence]
+  category: pa
+  description: >
+    Compose del Conto Annuale: un paniere di metriche per comparto x anno
+    (occupazione, costo del lavoro, assenze, retribuzioni, flessibilita',
+    contrattazione) da mart_sintesi dei dataset base. Grano: (anno, codi_comparto).
+    PK unica su tutti i mart_sintesi 2011-2024 (6 comparti x 14 anni).
+  years: [2026]
+  time_coverage:
+    start_year: 2011
+    end_year: 2024
+
+# Mart-only compose (pattern pil-intelligence / legal-graph):
+# nessun raw/clean propri. I SQL leggono i mart_sintesi locali dei
+# dataset fratelli via support type: file (directory multi-anno) +
+# glob DuckDB /*/mart_sintesi.parquet.
+#
+# path dei support file e' relativo alla root del candidate
+# (compose/contorno-comparti/), non a out/.
+#
+# Prerequisito: run-all dei 13 dataset base (make run-all) prima di
+# make compose. La copertura e' quella dichiarata nei singoli dataset
+# (attualmente 2011-2024).
+
+support:
+  - name: personale
+    type: file
+    path: "../../out/data/mart/personale"
+  - name: costo_lavoro
+    type: file
+    path: "../../out/data/mart/costo_lavoro"
+  - name: occupazione
+    type: file
+    path: "../../out/data/mart/occupazione"
+  - name: assenze
+    type: file
+    path: "../../out/data/mart/assenze"
+  - name: anzianita
+    type: file
+    path: "../../out/data/mart/anzianita"
+  - name: titoli_studio
+    type: file
+    path: "../../out/data/mart/titoli_studio"
+  - name: retribuzione_media
+    type: file
+    path: "../../out/data/mart/retribuzione_media"
+  - name: comandati
+    type: file
+    path: "../../out/data/mart/comandati"
+  - name: contrattazione
+    type: file
+    path: "../../out/data/mart/contrattazione"
+  - name: flessibili
+    type: file
+    path: "../../out/data/mart/flessibili"
+  - name: passaggi
+    type: file
+    path: "../../out/data/mart/passaggi"
+  - name: distribuzione
+    type: file
+    path: "../../out/data/mart/distribuzione"
+  - name: modalita_flessibile
+    type: file
+    path: "../../out/data/mart/modalita_flessibile"
+
+mart:
+  tables:
+    - name: "mart_contorno_comparti"
+      sql: "sql/mart_contorno_comparti.sql"
+    - name: "mart_contorno_italia"
+      sql: "sql/mart_contorno_italia.sql"
+  required_tables:
+    - "mart_contorno_comparti"
+    - "mart_contorno_italia"
+  validate:
+    table_rules:
+      mart_contorno_comparti:
+        required_columns:
+          - anno
+          - codi_comparto
+          - desc_comparto
+          - tot_dipendenti
+          - pct_donne
+          - tot_spesa_milioni
+          - spesa_per_dipendente_k
+          - pct_part_time
+          - assenze_per_dipendente
+          - avg_stipendio
+        primary_key: [anno, codi_comparto]
+        min_rows: 50
+        not_null:
+          - anno
+          - codi_comparto
+          - tot_dipendenti
+      mart_contorno_italia:
+        required_columns:
+          - anno
+          - tot_dipendenti
+          - tot_spesa_milioni
+          - spesa_per_dipendente_k
+          - pct_donne
+        primary_key: [anno]
+        min_rows: 10
+
+validation:
+  fail_on_error: true
