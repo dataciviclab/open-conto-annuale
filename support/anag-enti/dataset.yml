@@ -3,7 +3,7 @@ schema_version: 1
 
 dataset:
   name: "ca_anag_enti_seed"
-  source_id: "openbdap"
+  source_id: "conto_annuale"
   tags: [pa, conto-annuale, anagrafica, enti, support]
   category: pa
   description: "Anagrafica degli enti del Conto Annuale (tipo istituzione, codice e denominazione) — dizionario di supporto."

@@ -2,7 +2,7 @@ root: "../../out"
 schema_version: 1
 dataset:
   name: "ca_anag_voci_fua_seed"
-  source_id: "openbdap"
+  source_id: "conto_annuale"
   tags: [pa, conto-annuale, anagrafica, voci-fua, support]
   category: pa
   description: "Anagrafica delle voci di spesa FUA (Fondo Unico di Amministrazione) del Conto Annuale — dizionario di supporto."

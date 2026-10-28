@@ -3,7 +3,7 @@ schema_version: 1
 
 dataset:
   name: "ca_anag_causali_seed"
-  source_id: "openbdap"
+  source_id: "conto_annuale"
   tags: [pa, conto-annuale, anagrafica, causali, support]
   category: pa
   description: "Anagrafica delle causali di assenza del Conto Annuale — dizionario di supporto."

@@ -3,7 +3,7 @@ schema_version: 1
 
 dataset:
   name: "ca_anag_territorio_seed"
-  source_id: "openbdap"
+  source_id: "conto_annuale"
   tags: [pa, conto-annuale, anagrafica, territorio, support]
   category: pa
   description: "Anagrafica di comuni, province e regioni del Conto Annuale, con mapping codice catastale → regione ISTAT — dizionario di supporto."

@@ -9,7 +9,7 @@
       "name": "Anzianita",
       "description": "Distribuzione per fascia di anzianità di servizio del personale delle PA italiane (2020-2024), arricchita con anagrafica enti, comparti e qualifiche.",
       "source": "",
-      "source_id": "openbdap",
+      "source_id": "conto_annuale",
       "period": {
         "start": 2017,
         "end": 2024
@@ -174,7 +174,7 @@
       "name": "Assenze",
       "description": "Giornate di assenza per causale del personale delle PA italiane (2020-2024), arricchite con anagrafica enti, comparti, qualifiche e tipologie di causale.",
       "source": "",
-      "source_id": "openbdap",
+      "source_id": "conto_annuale",
       "period": {
         "start": 2017,
         "end": 2024
@@ -357,7 +357,7 @@
       "name": "Ca Anag Causali Seed",
       "description": "Anagrafica delle causali di assenza del Conto Annuale — dizionario di supporto.",
       "source": "",
-      "source_id": "openbdap",
+      "source_id": "conto_annuale",
       "period": {
         "start": 2024,
         "end": 2024
@@ -418,7 +418,7 @@
       "name": "Ca Anag Comparti Seed",
       "description": "Anagrafica dei comparti e contratti del Conto Annuale — dizionario di supporto.",
       "source": "",
-      "source_id": "openbdap",
+      "source_id": "conto_annuale",
       "period": {
         "start": 2024,
         "end": 2024
@@ -491,7 +491,7 @@
       "name": "Ca Anag Enti Seed",
       "description": "Anagrafica degli enti del Conto Annuale (tipo istituzione, codice e denominazione) — dizionario di supporto.",
       "source": "",
-      "source_id": "openbdap",
+      "source_id": "conto_annuale",
       "period": {
         "start": 2024,
         "end": 2024
@@ -565,7 +565,7 @@
       "name": "Ca Anag Fondi Seed",
       "description": "Anagrafica dei fondi di contrattazione (natura e tipo voce di spesa) del Conto Annuale — dizionario di supporto.",
       "source": "",
-      "source_id": "openbdap",
+      "source_id": "conto_annuale",
       "period": {
         "start": 2024,
         "end": 2024
@@ -650,7 +650,7 @@
       "name": "Ca Anag Qualifiche Seed",
       "description": "Anagrafica di contratti, macrocategorie, categorie e qualifiche del Conto Annuale — dizionario di supporto.",
       "source": "",
-      "source_id": "openbdap",
+      "source_id": "conto_annuale",
       "period": {
         "start": 2024,
         "end": 2024
@@ -729,7 +729,7 @@
       "name": "Ca Anag Territorio Seed",
       "description": "Anagrafica di comuni, province e regioni del Conto Annuale, con mapping codice catastale → regione ISTAT — dizionario di supporto.",
       "source": "",
-      "source_id": "openbdap",
+      "source_id": "conto_annuale",
       "period": {
         "start": 2024,
         "end": 2024
@@ -810,7 +810,7 @@
       "name": "Ca Anag Titoli Studio Seed",
       "description": "Anagrafica dei titoli di studio del Conto Annuale — dizionario di supporto.",
       "source": "",
-      "source_id": "openbdap",
+      "source_id": "conto_annuale",
       "period": {
         "start": 2024,
         "end": 2024
@@ -859,7 +859,7 @@
       "name": "Ca Anag Voci Fua Seed",
       "description": "Anagrafica delle voci di spesa FUA (Fondo Unico di Amministrazione) del Conto Annuale — dizionario di supporto.",
       "source": "",
-      "source_id": "openbdap",
+      "source_id": "conto_annuale",
       "period": {
         "start": 2024,
         "end": 2024
@@ -932,7 +932,7 @@
       "name": "Ca Anag Voci Spesa Seed",
       "description": "Anagrafica delle voci di spesa del Conto Annuale (voce e tipo voce) — dizionario di supporto.",
       "source": "",
-      "source_id": "openbdap",
+      "source_id": "conto_annuale",
       "period": {
         "start": 2024,
         "end": 2024
@@ -999,7 +999,7 @@
       "name": "Comandati",
       "description": "Personale comandato, distaccato o fuori ruolo nelle PA italiane (2020-2024), arricchito con anagrafica enti e comparti.",
       "source": "",
-      "source_id": "openbdap",
+      "source_id": "conto_annuale",
       "period": {
         "start": 2017,
         "end": 2024
@@ -1115,7 +1115,7 @@
       "name": "Composizione Retribuzione",
       "description": "Importi retributivi per voce di spesa e qualifica del personale delle PA italiane (2020-2024), arricchiti con anagrafica enti, comparti, qualifiche e voci di spesa.",
       "source": "",
-      "source_id": "openbdap",
+      "source_id": "conto_annuale",
       "period": {
         "start": 2017,
         "end": 2024
@@ -1294,7 +1294,7 @@
       "name": "Contrattazione",
       "description": "Spese di contrattazione integrativa delle PA italiane (2020-2024), arricchite con anagrafica enti e comparti.",
       "source": "",
-      "source_id": "openbdap",
+      "source_id": "conto_annuale",
       "period": {
         "start": 2017,
         "end": 2024
@@ -1411,7 +1411,7 @@
       "name": "Costo Lavoro",
       "description": "Costo del lavoro del personale delle PA italiane per voce di spesa (2020-2024), arricchito con anagrafica enti, comparti e voci di spesa.",
       "source": "",
-      "source_id": "openbdap",
+      "source_id": "conto_annuale",
       "period": {
         "start": 2017,
         "end": 2024
@@ -1553,7 +1553,7 @@
       "name": "Distribuzione",
       "description": "Distribuzione geografica per regione del personale delle PA italiane (2020-2024), arricchita con anagrafica enti e comparti.",
       "source": "",
-      "source_id": "openbdap",
+      "source_id": "conto_annuale",
       "period": {
         "start": 2017,
         "end": 2024
@@ -1666,7 +1666,7 @@
       "name": "Flessibili",
       "description": "Lavoratori flessibili delle PA italiane per tipologia di contratto (2020-2024), arricchiti con anagrafica enti e comparti.",
       "source": "",
-      "source_id": "openbdap",
+      "source_id": "conto_annuale",
       "period": {
         "start": 2017,
         "end": 2024
@@ -1806,7 +1806,7 @@
       "name": "Modalita Flessibile",
       "description": "Modalità di lavoro flessibile (telelavoro, lavoro agile, coworking, turnazione) nelle PA italiane (2021-2024), arricchite con anagrafica enti e comparti.",
       "source": "",
-      "source_id": "openbdap",
+      "source_id": "conto_annuale",
       "period": {
         "start": 2021,
         "end": 2024
@@ -1947,7 +1947,7 @@
       "name": "Occupazione",
       "description": "Occupazione del personale delle PA italiane per regime orario (tempo pieno, part-time) e genere (2020-2024), arricchita con anagrafica enti e comparti.",
       "source": "",
-      "source_id": "openbdap",
+      "source_id": "conto_annuale",
       "period": {
         "start": 2017,
         "end": 2024
@@ -2077,7 +2077,7 @@
       "name": "Passaggi",
       "description": "Passaggi di qualifica e categoria del personale delle PA italiane (2020-2024), arricchiti con anagrafica enti e comparti.",
       "source": "",
-      "source_id": "openbdap",
+      "source_id": "conto_annuale",
       "period": {
         "start": 2017,
         "end": 2024
@@ -2224,7 +2224,7 @@
       "name": "Personale",
       "description": "Distribuzione per fascia di età del personale delle PA italiane (2020-2024), arricchita con anagrafica enti, comparti e qualifiche.",
       "source": "",
-      "source_id": "openbdap",
+      "source_id": "conto_annuale",
       "period": {
         "start": 2017,
         "end": 2024
@@ -2397,7 +2397,7 @@
       "name": "Retribuzione Media",
       "description": "Retribuzione media per componente stipendiale del personale delle PA italiane (2020-2024), arricchita con anagrafica enti e comparti.",
       "source": "",
-      "source_id": "openbdap",
+      "source_id": "conto_annuale",
       "period": {
         "start": 2017,
         "end": 2024
@@ -2519,7 +2519,7 @@
       "name": "Titoli Studio",
       "description": "Titoli di studio del personale delle PA italiane (2020-2024), arricchiti con anagrafica enti, comparti e qualifiche.",
       "source": "",
-      "source_id": "openbdap",
+      "source_id": "conto_annuale",
       "period": {
         "start": 2017,
         "end": 2024
@@ -3270,7 +3270,7 @@
     },
     {
       "id": "anzianita",
-      "source_id": "openbdap",
+      "source_id": "conto_annuale",
       "status": "ok",
       "label": "anzianita",
       "detail": "anni 2011-2024 — mart: si",
@@ -3301,7 +3301,7 @@
     },
     {
       "id": "assenze",
-      "source_id": "openbdap",
+      "source_id": "conto_annuale",
       "status": "ok",
       "label": "assenze",
       "detail": "anni 2011-2024 — mart: si",
@@ -3332,7 +3332,7 @@
     },
     {
       "id": "comandati",
-      "source_id": "openbdap",
+      "source_id": "conto_annuale",
       "status": "ok",
       "label": "comandati",
       "detail": "anni 2011-2024 — mart: si",
@@ -3363,7 +3363,7 @@
     },
     {
       "id": "composizione_retribuzione",
-      "source_id": "openbdap",
+      "source_id": "conto_annuale",
       "status": "ok",
       "label": "composizione_retribuzione",
       "detail": "anni 2011-2024 — mart: si",
@@ -3394,7 +3394,7 @@
     },
     {
       "id": "contrattazione",
-      "source_id": "openbdap",
+      "source_id": "conto_annuale",
       "status": "ok",
       "label": "contrattazione",
       "detail": "anni 2011-2024 — mart: si",
@@ -3425,7 +3425,7 @@
     },
     {
       "id": "costo_lavoro",
-      "source_id": "openbdap",
+      "source_id": "conto_annuale",
       "status": "ok",
       "label": "costo_lavoro",
       "detail": "anni 2011-2024 — mart: si",
@@ -3456,7 +3456,7 @@
     },
     {
       "id": "distribuzione",
-      "source_id": "openbdap",
+      "source_id": "conto_annuale",
       "status": "ok",
       "label": "distribuzione",
       "detail": "anni 2011-2024 — mart: si",
@@ -3487,7 +3487,7 @@
     },
     {
       "id": "flessibili",
-      "source_id": "openbdap",
+      "source_id": "conto_annuale",
       "status": "ok",
       "label": "flessibili",
       "detail": "anni 2011-2024 — mart: si",
@@ -3518,7 +3518,7 @@
     },
     {
       "id": "modalita_flessibile",
-      "source_id": "openbdap",
+      "source_id": "conto_annuale",
       "status": "ok",
       "label": "modalita_flessibile",
       "detail": "anni 2011-2024 — mart: si",
@@ -3549,7 +3549,7 @@
     },
     {
       "id": "occupazione",
-      "source_id": "openbdap",
+      "source_id": "conto_annuale",
       "status": "ok",
       "label": "occupazione",
       "detail": "anni 2011-2024 — mart: si",
@@ -3580,7 +3580,7 @@
     },
     {
       "id": "passaggi",
-      "source_id": "openbdap",
+      "source_id": "conto_annuale",
       "status": "ok",
       "label": "passaggi",
       "detail": "anni 2011-2024 — mart: si",
@@ -3611,7 +3611,7 @@
     },
     {
       "id": "personale",
-      "source_id": "openbdap",
+      "source_id": "conto_annuale",
       "status": "ok",
       "label": "personale",
       "detail": "anni 2011-2024 — mart: si",
@@ -3642,7 +3642,7 @@
     },
     {
       "id": "retribuzione_media",
-      "source_id": "openbdap",
+      "source_id": "conto_annuale",
       "status": "ok",
       "label": "retribuzione_media",
       "detail": "anni 2011-2024 — mart: si",
@@ -3673,7 +3673,7 @@
     },
     {
       "id": "titoli_studio",
-      "source_id": "openbdap",
+      "source_id": "conto_annuale",
       "status": "ok",
       "label": "titoli_studio",
       "detail": "anni 2011-2024 — mart: si",
@@ -3704,7 +3704,7 @@
     },
     {
       "id": "ca_anag_causali_seed",
-      "source_id": "openbdap",
+      "source_id": "conto_annuale",
       "status": "ok",
       "label": "ca_anag_causali_seed",
       "detail": "anno 2024 — mart: si",
@@ -3735,7 +3735,7 @@
     },
     {
       "id": "ca_anag_comparti_seed",
-      "source_id": "openbdap",
+      "source_id": "conto_annuale",
       "status": "ok",
       "label": "ca_anag_comparti_seed",
       "detail": "anno 2024 — mart: si",
@@ -3766,7 +3766,7 @@
     },
     {
       "id": "ca_anag_enti_seed",
-      "source_id": "openbdap",
+      "source_id": "conto_annuale",
       "status": "ok",
       "label": "ca_anag_enti_seed",
       "detail": "anno 2024 — mart: si",
@@ -3797,7 +3797,7 @@
     },
     {
       "id": "ca_anag_fondi_seed",
-      "source_id": "openbdap",
+      "source_id": "conto_annuale",
       "status": "ok",
       "label": "ca_anag_fondi_seed",
       "detail": "anno 2024 — mart: si",
@@ -3828,7 +3828,7 @@
     },
     {
       "id": "ca_anag_qualifiche_seed",
-      "source_id": "openbdap",
+      "source_id": "conto_annuale",
       "status": "ok",
       "label": "ca_anag_qualifiche_seed",
       "detail": "anno 2024 — mart: si",
@@ -3859,7 +3859,7 @@
     },
     {
       "id": "ca_anag_territorio_seed",
-      "source_id": "openbdap",
+      "source_id": "conto_annuale",
       "status": "ok",
       "label": "ca_anag_territorio_seed",
       "detail": "anno 2024 — mart: si",
@@ -3890,7 +3890,7 @@
     },
     {
       "id": "ca_anag_titoli_studio_seed",
-      "source_id": "openbdap",
+      "source_id": "conto_annuale",
       "status": "ok",
       "label": "ca_anag_titoli_studio_seed",
       "detail": "anno 2024 — mart: si",
@@ -3921,7 +3921,7 @@
     },
     {
       "id": "ca_anag_voci_fua_seed",
-      "source_id": "openbdap",
+      "source_id": "conto_annuale",
       "status": "ok",
       "label": "ca_anag_voci_fua_seed",
       "detail": "anno 2024 — mart: si",
@@ -3952,7 +3952,7 @@
     },
     {
       "id": "ca_anag_voci_spesa_seed",
-      "source_id": "openbdap",
+      "source_id": "conto_annuale",
       "status": "ok",
       "label": "ca_anag_voci_spesa_seed",
       "detail": "anno 2024 — mart: si",

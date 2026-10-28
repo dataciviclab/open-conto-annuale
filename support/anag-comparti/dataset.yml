@@ -3,7 +3,7 @@ schema_version: 1
 
 dataset:
   name: "ca_anag_comparti_seed"
-  source_id: "openbdap"
+  source_id: "conto_annuale"
   tags: [pa, conto-annuale, anagrafica, comparti, support]
   category: pa
   description: "Anagrafica dei comparti e contratti del Conto Annuale — dizionario di supporto."
