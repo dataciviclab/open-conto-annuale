@@ -2,7 +2,7 @@ root: ../../out
 schema_version: 1
 dataset:
   name: distribuzione
-  source_id: openbdap
+  source_id: conto_annuale
   tags:
   - pa
   - conto-annuale

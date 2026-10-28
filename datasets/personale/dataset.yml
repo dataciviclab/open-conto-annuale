@@ -3,7 +3,7 @@ schema_version: 1
 
 dataset:
   name: "personale"
-  source_id: "openbdap"
+  source_id: "conto_annuale"
   tags: [pa, conto-annuale, personale, eta, dipendenti-pubblici]
   category: pa
   description: "Distribuzione per fascia di età del personale delle PA italiane (2011-2024), arricchita con anagrafica enti, comparti e qualifiche."

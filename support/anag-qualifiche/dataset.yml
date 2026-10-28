@@ -3,7 +3,7 @@ schema_version: 1
 
 dataset:
   name: "ca_anag_qualifiche_seed"
-  source_id: "openbdap"
+  source_id: "conto_annuale"
   tags: [pa, conto-annuale, anagrafica, qualifiche, support]
   category: pa
   description: "Anagrafica di contratti, macrocategorie, categorie e qualifiche del Conto Annuale — dizionario di supporto."

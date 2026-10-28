@@ -3,7 +3,7 @@ schema_version: 1
 
 dataset:
   name: "ca_anag_voci_spesa_seed"
-  source_id: "openbdap"
+  source_id: "conto_annuale"
   tags: [pa, conto-annuale, anagrafica, voci-spesa, support]
   category: pa
   description: "Anagrafica delle voci di spesa del Conto Annuale (voce e tipo voce) — dizionario di supporto."

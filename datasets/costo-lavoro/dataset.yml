@@ -3,7 +3,7 @@ schema_version: 1
 
 dataset:
   name: "costo_lavoro"
-  source_id: "openbdap"
+  source_id: "conto_annuale"
   tags: [pa, conto-annuale, costo-lavoro, spesa, dipendenti-pubblici]
   category: pa
   description: "Costo del lavoro del personale delle PA italiane per voce di spesa (2011-2024), arricchito con anagrafica enti, comparti e voci di spesa."

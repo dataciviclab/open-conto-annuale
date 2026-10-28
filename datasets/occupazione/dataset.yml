@@ -3,7 +3,7 @@ schema_version: 1
 
 dataset:
   name: "occupazione"
-  source_id: "openbdap"
+  source_id: "conto_annuale"
   tags: [pa, conto-annuale, occupazione, tempo-pieno, part-time, dipendenti-pubblici]
   category: pa
   description: "Occupazione del personale delle PA italiane per regime orario (tempo pieno, part-time) e genere (2011-2024), arricchita con anagrafica enti e comparti."
