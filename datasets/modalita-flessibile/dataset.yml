@@ -46,6 +46,7 @@ clean:
     header: true
     delim: ;
     encoding: utf-8
+    all_varchar: true
   required_columns:
   - anno
   - istituzione
