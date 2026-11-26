@@ -7,8 +7,26 @@ on:
     paths: ["**/*.py", "**/*.yml", "**/*.yaml", "**/*.sql", "**/Makefile"]
 
 jobs:
+  detect:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    outputs:
+      dirs: ${{ steps.detect.outputs.dirs }}
+      found: ${{ steps.detect.outputs.found }}
+    steps:
+      - uses: actions/checkout@v7
+      - uses: dataciviclab/.github/actions/detect-changed-datasets@main
+        id: detect
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          paths: "datasets compose support"
+
   validate-config:
+    needs: detect
+    if: always() && (github.event_name != 'pull_request' || needs.detect.outputs.found == 'true')
     uses: dataciviclab/.github/.github/workflows/dataset-config-check-reusable.yml@main
     with:
-      globs: "support datasets compose"
+      globs: "support datasets compose"  # fallback su push: scan completo
+      configs: ${{ needs.detect.outputs.dirs }}
       years: "from-config"
